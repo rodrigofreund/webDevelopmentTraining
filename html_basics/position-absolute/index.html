@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<!--Usando position:absolute em blocos-->
+<html lang="pt-BR">
+
+<head>
+  <meta charset="UTF-8" />
+  <title>Posicionamento Absoluto</title>
+  <style>
+  </style>
+</head>
+
+<body style="margin: auto; width: 60%">
+  <header>
+    <h1>Exemplo usando posicionamento absoluto</h1>
+  </header>
+  <section>
+    <h2>Bloco absolutamente posicionado</h2>
+    <div style="position: relative; border:blue 1px solid">
+      <img src="../images/painel-pagani1.jpg" alt="Foto painel pagani" style="display:block; position: absolute; top:120px;" />
+    </div>
+    <p>
+      Este tipo de posicionamento permite o uso das propriedades
+      <em>top, left, right e botton</em> para posicionamento do item. Ele se retrai até a largura do conteúdo e
+      <em>não ocupa qualquer espaço no fluxo</em>.
+    </p>
+    <p>Ao usar as propriedades
+      <em>top, left, right e botton</em> será posicionado relativamente ao seu bloco de conteúdo que será o <strong>elemento ancestral
+      mais próximo que não possui um position static</strong>, ou o elemento raiz &lt;html&gt;</p>
+  </section>
+  <footer>Footer</footer>
+</body>
+
+</html>
