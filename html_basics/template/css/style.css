@@ -1,0 +1,8 @@
+.header-invisible {
+  visibility: hidden;
+}
+
+.body-centralized {
+  margin: auto;
+  width: 60%;
+}
