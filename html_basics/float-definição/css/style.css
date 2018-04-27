@@ -1,0 +1,12 @@
+.header-invisible {
+  visibility: hidden;
+}
+
+.body-centralized {
+  margin: auto;
+  width: 60%;
+}
+
+.imagem-float {
+  float: right;
+}
