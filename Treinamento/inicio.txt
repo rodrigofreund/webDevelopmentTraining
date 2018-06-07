@@ -1,0 +1,9 @@
+Elementos que não precisam ser fechados:
+<br/>
+<img/>
+<hr/>
+<input/>
+
+DOM - Document Object Model
+Browser organiza os objetos como uma árvore, com isso, cada elemento é representado como um objeto, e o DOM fornece uma 
+API para acessarmos cada um desses elementos por programação, como JavaScript.

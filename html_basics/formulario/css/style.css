@@ -1,0 +1,12 @@
+.header-invisible {
+  visibility: hidden;
+}
+
+.body-centralized {
+  margin: auto;
+  width: 60%;
+}
+
+form {
+  padding: 10px 0px;
+}

@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+  <meta charset="UTF-8" />
+  <title>Template First</title>
+  <link rel="stylesheet" type="text/css" href="./css/style.css" />
+</head>
+
+<body class="body-centralized">
+  <section>
+    <h1>Formulário</h1>
+    <form action="/envio-dados-usuario" method="POST">
+      <fieldset>
+        <legend>Dados Usuário</legend>
+        <div class="form-item">
+          <label for="input-nome">Nome:</label>
+          <input id="input-nome" type="text"/>
+          <strong><abbr title="requiered">*</abbr></strong>
+        </div>
+        <div>
+            <label for="input-email">Email:</label>
+            <input id="input-email" type="email"/>
+        </div>
+        <div>
+            <label for="input-ano">Ano nascimento:</label>
+            <input id="input-ano" type="number"/>
+        </div>
+        <div class="button">
+          <button type="submit">Enviar</button>
+        </div>
+      </fieldset>
+    </form>
+  </section>
+  <script src="./js/script.js"></script>
+</body>
+
+</html>

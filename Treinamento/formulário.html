@@ -1,0 +1,189 @@
+<!--exemplo formulário-->
+<!DOCTYPE html>
+<html lang="pt">
+
+<head>
+  <title>Formulário</title>
+  <meta charset="utf-8" />
+</head>
+
+<body>
+  <h1>Propriedades de um formulário</h1>
+
+  <h2>Propriedades</h2>
+  <dl>
+    <dt>
+      <h3>accept-charset</h3>
+    </dt>
+    <dd>
+      <span>Define o charset utilizado pelo formulário. Ex: UFT-8, UTF-16, ANSI.</span>
+      <pre><code>
+&lt;form accept-charset="ISO-8859-1"&gt;
+  &lt;!--Campos aqui...--&gt;
+&lt;/form&gt;
+      </code></pre>
+    </dd>
+
+    <dt>
+        <h3>autocomplete</h3>
+    </dt>
+    <dd>
+      <span>A medida que os dados são adicionados no formulário, o navegador sugere os valores inseridos anteriormente.</span>
+      <pre><code>
+&lt;form autocomplete="on"&gt;
+  &lt;input id="email" type="text" /&gt;
+&lt;/form&gt;
+      </code></pre>
+    </dd>
+
+    <dt><h3>action</h3></dt>
+    <dd>
+      <span>Especifica o destino dos dados do formulário.</span>
+      <pre><code>
+&lt;form action="action="http://www.nosso-servidor.com.br/cadastro/usuario.php""&gt;
+  &lt;input id="email" type="text" /&gt;
+&lt;/form&gt;
+      </code></pre>
+    </dd>
+
+    <dt><h3>method</h3></dt>
+    <dd>
+      <span>Especifíca o método HTTP que será usado para transmitir os dados.<br/></span>
+      <span>Valores possíveis são: <strong>GET</strong>, POST</span>
+      <pre><code>
+&lt;form action="action="http://www.nosso-servidor.com.br/cadastro/usuario.php"" method="POST"&gt;
+  &lt;input id="email" type="text" /&gt;
+&lt;/form&gt;
+      </code></pre>
+    </dd>
+
+    <dt><h3>enctype</h3></dt>
+    <dd>
+      <span>Especifíca quando os dados do formulário precisam ser codificados antes do envio.<br/></span>
+      <span>Valores possíveis são: <strong>application/x-www-form-urlencoded</strong>, multipart/form-data, text/plain.<br/></span>
+      <span>Utilizado apenas quando o método de envio for POST.</span>
+      <pre><code>
+&lt;form action="action="http://www.nosso-servidor.com.br/cadastro/usuario.php"" enctype="multipart/form-data"&gt;
+  &lt;input id="email" type="text" /&gt;
+&lt;/form&gt;
+      </code></pre>
+    </dd>
+
+    <dt><h3>novalidate</h3></dt>
+    <dd>
+      <span>Impede a validação do formulário antes da submissão.<br/></span>
+      <pre><code>
+&lt;form action="action="http://www.nosso-servidor.com.br/cadastro/usuario.php"" novalidate&gt;
+  &lt;input id="email" type="text" /&gt;
+&lt;/form&gt;
+      </code></pre>
+    </dd>
+
+    <dt><h3>target</h3></dt>
+    <dd>
+      <span>Indica onde a página de destino será aberta.<br/></span>
+      <span>Usa os mesmos valores da tag a (<em>anchor</em>).<br/></span>
+      <span>Valoes possíveis: _blank, _self, _parent, _top, <em>framename</em></span>
+      <pre><code>
+&lt;form target="_blank" &gt;
+  &lt;input id="email" type="text" /&gt;
+&lt;/form&gt;
+      </code></pre>
+    </dd>
+  </dl>
+
+  <h2>Elementos</h2>
+
+  <dl>
+    <dt>
+      <h3>input</h3>
+      <h4>type="text"</h4>
+    </dt>
+    <dd>
+      <span>Campo básico para colocar texto.</span>
+      <pre><code>
+&lt;input type="text" /&gt;
+      </code></pre>
+      <ul>
+        <li>placeholder - texto a ser exibido quando o campo está vazio.</li>
+        <li>maxlength - quantidade máxima de caracteres.</li>
+        <li>required - indica que o campo é obrigatório.</li>
+        <li>disabled - deixa o campo desabilitado para edição.</li>
+        <li>readonly - impede edições do campo.</li>
+      </ul>
+    </dd>
+
+    <dt>
+      <h4>type="email"</h4>
+    </dt>
+    <dd>
+      <span>Campo destinado para inserção de email com validação.</span>
+    </dd>
+
+    <dt>
+      <h4>type="search"</h4>
+    </dt>
+    <dd>
+      <span>Campo destinado para pesquisa.</span>
+    </dd>
+
+    <dt>
+      <h4>type="url"</h4>
+    </dt>
+    <dd>
+      <span>Campo destinado para inserção de url com validação.</span>
+    </dd>
+
+    <dt>
+      <h4>type="number"</h4>
+    </dt>
+    <dd>
+      <span>Campo destinado para inserção de número com validação.</span>
+      <ul>
+        <li>min - validação do valor mínimo a ser inserido no campo.</li>
+        <li>max - validação do valor máximo a ser inserido no campo.</li>
+        <li>step - intervalo válido entre min e max.</li>
+      </ul>
+    </dd>
+
+    <dt>
+      <h4>type="radio"</h4>
+    </dt>
+    <dd>
+      <span>Campo que permite escolha de uma opção.</span>
+      <ul>
+        <li>checked - indica que uma opção está selecionada por padrão.</li>
+      </ul>
+      <pre><code>
+&lt;form&gt;
+  &lt;input type="radio" name="opcao" checked /&gt; Masculino
+  &lt;input type="radio" name="opcao" /&gt; Feminino
+&lt;/form&gt;
+      </code></pre>
+      <form>
+          <input type="radio" name="opcao" checked /> Masculino
+          <input type="radio" name="opcao" /> Feminino
+      </form>
+    </dd>
+
+
+    <dt>
+      <h3>textarea</h3>
+    </dt>
+    <dd>
+      <span>Campo para inserir texto em múltiplas linhas.</span>
+      <pre><code>
+  &lt;textarea rows="15" cols="20"&gt;Texto inicial&lt;/textarea&gt;
+      </code></pre>
+      <ul>
+        <li>rows - número de linhas do componente.</li>
+        <li>cols - número de colunas do componente.</li>
+        </ul>
+    </dd>
+
+  </dl>
+
+
+</body>
+
+</html>
