@@ -1,0 +1,568 @@
+<!--exemplo formulário-->
+<!DOCTYPE html>
+<html lang="pt">
+
+<head>
+  <title>Formulário</title>
+  <meta charset="utf-8" />
+</head>
+
+<body>
+  <h1>Trabalhando com Formulários</h1>
+
+  <ul>
+    <li>Características</li>
+    <li>Propriedades</li>
+    <li>Elementos</li>
+  </ul>
+
+  <section>
+    <h2 id="caracteristicas">Características</h2>
+  </section>
+
+  <section>
+    <h2 id="propriedades">Propriedades</h2>
+    <ul>
+      <li>
+        <a href="#accept-charset">accept-charset</a>
+      </li>
+      <li>
+        <a href="#autocomplete">autocomplete</a>
+      </li>
+      <li>
+        <a href="#action">action</a>
+      </li>
+      <li>
+        <a href="#method">method</a>
+      </li>
+      <li>
+        <a href="#enctype">enctype</a>
+      </li>
+      <li>
+        <a href="#novalidate">novalidate</a>
+      </li>
+      <li>
+        <a href="#target">target</a>
+      </li>
+    </ul>
+    <dl>
+      <dt id="accept-charset">
+        accept-charset
+      </dt>
+      <dd>
+        <span>Define o charset utilizado pelo formulário. Ex: UFT-8, UTF-16, ANSI.</span>
+        <pre><code>
+&lt;form accept-charset="ISO-8859-1"&gt;
+  &lt;!--Campos aqui...--&gt;
+&lt;/form&gt;
+      </code></pre>
+      </dd>
+
+      <dt>
+        <dt id="autocomplete">
+          autocomplete
+        </dt>
+      </dt>
+      <dd>
+        <span>A medida que os dados são adicionados no formulário, o navegador sugere os valores inseridos anteriormente.</span>
+        <pre><code>
+&lt;form autocomplete="on"&gt;
+  &lt;input id="email" type="text" /&gt;
+&lt;/form&gt;
+      </code></pre>
+      </dd>
+
+      <dt id="action">
+        action
+      </dt>
+      <dd>
+        <span>Especifica o destino dos dados do formulário.</span>
+        <pre><code>
+&lt;form action="action="http://www.nosso-servidor.com.br/cadastro/usuario.php""&gt;
+  &lt;input id="email" type="text" /&gt;
+&lt;/form&gt;
+      </code></pre>
+      </dd>
+
+      <dt id="method">
+        method
+      </dt>
+      <dd>
+        <span>Especifíca o método HTTP que será usado para transmitir os dados.
+          <br/>
+        </span>
+        <span>Valores possíveis são:
+          <strong>GET</strong>, POST</span>
+        <pre><code>
+&lt;form action="action="http://www.nosso-servidor.com.br/cadastro/usuario.php"" method="POST"&gt;
+  &lt;input id="email" type="text" /&gt;
+&lt;/form&gt;
+      </code></pre>
+      </dd>
+
+      <dt id="enctype">
+        enctype
+      </dt>
+      <dd>
+        <span>Especifíca quando os dados do formulário precisam ser codificados antes do envio.
+          <br/>
+        </span>
+        <span>Valores possíveis são:
+          <strong>application/x-www-form-urlencoded</strong>, multipart/form-data, text/plain.
+          <br/>
+        </span>
+        <span>Utilizado apenas quando o método de envio for POST.</span>
+        <pre><code>
+&lt;form action="action="http://www.nosso-servidor.com.br/cadastro/usuario.php"" enctype="multipart/form-data"&gt;
+  &lt;input id="email" type="text" /&gt;
+&lt;/form&gt;
+      </code></pre>
+      </dd>
+
+      <dt id="novalidate">
+        novalidate
+      </dt>
+      <dd>
+        <span>Impede a validação do formulário antes da submissão.
+          <br/>
+        </span>
+        <pre><code>
+&lt;form action="action="http://www.nosso-servidor.com.br/cadastro/usuario.php"" novalidate&gt;
+  &lt;input id="email" type="text" /&gt;
+&lt;/form&gt;
+      </code></pre>
+      </dd>
+
+      <dt id="target">
+        target
+      </dt>
+      <dd>
+        <span>Indica onde a página de destino será aberta.
+          <br/>
+        </span>
+        <span>Usa os mesmos valores da tag a (
+          <em>anchor</em>).
+          <br/>
+        </span>
+        <span>Valoes possíveis: _blank, _self, _parent, _top,
+          <em>framename</em>
+        </span>
+        <pre><code>
+&lt;form target="_blank" &gt;
+  &lt;input id="email" type="text" /&gt;
+&lt;/form&gt;
+      </code></pre>
+      </dd>
+    </dl>
+
+  </section>
+
+  <section>
+
+    <h2 id="elementos">Elementos</h2>
+
+    <ul>
+      <li>button</li>
+      <li>datalist</li>
+      <li>fieldset</li>
+      <li>input</li>
+      <li>label</li>
+      <li>output</li>
+      <li>select</li>
+      <li>textarea</li>
+    </ul>
+
+
+    <h3>input</h3>
+    <dl>
+      <dt>
+        type="text"
+      </dt>
+      <dd>
+        <span>Campo básico para colocar texto.</span>
+        <pre><code>
+&lt;input type="text" /&gt;
+      </code></pre>
+        <ul>
+          <li>placeholder - texto a ser exibido quando o campo está vazio.</li>
+          <li>maxlength - quantidade máxima de caracteres.</li>
+          <li>required - indica que o campo é obrigatório.</li>
+          <li>disabled - deixa o campo desabilitado para edição.</li>
+          <li>readonly - impede edições do campo.</li>
+        </ul>
+      </dd>
+
+      <dt>
+        type="email"
+      </dt>
+      <dd>
+        <span>Campo destinado para inserção de email com validação.</span>
+      </dd>
+
+      <dt>
+        type="search"
+      </dt>
+      <dd>
+        <span>Campo destinado para pesquisa.</span>
+      </dd>
+
+      <dt>
+        type="url"
+      </dt>
+      <dd>
+        <span>Campo destinado para inserção de url com validação.</span>
+      </dd>
+
+      <dt>
+        type="number"
+      </dt>
+      <dd>
+        <span>Campo destinado para inserção de número com validação.</span>
+        <ul>
+          <li>min - validação do valor mínimo a ser inserido no campo.</li>
+          <li>max - validação do valor máximo a ser inserido no campo.</li>
+          <li>step - intervalo válido entre min e max.</li>
+        </ul>
+      </dd>
+
+      <dt>
+        type="radio"
+      </dt>
+      <dd>
+        <span>Campo que permite escolha de uma opção.</span>
+        <ul>
+          <li>checked - indica que uma opção está selecionada por padrão.</li>
+        </ul>
+        <pre><code>
+&lt;form&gt;
+  &lt;input type="radio" name="opcao" checked /&gt; Masculino
+  &lt;input type="radio" name="opcao" /&gt; Feminino
+&lt;/form&gt;
+      </code></pre>
+        <form>
+          <input type="radio" name="opcao" checked /> Masculino
+          <input type="radio" name="opcao" /> Feminino
+        </form>
+      </dd>
+
+      <dt>
+        type="checkbox"
+      </dt>
+      <dd>
+        <span>Campo que permite escolha de mais de uma opção.</span>
+        <ul>
+          <li>checked - indica que uma opção está selecionada por padrão.</li>
+        </ul>
+        <pre><code>
+&lt;form&gt;
+  &lt;input type="checkbox" name="transparente" checked /&gt; Transparente
+  &lt;input type="checkbox" name="azul" /&gt; Azul
+  &lt;input type="checkbox" name="vermelho" /&gt; Vermelho
+&lt;/form&gt;
+        </code></pre>
+        <form>
+          <input type="checkbox" name="transparente" checked /> Transparente
+          <input type="checkbox" name="azul" /> Azul
+          <input type="checkbox" name="vermelho" /> Vermelho
+        </form>
+      </dd>
+
+      <dt>
+        type="time"
+      </dt>
+      <dd>
+        <span>Campo que permite escolha de hora.</span>
+        <ul>
+          <li>min - Especifica data mínima no formato HH:MM.</li>
+          <li>max - Especifica data máxima no formato HH:MM.</li>
+        </ul>
+        <span>O formato da data a ser exibido assim como a linguágem usada no datepicker depende da linguágem na qual o browser
+          está configurado.
+        </span>
+        <pre><code>
+&lt;form&gt;
+  &lt;input type="time" name="time" min="08:00"/&gt;
+&lt;/form&gt;
+          </code></pre>
+        <form>
+          <input type="time" name="time" min="08:00" />
+          <input type="submit" />
+        </form>
+      </dd>
+
+      <dt>
+        type="date"
+      </dt>
+      <dd>
+        <span>Campo que permite escolha de data.</span>
+        <ul>
+          <li>min - Especifica data mínima no formato YYYY-MM-DD.</li>
+          <li>max - Especifica data máxima no formato YYYY-MM-DD.</li>
+        </ul>
+        <span>O formato da data a ser exibido assim como a linguágem usada no datepicker depende da linguágem na qual o browser
+          está configurado.
+        </span>
+        <pre><code>
+&lt;form&gt;
+  &lt;input type="date" name="data" min="2018-06-08"/&gt;
+&lt;/form&gt;
+            </code></pre>
+        <form>
+          <input type="date" name="data" min="2018-06-08" />
+          <input type="submit" />
+        </form>
+      </dd>
+
+      <dt>
+        type="datetime-local"
+      </dt>
+      <dd>
+        <span>Campo que permite escolha de data e hora local.</span>
+        <ul>
+          <li>min - Especifica data mínima no formato YYYY-MM-DD.</li>
+          <li>max - Especifica data máxima no formato YYYY-MM-DD.</li>
+        </ul>
+        <p>O formato da data a ser exibido assim como a linguágem usada no datepicker depende da linguágem na qual o browser
+          está configurado.
+        </p>
+        <p>Atualmente não suportado no Firefox 60.0.2.
+        </p>
+        <pre><code>
+&lt;form&gt;
+  &lt;input type="datetime-local" name="data"/&gt;
+&lt;/form&gt;
+      </code></pre>
+        <form>
+          <input type="datetime-local" name="data" />
+          <input type="submit" />
+        </form>
+      </dd>
+
+      <!--CONCLUIR ITENS-->
+      <span>
+        <strong>Terminar itens de date time</strong>
+      </span>
+
+      <dt>
+        type="range"
+      </dt>
+      <dd>
+        <span>Permite selecionar um valor dentro de limites definidos.</span>
+        <ul>
+          <li>min - Especifica o valor mínimo.</li>
+          <li>max - Especifica o valor máximo.</li>
+        </ul>
+        <pre><code>
+&lt;form&gt;
+  &lt;input type="range" min="0" max="10"/&gt;
+&lt;/form&gt;
+        </code></pre>
+        <form>
+          <input type="range" min="0" max="10" />
+        </form>
+      </dd>
+
+      <dt>
+        type="color"
+      </dt>
+      <dd>
+        <span>Permite selecionar cor através da paleta de cores.</span>
+        <pre><code>
+&lt;form&gt;
+  &lt;input type="color"/&gt;
+&lt;/form&gt;
+    </code></pre>
+        <form>
+          <input type="color" />
+        </form>
+      </dd>
+
+      <dt>
+        type="file"
+      </dt>
+      <dd>
+        <span>Permite selecionar arquivos.</span>
+        <pre><code>
+&lt;form&gt;
+  &lt;input type="file"/&gt;
+&lt;/form&gt;
+      </code></pre>
+        <form>
+          <input type="file" />
+        </form>
+      </dd>
+
+    </dl>
+  </section>
+
+  <section>
+    <dl>
+      <dt>
+        type="button"
+      </dt>
+      <dd>
+        <span>Criando botões.</span>
+        <ul>
+          <li>submit - botão usado para enviar um formulário.</li>
+          <li>reset - botão usado para limpar os campos de um formulário.</li>
+        </ul>
+        <pre><code>
+&lt;form&gt;
+  &lt;input type="button"/&gt;
+&lt;/form&gt;
+        </code></pre>
+        <form>
+          <input type="button" value="Botão" />
+        </form>
+      </dd>
+
+      <dt>
+        textarea
+      </dt>
+      <dd>
+        <span>Campo para inserir texto em múltiplas linhas.</span>
+        <pre><code>
+&lt;textarea rows="15" cols="20"&gt;Texto inicial&lt;/textarea&gt;
+      </code></pre>
+        <ul>
+          <li>rows - número de linhas do componente.</li>
+          <li>cols - número de colunas do componente.</li>
+        </ul>
+      </dd>
+
+      <dt>
+        select
+      </dt>
+      <dd>
+        <span>Permite selecionar um item dentro de uma lista de opções.</span>
+        <ul>
+          <li>multiple - permite a seleção/exibição de mais de um item.</li>
+        </ul>
+        <pre><code>
+&lt;select&gt;
+  &lt;option value="boleto"&gt;Boleto&lt;/option&gt;
+  &lt;option value="cartao"&gt;Cartão de Crédito&lt;/option&gt;
+  &lt;option value="crediario"&gt;Crediário&lt;/option&gt;
+&lt;/select&gt;
+      </code></pre>
+
+        <form>
+          <select>
+            <option value="boleto">Boleto</option>
+            <option value="cartao">Cartão de Crédito</option>
+            <option value="crediario">Crediário</option>
+          </select>
+        </form>
+      </dd>
+
+      <dt>
+        datalist
+      </dt>
+      <dd>
+        <ul>
+          <li>list - id do componente datalist.</li>
+        </ul>
+        <p>Permite selecionar um item dentro de uma lista de opções.</p>
+        <pre><code>
+&lt;input list="items" name="shopping-list"&gt;
+  &lt;datalist id="items"&gt;
+  &lt;option value="Aveia"&gt;
+  &lt;option value="Manteiga"&gt;
+  &lt;option value="AçucarMascavo"&gt;
+&lt;/datalist&gt;
+      </code></pre>
+
+        <form>
+          <input list="items" name="in-shopping-list" />
+          <datalist id="items">
+            <option value="Aveia" />
+            <option value="Manteiga" />
+            <option value="AçucarMascavo" />
+          </datalist>
+        </form>
+      </dd>
+
+      <dt>
+        fieldset
+      </dt>
+      <dd>
+        <p>Permite criar divisões no formulário para organização de partes lógicas no cadastro.</p>
+        <pre><code>
+&lt;fieldset&gt;
+    &lt;legend&gt;Dados Usuário&lt;/legend&gt;
+    Nome: &lt;input type="text"/&gt;&lt;br /&gt;
+    Email: &lt;input type="text"/&gt;&lt;br /&gt;
+&lt;/fieldset&gt;
+    </code></pre>
+
+        <form>
+          <fieldset>
+            <legend>Dados Usuário</legend>
+            Nome:
+            <input type="text" />
+            <br /> Email:
+            <input type="text" />
+            <br />
+          </fieldset>
+        </form>
+      </dd>
+
+      <dt>
+        label
+      </dt>
+      <dd>
+        <p>Permite dar nome a campos de um formulário. Habilita a funcionalidade de autofocus ao clicar no label o input exibe
+          o cursor.
+        </p>
+        <pre><code>
+&lt;fieldset&gt;
+    &lt;legend&gt;Dados Usuário&lt;/legend&gt;
+    Nome: &lt;input type="text"/&gt;&lt;br /&gt;
+    Email: &lt;input type="text"/&gt;&lt;br /&gt;
+&lt;/fieldset&gt;
+      </code></pre>
+
+        <form>
+          <label for="telefone">Telefone</label>
+          <input id="telefone" type="tel" />
+        </form>
+      </dd>
+
+      <dt>
+        output
+      </dt>
+      <dd>
+        <p>Permite exibir o resultado de alguma operação.</p>
+        <pre><code>
+&lt;fieldset&gt;
+    &lt;legend&gt;Dados Usuário&lt;/legend&gt;
+    Nome: &lt;input type="text"/&gt;&lt;br/&gt;
+    Email: &lt;input type="text"/&gt;&lt;br/&gt;
+&lt;/fieldset&gt;
+      </code></pre>
+
+        <form oninput="x.value=parseInt(a.value)+parseInt(b.value)">
+          <label>A: </label>
+          <input id="a" type="number" />
+          <br/>
+          <label>B: </label>
+          <input id="b" type="number" />
+          <br/>
+          <label>Resultado: </label>
+          <output name="x" for="a b"></output>
+        </form>
+
+        <form oninput="b.value = parseInt(val.value)">
+          <label>A: </label>
+          <input id="val" type="range" min="0" max="100" value="0" />
+          <br/>
+          <label>Resultado: </label>
+          <output name="b" for="val"></output>
+        </form>
+      </dd>
+
+    </dl>
+  </section>
+</body>
+
+</html>
