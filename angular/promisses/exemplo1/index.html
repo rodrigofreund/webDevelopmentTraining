@@ -1,0 +1,17 @@
+<!DOCTYPE>
+<html lang="pt-BR">
+  <head>
+    <meta charset="utf-8">
+    <title>AngularJS Basic usage</title>
+  </head>
+  <body ng-app="app">
+    <main ng-controller="controller as vm">
+      <p>Hello {{vm.text}}!</p>
+      <ul>
+        <li ng-repeat="item in vm.repositories">{{item.full_name}}</li>
+      </ul>
+    </main>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.7.2/angular.min.js"></script>
+    <script src="app.js"></script>
+  </body>
+</html>
