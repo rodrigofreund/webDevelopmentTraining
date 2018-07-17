@@ -1,0 +1,26 @@
+<!DOCTYPE>
+<html lang="pt-BR">
+
+  <head>
+    <meta charset="utf-8">
+    <title>AngularJS Basic usage</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.7.2/angular.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/angular-ui-router/1.0.18/angular-ui-router.js"></script>
+  </head>
+
+  <body ng-app="app">
+
+    <main ng-controller="controller as vm">
+      <a ui-sref="hello" ui-sref-active="active">Hello</a>
+      <a ui-sref="about" ui-sref-active="active">About</a>
+
+      <ui-view></ui-view>
+    </main>
+
+    <script src="app.js"></script>
+    <script src="config.js"></script>
+    <script src="compAbout/about.js"></script>
+    <script src="/about.js"></script>
+
+  </body>
+</html>

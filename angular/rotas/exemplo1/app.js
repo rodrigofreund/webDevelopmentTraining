@@ -1,8 +1,8 @@
-var app = angular.module('app', [])
+var app = angular.module('app', ['ngRoute'])
 
 app.controller('controller', controller)
 
-controller.$inject('$http')
+controller.$inject = ['$http']
 
 function controller($http) {
     var vm = this
