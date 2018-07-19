@@ -1,10 +1,10 @@
 angular.module('app').component('hello', {
-  templateUrl: './hello.html',
-  controller: controller
+  templateUrl: 'compHello/hello.html',
+  controller: helloController
 })
 
-function controller() {
+function helloController() {
   var vm = this;
 
-  vm.text = 'Hello Word!'
+  vm.text = 'Hello!'
 }

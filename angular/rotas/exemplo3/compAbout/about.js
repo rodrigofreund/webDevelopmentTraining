@@ -1,10 +1,13 @@
 angular.module('app').component('about', {
-  templateUrl: './about.html',
-  controller: controller
+  templateUrl: 'compAbout/about.html',
+  controller: aboutController,
+  bindings: {
+    title :'<'
+  }
 })
 
-function controller() {
+function aboutController() {
   var vm = this;
 
-  vm.text = 'Its the UI-Router hello world app!'
+  vm.text = 'About!'
 }

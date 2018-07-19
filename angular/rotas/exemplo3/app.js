@@ -6,5 +6,4 @@ controller.$inject = ['$http']
 
 function controller($http) {
     var vm = this
-    vm.repositories = []
 }

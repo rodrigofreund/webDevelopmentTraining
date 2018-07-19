@@ -1,16 +1,25 @@
 var app = angular.module('app')
 
-app.config(['$stateProvider', function($stateProvider) {
+app.config(['$stateProvider', function($stateProvider, $q, $timeout) {
   var helloState = {
       name: 'hello',
       url: '/hello',
-      template: '<h3>hello world!</h3>'
+      component: 'hello'
   }
 
   var aboutState = {
       name: 'about',
       url: '/about',
-      template: '<h3>Its the UI-Router hello world app!</h3>'
+      component: 'about',
+      resolve: {
+        title : function($q, $timeout) {
+          var deferred = $q.defer();
+          $timeout(function(){
+              deferred.resolve('About title');
+          }, 500);
+          return deferred.promise;
+        }
+      }
   }
 
   $stateProvider.state(helloState)
