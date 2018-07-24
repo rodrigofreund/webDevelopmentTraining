@@ -1,6 +1,6 @@
 var app = angular.module('app')
 
-app.config(['$stateProvider', function($stateProvider) {
+app.config(['$stateProvider', function($stateProvider, $state) {
   var usuarioState = {
     name: 'usuario',
     url: '/usuario',
