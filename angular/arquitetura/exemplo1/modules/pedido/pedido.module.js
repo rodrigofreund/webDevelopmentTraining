@@ -1,0 +1,1 @@
+angular.module('pedido.module', ['ui.router'])
