@@ -1,8 +1,9 @@
-	<!DOCTYPE html>
+<!DOCTYPE html>
 
 <html lang="pt-BR" ng-app="GerenciadorFinanceiroFlechaVendas">
-	<head>
-			<!--
+
+<head>
+	<!--
 			Customize this policy to fit your own app's needs. For more guidance, see:
 					https://github.com/apache/cordova-plugin-whitelist/blob/master/README.md#content-security-policy
 			Some notes:
@@ -11,135 +12,163 @@
 					* Disables use of inline scripts in order to mitigate risk of XSS vulnerabilities. To change this:
 							* Enable inline JS: add 'unsafe-inline' to default-src
 			-->
-		<meta http-equiv="Content-Security-Policy" content="default-src 'self' data: gap: http://localhost:8080 'unsafe-eval'; style-src 'self' 'unsafe-inline'; media-src *; img-src 'self' data: content:; connect-src *;">
-		<meta name="format-detection" content="telephone=no">
-		<meta name="msapplication-tap-highlight" content="no">
-		<meta charset="UTF-8" name="viewport" content="user-scalable=no, initial-scale=1, maximum-scale=1, minimum-scale=1, width=device-width">
-		<meta http-equiv="Cache-Control" content="max-age=1440" />
-		
-		<title>Gerenciador Financeiro</title>
-		
-		<link rel="stylesheet" href="css/style.css">
-		<link rel="stylesheet" href="css/bootstrap.css">
-		<link rel="stylesheet" href="css/bootstrap-datepicker3.css">
-		<link rel="stylesheet" href="css/jquery-ui.min.css">
-		<link rel="stylesheet" href="css/jquery-ui.theme.min.css">
-		<link rel="stylesheet" href="css/ui-bootstrap-2.4.0-csp.css">
-		<link rel="stylesheet" href="css/angular-block-ui.min.css">
-		<link rel="stylesheet" href="css/ui-grid.min.css">
-		<link rel="stylesheet" href="css/select.min.css">
-		<link rel="stylesheet" href="css/select2-bootstrap.css">
-		<link rel="stylesheet" href="css/angular-ui-notification.min.css">
-	</head>
-	<body>
-		<div ng-controller="AppController">
-			<div class="wrap">
-				<nav class="nav-bar navbar-inverse" role="navigation">
-					<div id="top-menu" class="container-fluid active">
-						<a class="navbar-brand" href="#/dashboard" ng-cloak>{{nomeUsuario}}</a>
-						<img src="img/online.png" class="connection-status" ng-show="hasConnection && isMobile" width="26px" height="20px" ng-cloak/>
-						<img src="img/offline.png" class="connection-status" ng-show="!hasConnection && isMobile" width="26px" height="20px" ng-cloak/>
-					</div>
-				</nav>
-				<aside id="side-menu" class="aside" role="navigation">
-					<ul class="nav nav-list accordion">
-						<li class="nav-header">
-							<div class="link">
-								<i class="fa fa-lg fa-globe"></i>Gerenciador Financeiro<i
-									class="fa fa-chevron-down"></i>
-							</div>
-							<ul class="submenu">
-								<li><a href="#/dashboard">Principal</a></li>
-							</ul>
-						</li>
+	<base href="/">
+	<meta http-equiv="Content-Security-Policy" content="default-src 'self' data: gap: http://localhost:8080 'unsafe-eval'; style-src 'self' 'unsafe-inline'; media-src *; img-src 'self' data: content:; connect-src *;">
+	<meta name="format-detection" content="telephone=no">
+	<meta name="msapplication-tap-highlight" content="no">
+	<meta charset="UTF-8" name="viewport" content="user-scalable=no, initial-scale=1, maximum-scale=1, minimum-scale=1, width=device-width">
+	<meta http-equiv="Cache-Control" content="max-age=1440" />
 
-						<li class="nav-header">
-							<div class="link">
-								<i class="fa fa-lg fa-users"></i>Pedidos<i
-									class="fa fa-chevron-down"></i>
-							</div>
-							<ul class="submenu">
-								<li><a href="#/pedido">Novo Pedido</a></li>
-								<li><a href="#/detalhePedido">Exibir Pedidos</a></li>
-								<li><a href="#/detalhePedidoSalvo">Exibir Pedidos Salvos</a></li>
-							</ul>
-						</li>
+	<title>Gerenciador Financeiro</title>
 
-						<li class="nav-header">
-							<div class="link">
-								<i class="fa fa-cloud"></i>Clientes<i class="fa fa-chevron-down"></i>
-							</div>
-							<ul class="submenu">
-								<li><a href="#/cadastroCompletoCliente">Novo</a></li>
-								<li><a href="#/listaClientes">Listar</a></li>
-							</ul>
-						</li>
+	<link rel="stylesheet" href="css/style.css">
+	<link rel="stylesheet" href="css/bootstrap.css">
+	<!--
+	<link rel="stylesheet" href="css/bootstrap-datepicker3.css">
+	<link rel="stylesheet" href="css/jquery-ui.min.css">
+	<link rel="stylesheet" href="css/jquery-ui.theme.min.css">
+	<link rel="stylesheet" href="css/ui-bootstrap-2.4.0-csp.css">
+	<link rel="stylesheet" href="css/angular-block-ui.min.css">
+	<link rel="stylesheet" href="css/ui-grid.min.css">
+	<link rel="stylesheet" href="css/select.min.css">
+	<link rel="stylesheet" href="css/select2-bootstrap.css">
+	<link rel="stylesheet" href="css/angular-ui-notification.min.css">
+	-->
+</head>
 
-						<li class="nav-header">
-							<div class="link">
-								<i class="fa fa-lg fa-map-marker"></i>Tabelas<i
-									class="fa fa-chevron-down"></i>
-							</div>
-							<ul class="submenu">
-								<li><a href="#/cadastroTabela">Cadastro de Tabelas</a></li>
-							</ul>
-						</li>
-
-						<li class="nav-header" ng-show="isMaster">
-							<div class="link">
-								<i class="fa fa-lg fa-map-marker"></i>Industrias<i
-									class="fa fa-chevron-down"></i>
-							</div>
-							<ul class="submenu">
-								<li><a href="#/listaIndustrias">Configuração</a></li>
-							</ul>
-						</li>
-
-						<li class="nav-header" ng-show="isMaster">
-							<div class="link">
-								<i class="fa fa-lg fa-map-marker"></i>Usuários<i
-									class="fa fa-chevron-down"></i>
-							</div>
-							<ul class="submenu">
-								<li><a href="#/usuarioCadastro">Cadastro</a></li>
-								<li><a href="#/usuarioPesquisa">Pesquisa</a></li>
-							</ul>
-						</li>
-
-						<li class="nav-header">
-							<div class="link">
-								<i class="fa fa-lg fa-map-marker"></i><a href="#/">Sair</a><i
-									class="fa fa-chevron-down"></i>
-							</div>
-						</li>
-					</ul>
-				</aside>
-				<!--Body content-->
-				<div class="content">
-					<div class="top-bar">
-						<a href="#menu" class="side-menu-link burger"> <span
-							class='burger_inside' id='bgrOne'></span> <span
-							class='burger_inside' id='bgrTwo'></span> <span
-							class='burger_inside' id='bgrThree'></span>
-						</a>
-					</div>
-					<section class="content-inner">
-						<div class="container-fluid">
-							<div ng-view></div>
-						</div>
-					</section>
+<body>
+			<!--
+			<nav class="nav-bar navbar-inverse" role="navigation">
+				<div id="top-menu" class="container-fluid active">
+					<a class="navbar-brand" href="#/dashboard" ng-cloak>{{nomeUsuario}}</a>
+					<img src="img/online.png" class="connection-status" ng-show="hasConnection && isMobile" width="26px" height="20px" ng-cloak/>
+					<img src="img/offline.png" class="connection-status" ng-show="!hasConnection && isMobile" width="26px" height="20px" ng-cloak/>
 				</div>
+			</nav>
+			<aside id="side-menu" class="aside" role="navigation">
+				<ul class="nav nav-list accordion">
+					<li class="nav-header">
+						<div class="link">
+							<i class="fa fa-lg fa-globe"></i>Gerenciador Financeiro<i class="fa fa-chevron-down"></i>
+						</div>
+						<ul class="submenu">
+							<li><a href="#/dashboard">Principal</a></li>
+						</ul>
+					</li>
+
+					<li class="nav-header">
+						<div class="link">
+							<i class="fa fa-lg fa-users"></i>Pedidos<i class="fa fa-chevron-down"></i>
+						</div>
+						<ul class="submenu">
+							<li><a href="#/pedido">Novo Pedido</a></li>
+							<li><a href="#/detalhePedido">Exibir Pedidos</a></li>
+							<li><a href="#/detalhePedidoSalvo">Exibir Pedidos Salvos</a></li>
+						</ul>
+					</li>
+
+					<li class="nav-header">
+						<div class="link">
+							<i class="fa fa-cloud"></i>Clientes<i class="fa fa-chevron-down"></i>
+						</div>
+						<ul class="submenu">
+							<li><a href="#/cadastroCompletoCliente">Novo</a></li>
+							<li><a href="#/listaClientes">Listar</a></li>
+						</ul>
+					</li>
+
+					<li class="nav-header">
+						<div class="link">
+							<i class="fa fa-lg fa-map-marker"></i>Tabelas<i class="fa fa-chevron-down"></i>
+						</div>
+						<ul class="submenu">
+							<li><a href="#/cadastroTabela">Cadastro de Tabelas</a></li>
+						</ul>
+					</li>
+
+					<li class="nav-header" ng-show="isMaster">
+						<div class="link">
+							<i class="fa fa-lg fa-map-marker"></i>Industrias<i class="fa fa-chevron-down"></i>
+						</div>
+						<ul class="submenu">
+							<li><a href="#/listaIndustrias">Configuração</a></li>
+						</ul>
+					</li>
+
+					<li class="nav-header" ng-show="isMaster">
+						<div class="link">
+							<i class="fa fa-lg fa-map-marker"></i>Usuários<i class="fa fa-chevron-down"></i>
+						</div>
+						<ul class="submenu">
+							<li><a href="#/usuarioCadastro">Cadastro</a></li>
+							<li><a href="#/usuarioPesquisa">Pesquisa</a></li>
+						</ul>
+					</li>
+
+					<li class="nav-header">
+						<div class="link">
+							<i class="fa fa-lg fa-map-marker"></i><a href="#/">Sair</a><i class="fa fa-chevron-down"></i>
+						</div>
+					</li>
+				</ul>
+			</aside>
+			
+			
+			<div class="content">
+				<div class="top-bar">
+					<a href="#menu" class="side-menu-link burger"> <span class='burger_inside' id='bgrOne'></span> <span class='burger_inside'
+						 id='bgrTwo'></span> <span class='burger_inside' id='bgrThree'></span>
+					</a>
+				</div>
+				<section class="content-inner">
+					<div class="container-fluid">
+						<div ng-view></div>
+					</div>
+				</section>
 			</div>
 		</div>
-	</body>
+		-->
+		<ui-view></ui-view>
+</body>
 
-<script src="dist/js/lib.js"></script>
+<script src="dist/js/lib/jquery-3.1.0.min.js"></script>
+<script src="dist/js/lib/bootstrap.min.js"></script>
+<script src="dist/js/lib/angular.min.js"></script>
+<script src="dist/js/lib/angular-locale_pt-br.js"></script>
+<script src="dist/js/lib/angular-ui-router.min.js"></script>
+
+
+<script src="app.js"></script>
+<script src="app/components/login/login.component.js"></script>
+<script src="app/components/dashboard/dashboard.component.js"></script>
+<script src="routes.js"></script>
+
+<!--
+<script src="dist/js/lib/jquery-ui.min.js"></script>
+
+
+<script src="dist/js/lib/angular-route.min.js"></script>
+
+<script src="dist/js/lib/angular-cookies.min.js"></script>
+<script src="dist/js/lib/angular-block-ui.min.js"></script>
+<script src="dist/js/lib/angular-sanitize.min.js"></script>
+<script src="dist/js/lib/angular-animate.min.js"></script>
+<script src="dist/js/lib/angular-ui-notification.min.js"></script>
+<script src="dist/js/lib/ui-grid.min.js"></script>
+<script src="dist/js/lib/mask.min.js"></script>
+<script src="dist/js/lib/select.min.js"></script>
+<script src="dist/js/lib/moment.min.js"></script>
+<script src="dist/js/lib/moment-with-locales.min.js"></script>
+
+<script src="dist/js/lib/bootstrap-datepicker.min.js"></script>
+<script src="dist/js/lib/bootstrap-datepicker.pt-BR.min.js"></script>
+<script src="dist/js/lib/ui-bootstrap-tpls-2.4.0.min.js"></script>
+<script src="dist/js/lib/image-compressor.min.js"></script>
 
 <script src="dist/js/context.js"></script>
-	
+
 <script src="js/script.js"></script>
 
-<!--<script src="cordova.js"></script>-->
 <script src="constants.js?v=12"></script>
 <script src="app.js?v=12"></script>
 
@@ -194,4 +223,7 @@
 <script src="modules/usuario/components/pesquisa/pesquisaComponent.js?v=12"></script>
 
 <script src="components/chat-message/chat-message-component.js?v=12"></script>
+
+-->
+
 </html>

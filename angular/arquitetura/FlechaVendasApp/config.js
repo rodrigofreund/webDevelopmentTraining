@@ -2,6 +2,9 @@ var app = angular.module('app.module')
 
 app.config(['$stateProvider', '$urlRouterProvider', '$locationProvider', function($stateProvider, $urlRouterProvider, $locationProvider, UsuarioService) {
 
+  $locationProvider.html5Mode(true).hashPrefix('!');
+  $urlRouterProvider.otherwise('/');
+
   $urlRouterProvider.otherwise('/app')
 
   var loginState = {

@@ -5,7 +5,8 @@ pedidoModule.config(['$stateProvider', function($stateProvider) {
   var pedidoState = {
     name: 'app.pedido',
     url: '/pedido',
-    abstract: true
+    abstract: true,
+    template: '<ui-view></ui-view>'
   }
 
   var pedidoNovoState = {

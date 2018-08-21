@@ -16,32 +16,9 @@ var rename = require("gulp-rename");
 
 gulp.task('build-js', function() {
   gulp.src([
-    './js/jquery-3.1.0.min.js',
-    './js/jquery-ui.min.js',
-    './js/angular.min.js',
-    './js/angular-locale_pt-br.js',
-    './js/angular-route.min.js',
-    './js/angular-ui-router.min.js',
-    './js/angular-cookies.min.js',
-    './js/angular-block-ui.min.js',
-    './js/angular-sanitize.min.js',
-    './js/angular-animate.min.js',
-    './js/angular-ui-notification.min.js',
-    './js/ui-grid.min.js',
-    './js/mask.min.js',
-    './js/select.min.js',
-    './js/moment.min.js',
-    './js/moment-with-locales.min.js',
-    './js/bootstrap.min.js',
-    './js/bootstrap-datepicker.min.js',
-    './locales/bootstrap-datepicker.pt-BR.min.js',
-    './js/ui-bootstrap-tpls-2.4.0.min.js',
-    './js/image-compressor.min.js'
+    './js/**'
   ])
-  .pipe(sourcemaps.init())
-  .pipe(concat('lib.js'))
-  .pipe(sourcemaps.write())
-  .pipe(gulp.dest('./dist/js'));
+  .pipe(gulp.dest('./dist/js/lib'));
 });
 
 gulp.task('dev-context', function() {

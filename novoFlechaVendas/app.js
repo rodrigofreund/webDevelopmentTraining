@@ -1,5 +1,13 @@
 'use strict'
 
+angular.module('GerenciadorFinanceiroFlechaVendas', ['ui.router'])
+.run(['$transitions', ($transitions) => {
+	$transitions.onBefore({to:'loginState'}, transition => {
+		console.log('transacao');
+	});
+}]);
+
+/*
 angular.module('Authentication', [])
 angular.module('Industrias', ['ui.grid','ui.grid.pagination', 'ui.grid.selection', 'ui.grid.resizeColumns'])
 angular.module('Menu', [])
@@ -160,3 +168,5 @@ app.filter('propsFilter', function() {
 	    return out;
 	  };
 	});
+
+	*/

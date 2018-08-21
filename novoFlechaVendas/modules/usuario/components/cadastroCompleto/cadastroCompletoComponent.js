@@ -6,7 +6,6 @@ UsuarioModulo.component('cadastroCompletoUsuario', {
 	controller: function usuarioModuloController(
 		$scope,
 		$state,
-		$route,
 		UsuarioService,
 		IndustriasService,
 		CadastroClientesService,
