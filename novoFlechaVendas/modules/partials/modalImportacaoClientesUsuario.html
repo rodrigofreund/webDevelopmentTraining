@@ -1,0 +1,43 @@
+<div class="modal-header">
+  <h4>{{modalOptions.headerText}}</h4>
+</div>
+<div class="modal-body">
+  <div ng-show="modalOptions.bodyDataList.length>0">
+    <span style="display: inline-block; min-width: 14%;">Industria</span>
+    <span style="display: inline-block; min-width: 12%;">Importar</span>
+    <span style="display: inline-block; min-width: 40%;">Cliente</span>
+    <span style="display: inline-block; min-width: 18%;"><input type="search" ng-model="pesquisa"/></span>
+  </div>
+  <div style="overflow-y: scroll; height: 300px;">
+    <div ng-repeat="item in modalOptions.bodyDataList">
+      <table class="table">
+        <thead ng-show="modalOptions.bodyDataList.length==0">
+          <th>Não há dados para serem importados.</th>
+        </thead>
+        <tbody>
+          <tr ng-repeat="cliente in item.listaCliente | filter : filtroClientes">
+            <td style="width: 16%">{{item.nomeIndustria}}</td>
+            <td style="width: 10%">
+              <input type="checkbox" ng-model="cliente.importar" />
+            </td>
+            <td style="width: 70%">
+              {{cliente.nome}}
+            </td>
+          </tr>
+          <tr ng-show="item.length==0">
+            <td>Nenhum dados a exibir.</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <div ng-show="modalOptions.bodyDataList.length==0">
+      <span>Não há clientes para importação.</span>
+    </div>
+  </div>
+</div>
+</div>
+<div class="modal-footer">
+    <input class="btn btn-warning" style="float: left;" type="button" value="{{selecionaTodos ? 'Desmarca Todos' : 'Seleciona Todos'}}" ng-click="marcarTodos()"/>
+  <button type="button" class="btn" data-ng-click="modalOptions.close()">{{modalOptions.closeButtonText}}</button>
+  <button class="btn btn-primary" data-ng-click="modalOptions.ok(selectedOption)" ng-disabled="modalOptions.bodyDataList.length === 0">{{modalOptions.actionButtonText}}</button>
+</div>

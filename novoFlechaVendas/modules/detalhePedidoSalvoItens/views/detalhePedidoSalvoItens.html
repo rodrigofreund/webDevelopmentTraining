@@ -1,0 +1,137 @@
+<form>
+	<div class="col-sm-12">
+		<div class="row" align="center">
+			<img class="img-personal-size image-space"
+				src="images/{{pedido.industria.imagem}}" />
+			<p class="content-title">Detalhes do Pedido Salvo</p>
+		</div>
+		<div class="row">
+			<div class="panel panel-default">
+				<div class="panel-heading">Pedido</div>
+				<div class="panel-body">
+					<div class="row">
+						<div class="col-sm-6">
+							<div class="form-group">
+								<label>Cliente: </label><label class="form-control" style="height: auto;">{{pedido.cliente.razaoSocial}}</label>
+							</div>
+						</div>
+						<div class="col-sm-3">
+							<div class="form-group">
+								<label>Data do Pedido: </label><label class="form-control">{{pedido.dataPedido
+									| date:'dd/MM/yyyy'}}</label>
+							</div>
+						</div>
+						<div class="col-sm-3">
+							<div class="form-group">
+								<label>Data de Entrega: </label><label class="form-control">{{pedido.dataEntrega
+									| date:'dd/MM/yyyy'}}</label>
+							</div>
+						</div>
+					</div>
+					<div class="row">
+						<div class="col-sm-6">
+							<div class="form-group">
+								<label>Vendedor: </label><label class="form-control">{{pedido.usuario.nome}}</label>
+							</div>
+						</div>
+						<div class="col-sm-3">
+							<div class="form-group">
+								<label>Tabela: </label><label class="form-control">{{pedido.nomeTabela}}</label>
+							</div>
+						</div>
+						<div class="col-sm-3">
+							<div class="form-group">
+								<label>Prazo: </label><label class="form-control">{{(pedido.industriaPrazo.descricao)}}</label>
+							</div>
+						</div>
+					</div>
+					<div class="row">
+						<div class="col-sm-6">
+							<div class="form-group">
+								<label>Carga: </label><label class="form-control">{{valorCarga(pedido)}}</label>
+							</div>
+						</div>
+						<div class="col-sm-6">
+							<div class="form-group">
+								<label>Proposta: </label><label class="form-control">{{(pedido.proposta == 1 ? 'Sim' : 'Não')}}</label>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="row">
+			<div class="panel panel-default">
+				<div class="panel-heading">Itens do Pedido</div>
+				<div class="panel-body">
+					<div class="table-responsive">
+						<table class="table">
+							<thead class="thead-inverse">
+								<tr>
+									<th>C&oacute;digo</th>
+									<th>Descri&ccedil;&atilde;o</th>
+									<th>Quantidade</th>
+									<th>Pre&ccedil;o Base</th>
+									<th>Desconto</th>
+									<th>Pre&ccedil;o Vendido</th>
+									<th>Preço Unitário</th>
+									<th>Total</th>
+								</tr>
+							</thead>
+							<tbody>
+								<tr ng-repeat="i in pedido.itensPedido" ng-class="{destaquePedido: verificaPedidoAlterado(i)}">
+									<td>{{i.codigo}}</td>
+									<td>{{i.descricao}}</td>
+									<td>{{i.quantidadeSolicitada}}</td>
+									<td>{{i.preco | currency:"R$"}}</td>
+									<td>{{i.desconto | percentage}}</td>
+									<td>{{buscaPrecoSemSt(i) | currency:"R$"}}</td>
+									<td>{{buscaPrecoSemSt(i) / i.quantidade | currency:"R$"}}</td>
+									<td>{{buscaPrecoSemSt(i) * i.quantidadeSolicitada |
+										currency:"R$"}}</td>
+								</tr>
+								<tr ng-show="pedidos.length==0">
+									<td>Nenhum item no pedido</td>
+								</tr>
+							</tbody>
+						</table>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="col-xs-12 col-sm-10">
+			<div class="form-group">
+				<uib-accordion close-others="oneAtATime">
+					<div uib-accordion-group class="panel-default" is-open="true">
+						<uib-accordion-heading>
+							Observações<i class="pull-right glyphicon" ng-class="{'glyphicon-chevron-down': status.open, 'glyphicon-chevron-right': !status.open}"></i>
+						</uib-accordion-heading>
+						<div class="panel-body observacoesScroll">
+							<ul class="chat">
+								<chat-message mensagens="pedido.observacoesPedidoDto"></chat-message>
+							</ul>
+					</div>
+					<div class="panel-footer">
+						<div class="input-group">
+							<input id="btn-input" type="text" class="form-control input-sm" placeholder="Escreva sua mensagem aqui..." ng-model="observacao.msg"/>
+								<span class="input-group-btn">
+									<button class="btn btn-warning btn-sm" id="btn-chat" ng-click="adicionaObservacao()">Enviar</button>
+								</span>
+						</div>
+					</div>
+				</uib-accordion>
+			</div>
+		</div>
+		<div class="row panel panel-default">
+			<div class="panel-heading">Ações</div>
+			<div class="panel-body">
+				<input type="button" ng-style="{'background-color': pedido.industria.cor}" class="btn btn-primary" value="Voltar"
+					ng-click="voltar()" />
+				<input type="button" ng-style="{'background-color': pedido.industria.cor}" class="btn btn-primary" value="Enviar"
+					ng-click="enviarPedido()" /> 
+				<input type="button" ng-style="{'background-color': pedido.industria.cor}" class="btn btn-primary"
+					value="Remover" ng-click="excluirPedido()" />
+			</div>
+		</div>
+	</div>
+</form>

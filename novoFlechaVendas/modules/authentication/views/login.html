@@ -1,0 +1,59 @@
+<div class="row align-center">
+	<div class="col-sm-3 col-md-3"></div>
+	<div class="col-sm-4 col-md-6 jumbotron" align="center">
+		<h2>Login</h2>
+	</div>
+	<div class="col-sm-5 col-md-3"></div>
+</div>
+<div class="row">
+	<div class="col-sm-3 col-md-3"></div>
+	<div class="col-xs-12 col-sm-4 col-md-6">
+		<div class="alert alert-danger" ng-show="mensagem != null">
+			{{mensagem}}
+		</div>
+	</div>
+	<div class="col-sm-5 col-md-3"></div>
+</div>
+<div class="row">
+	<div class="col-lg-12">
+		<form ng-submit="doLogin()" role="form">
+			<div class="row">
+				<div class="col-sm-3 col-md-3"></div>
+				<div class="col-xs-12 col-sm-4 col-md-6 text-center form-group">
+					<input type="text" id="inputLogin" class="form-control" placeholder="Login"
+						ng-model="login" required autofocus/>
+				</div>
+				<div class="col-sm-5 col-md-3"></div>
+			</div>
+		
+			<div class="row">
+				<div class="col-sm-3"></div>
+				<div class="col-xs-12 col-sm-4 col-md-6 form-group">
+					<input type="password" id="inputPassword" class="form-control" placeholder="Senha" ng-model="senha" required>
+				</div>
+				<div class="col-sm-5"></div>
+			</div>
+		
+			<div class="row">
+				<div class="col-sm-3 col-md-3"></div>
+				<div class="col-xs-12 col-sm-4 col-md-6 form-group">
+					<div id="remember" class="checkbox">
+						<label>
+							<input type="checkbox" ng-model="rememberModel.value" ng-change="verifica()" />
+							Lembrar senha
+						</label>
+					</div>
+				</div>
+				<div class="col-sm-3 col-md-3"></div>
+			</div>
+		
+			<div class="row">
+				<div class="col-sm-3 col-md-3"></div>
+				<div class="col-xs-12 col-sm-4 col-md-6">
+					<button class="btn btn-lg btn-primary btn-block btn-signin" type="submit">Entrar</button>
+				</div>
+				<div class="col-sm-5 col-md-3"></div>
+			</div>
+		</form>
+	</div>
+</div>

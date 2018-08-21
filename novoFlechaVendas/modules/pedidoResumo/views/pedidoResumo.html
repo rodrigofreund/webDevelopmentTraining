@@ -1,0 +1,128 @@
+<form>
+		<div class="row" align="center">
+			<div class="col-xs-12">
+				<img class="img-personal-size image-space"
+					src="images/{{industria.imagem}}" />
+			</div>
+		</div>
+		<div class="row" align="center">
+			<div class="col-xs-12 padding-off">
+				<div class="form-group input-group-sm">
+					<label class="form-control" disabled="disabled" style="height: auto;">{{cliente.id}}
+						- {{cliente.razaoSocial}}</label>
+					</div>
+				</div>
+		</div>
+		<div class="row">
+			<div class="col-xs-12">
+				<div class="table-responsive">
+					<table class="table table-condensed">
+						<thead class="thead-inverse">
+							<tr>
+								<th>C&#243;digo</th>
+								<th>Descri&ccedil;&atilde;o</th>
+								<th>Quantidade</th>
+								<th>Desconto</th>
+								<th>Caixa sem ST</th>
+								<th>Total sem ST</th>
+								<th>Caixa com ST</th>
+								<th>Total com ST</th>
+							</tr>
+						</thead>
+						<tbody>
+							<tr ng-repeat="i in getItensPedido() track by i.id">
+								<td>{{i.codigo}}</td>
+								<td>{{i.descricao}}</td>
+								<td>{{i.quantidadeSolicitada}}</td>
+								<td>{{i.desconto | percentage}}</td>
+								<td>{{valorCaixaSemSt(i) | currency:"R$"}}</td>
+								<td>{{valorCaixaSemSt(i) * i.quantidadeSolicitada |
+									currency:"R$"}}</td>
+								<td>{{i.precoFinal | currency:"R$"}}</td>
+								<td>{{i.precoFinal * i.quantidadeSolicitada |
+									currency:"R$"}}</td>
+							</tr>
+							<tr ng-show="getItensPedido().length==0">
+								<td>Nenhum item selecionado</td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
+			</div>
+		</div>
+		<div class="row">
+			<div class="col-xs-4 col-sm-4">
+				<div class="form-group" >
+					<label>Total Sem ST</label> <label class="form-control">{{valorTotalPedidoSemSt()
+						| currency:"R$"}}</label>
+				</div>
+			</div>
+			<div class="col-xs-4 col-sm-4">
+				<div class="form-group">
+					<label>Total Com ST</label> <label class="form-control">{{valorTotalPedidoComSt()
+						| currency:"R$"}}</label>
+				</div>
+			</div>
+			<div class="col-xs-4 col-sm-4">
+				<div class="form-group">
+					<label>Prazo</label> <label class="form-control">{{valorPrazo()}}</label>
+				</div>
+			</div>
+		</div>
+		<div class="row">
+			<div class="col-xs-12 col-sm-6">
+				<div class="form-group">
+					<label>Tabela</label> <label class="form-control">{{valorTabela()}}</label>
+				</div>
+			</div>
+			<div class="col-xs-6 col-sm-4">
+				<div class="form-group">
+					<label>Carga</label> <label class="form-control">{{valorCarga()}}</label>
+				</div>
+			</div>
+			<div class="col-xs-6 col-sm-2">
+				<div class="form-group">
+					<label>Total Itens</label> <label class="form-control">{{totalItens()}}</label>
+				</div>
+			</div>
+			<div class="col-sm-1"></div>
+			<div class="col-xs-12 col-sm-10">
+				<div class="form-group">
+					<uib-accordion close-others="oneAtATime">
+						<div uib-accordion-group class="panel-default" is-open="true">
+							<uib-accordion-heading>
+								Observações<i class="pull-right glyphicon" ng-class="{'glyphicon-chevron-down': status.open, 'glyphicon-chevron-right': !status.open}"></i>
+							</uib-accordion-heading>
+							<div class="panel-body observacoesScroll">
+								<ul class="chat">
+									<chat-message mensagens="pedido.observacoesPedidoDto"></chat-message>
+								</ul>
+						</div>
+						<div class="panel-footer">
+							<div class="input-group">
+								<input id="btn-input" type="text" class="form-control input-sm" placeholder="Escreva sua mensagem aqui..." ng-model="observacao.msg"/>
+									<span class="input-group-btn">
+										<button class="btn btn-warning btn-sm" id="btn-chat" ng-click="adicionaObservacao()">Enviar</button>
+									</span>
+							</div>
+						</div>
+					</uib-accordion>
+				</div>
+			</div>
+			<div class="col-sm-1"></div>
+		</div>
+
+		<div class="row">
+			<div class="col-xs-12 col-sm-4 col-lg-2 form-group">
+				<button class="btn btn-primary btn-sm btn-block" type="button" ng-style="{'background-color': industria.cor}" ng-click="voltar()">Voltar</button>
+			</div>
+			<div class="col-lg-3"></div>
+			<div class="col-xs-12 col-sm-4 col-lg-2 form-group">
+				<button class="btn btn-primary btn-sm btn-block" type="button" ng-style="{'background-color': industria.cor}" ng-click="salvarPedido()">Salvar Pedido</button>
+			</div>
+			<div class="col-lg-3"></div>
+			<div class="col-xs-12 col-sm-4 col-lg-2 form-group">
+				<button class="btn btn-primary btn-sm btn-block" type="button" ng-style="{'background-color': industria.cor}" ng-click="enviarPedido()">Enviar Pedido</button>
+			</div>
+		</div>
+</form>

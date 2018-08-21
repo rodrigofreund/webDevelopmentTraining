@@ -1,0 +1,129 @@
+<form>
+	<div class="row">
+		<div class="col-sm-12">
+			<p class="content-title">Novo Pedido </p>
+		</div>
+	</div>
+	<div class="row">
+		<div class="col-xs-12 form-group">
+			<label for="industria">Indústria</label> <select
+				class="form-control" ng-model="industria.selecionado"
+				id="nomeIndustria" ng-options="i.nome for i in industrias track by i.id"
+				value="{{i}}" ng-change="selecionaIndustria()" required
+				ng-disabled="emEdicao">
+				<option value="">Selecione uma Indústria</option>
+			</select>
+		</div>
+	</div>
+	<div class="row">
+		<div class="col-xs-12 form-group">
+			<label for="nomeCliente">Cliente</label>
+			<ui-select id="nomeCliente" ng-model="cliente.selecionado" ng-change="selecionaCliente()" ng-disabled="isClienteDisabled()" theme="bootstrap" title="Selecione um Cliente:" skip-focusser="true">
+				<ui-select-match placeholder="Selecione um Cliente">{{$select.selected.razaoSocial}} - {{$select.selected.nomeFantasia}}</ui-select-match>
+				<ui-select-choices class="small-font" repeat="cliente in clientes | propsFilter: {razaoSocial: $select.search, nomeFantasia: $select.search}">
+				<div ng-bind-html="cliente.razaoSocial | highlight: $select.search"></div>
+					<smal>
+						Nome Fantasia: {{cliente.nomeFantasia}}
+					</smal>
+				</ui-select-choices>
+			</ui-select>
+		</div>
+	</div>
+	<div class="row" ng-show="cliente.selecionado">
+		<div class="col-xs-12 demonstrate">
+				<label>Endere&ccedil;o: </label> <label>{{cliente.selecionado.rua}},
+					{{cliente.selecionado.numero}} </label> <label>Bairro: </label><label>{{cliente.selecionado.bairro}}</label>
+				<div class="row" ng-show="cliente.selecionado">
+					<label>CNPJ: </label> <label>{{cliente.selecionado.cpfCnpj}}</label>
+					<label>Telefone: </label><label>{{cliente.selecionado.telefone}}</label>
+				</div>
+			</div>
+	</div>
+	<div class="row">
+		<div class="col-xs-12 form-group">
+			<label for="tabela">Tabela</label> <select class="form-control" focus="selectChanged"
+				ng-model="tabela.selecionado"
+				ng-options="tabela.nome for tabela in tabelas" id="idTabela"
+				id="tabela" placeholder="Selecione a tabela"
+				ng-change="selecionaTabela()" required
+				ng-disabled="industria.selecionado == null">
+				<option value="">Selecione uma tabela</option>
+			</select>
+		</div>
+	</div>
+	<div class="row">
+		<div class="col-xs-12 form-group">
+			<label for="dataEntrega">Data de entrega</label>
+				<input type="text" class="form-control" ng-model="pedido.dataEntrega"
+					id="dataEntrega" is-open="popup1.opened" data-date-format="dd/mm/yyyy" data-provide="datepicker" data-date-language="pt-BR"
+					ng-required="true" data-date-autoclose="true" data-date-start-date="{{pedido.dataEntrega}}">
+		</div>
+	</div>
+	<div class="row">
+		<div class="col-xs-12 form-group">
+			<label for="prazo">Prazo</label>
+			<select class="form-control" ng-model="prazo.selecionado" id="nomeIndustria" ng-disabled="!cliente.selecionado" required
+				ng-options="p as p.descricao for p in listaPrazo">
+				<option value="">Selecione um prazo</option>
+			</select>
+		</div>
+	</div>
+	<div class="row">
+		<div class="col-xs-12 form-group">
+			<label for="proposta">Proposta</label> 
+			<select class="form-control" ng-model="proposta.selecionado" ng-options="p as p.text for p in LISTA_SIMNAO" ng-init="proposta.selecionado = LISTA_SIMNAO[1]">
+			</select>
+		</div>
+	</div>
+	<div class="row">
+		<div class="col-xs-12 form-group">
+			<label for="carga">Carga</label>
+			<select class="form-control" ng-model="carga.selecionado" ng-options="p as p.text for p in LISTA_CARGA" ng-init="carga.selecionado = LISTA_CARGA[0]">
+			</select>
+		</div>
+	</div>
+	<div class="row">
+		<div class="col-xs-12 col-sm-2 col-md-2 col-lg-2 form-group">
+			<button class="btn btn-danger btn-sm btn-block"
+				ng-click="cancelarPedido()" ng-show="possuiPedidoAtivo()">Cancelar</button>
+		</div>
+		<div class="col-lg-1"></div>
+		<div class="col-xs-12 col-sm-3 col-md-3 col-lg-2 form-group">
+			<button class="btn btn-sm btn-block" type="button"
+				data-toggle="modal"
+				ng-style="{'background-color': industria.cor}"
+				data-target="#modalFaturamentos" disabled>Acampanhamento</button>
+		</div>
+		<div class="col-lg-1"></div>
+		<div class="col-xs-12 col-sm-3 col-md-3 col-lg-2 form-group">
+			<button class="btn btn-sm btn-block" type="button"
+				data-toggle="modal" data-target="#modalDuplicatas"
+				ng-style="{'background-color': industria.cor}" disabled>Duplicatas</button>
+		</div>
+		<div class="col-lg-2"></div>
+		<div class="col-xs-12 col-sm-4 col-md-4 col-lg-2 form-group">
+			<button class="btn btn-primary btn-sm btn-block" type="submit"
+				ng-click="geraPedido()"
+				ng-style="{'background-color': industria.cor}">Fazer
+				Pedido</button>
+		</div>
+	</div>
+</form>
+<div class="modal fade" id="modalDuplicatas" tabindex="-1"
+	role="dialog" aria-labelledby="Duplicatas">
+	<div class="modal-dialog" role="document">
+		<div class="modal-content">
+			<div class="modal-header">Duplicatas</div>
+			<div class="modal-body">...</div>
+		</div>
+	</div>
+</div>
+<div class="modal fade" id="modalFaturamentos" tabindex="-1"
+	role="dialog" aria-labelledby="Faturamentos">
+	<div class="modal-dialog" role="document">
+		<div class="modal-content">
+			<div class="modal-header">Faturamentos</div>
+			<div class="modal-body">...</div>
+		</div>
+	</div>
+</div>

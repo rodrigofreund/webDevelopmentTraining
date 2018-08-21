@@ -1,0 +1,99 @@
+<div class="table-responsive">
+  <table class="table table-striped table-hover table-center-align">
+    <thead>
+      <tr>
+        <td colspan="10">
+          <button class="btn" ng-click="novoUsuario()">Novo Cadastro</button>
+        </td>
+      </tr>
+      <tr>
+        <th>Ações</th>
+        <th>Código</th>
+        <th>Nome</th>
+        <th>Login</th>
+        <th>Região</th>
+        <th>Endereço</th>
+        <th>Email</th>
+        <th>CPF</th>
+        <th>RG</th>
+      </tr>
+      <tr>
+        <td>
+        </td>
+        <td>
+          <input class="form-control" type="search" placeholder="Código" ng-model="filter.id" ng-change="changeField()" ng-blur="pesquisa($event)"/>
+        </td>
+        <td>
+          <input class="form-control" type="search" placeholder="Nome" ng-model="filter.nome" ng-change="changeField()" ng-blur="pesquisa()"/>
+        </td>
+        <td>
+          <input class="form-control" type="search" placeholder="Login" ng-model="filter.login" ng-change="changeField()" ng-blur="pesquisa()"/>
+        </td>
+        <td>
+          <input class="form-control" type="search" placeholder="Região" ng-model="filter.regiao" ng-change="changeField()" ng-blur="pesquisa()"/>
+        </td>
+        <td>
+            <input class="form-control" type="search" placeholder="Endereço" ng-model="filter.endereco" ng-change="changeField()" ng-blur="pesquisa()"/>
+        </td>
+        <td>
+            <input class="form-control" type="search" placeholder="Email" ng-model="filter.email" ng-change="changeField()" ng-blur="pesquisa()"/>
+        </td>
+        <td>
+          <input class="form-control" type="search" placeholder="CPF" ng-model="filter.cpf" ng-change="changeField()" ng-blur="pesquisa()"/>
+        </td>
+        <td>
+          <input class="form-control" type="search" placeholder="RG" ng-model="filter.rg" ng-change="changeField()" ng-blur="pesquisa()"/>
+        </td>
+      </tr>
+    </thead>
+    <tbody class="table-striped">
+      <tr ng-repeat="u in lista" ng-class="u.ativo == false ? 'danger' : ''">
+        <td>
+          <div class="btn-group">
+              <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                Ações <span class="caret"></span>
+              </button>
+              <ul class="dropdown-menu">
+                <li><a href="" ng-click="editarRegistro(u.id)">Editar</a></li>
+                <li><a href="" ng-click="inativarUsuario(u.id)" ng-show="u.ativo">Inativar</a></li>
+                <li><a href="" ng-click="excluirUsuario(u.id)">Excluir</a></li>
+              </ul>
+            </div>
+        </td>
+        <td>{{u.id}}</td>
+        <td>{{u.nome}}</td>
+        <td>{{u.login}}</td>
+        <td>{{u.regiao}}</td>
+        <td>{{u.endereco}}</td>
+        <td>{{u.email}}</td>
+        <td>{{u.cpf}}</td>
+        <td>{{u.rg}}</td>
+      </tr>
+    </tbody>
+  </table>
+  <div style="text-align: center;">
+      <nav aria-label="Páginas">
+        <ul class="pagination">
+          <li>
+            <a href="" ng-click="anteriorPagina()" aria-label="Anterior">
+              <span aria-hidden="true">&laquo;</span>
+            </a>
+          </li>
+          <li><a ng-click="mudaPagina(1)" href="">1</a></li>
+          <li><a ng-click="mudaPagina(2)" href="">2</a></li>
+          <li><a ng-click="mudaPagina(3)" href="">3</a></li>
+          <li>
+            <a href="" ng-click="proximaPagina()" aria-label="Próximo">
+              <span aria-hidden="true">&raquo;</span>
+            </a>
+          </li>
+        </ul>
+      </nav>
+      <span>Página:
+          <strong>{{paginaAtual}}</strong>
+        </span>
+        <span>Total:
+          <strong>{{totalPaginas}}</strong>
+        </span>
+  </div>
+</div>

@@ -1,0 +1,75 @@
+<div class="divScroll">
+	<form>
+		<div class="col-sm-12">
+			<div class="row">
+				<p class="content-title">Listagem de Pedidos Salvos</p>
+			</div>
+			<div class="row">
+				<div class="panel panel-default">
+					<div class="panel-heading">Filtros</div>
+					<div class="panel-body">
+						<div class="col-sm-4 form-group">
+							<label for="industria">Indústria</label> <select
+								class="form-control" ng-model="pedidoSearch.idIndustria"
+								id="nomeIndustria" ng-change="selecionaIndustria()" required>
+								<option value="">Selecione uma Indústria</option>
+								<option ng-repeat="i in industrias" value="{{i.id}}">{{i.nome}}</option>
+							</select>
+						</div>
+						<div class="col-sm-4">
+							<div class="form-group" align="center" restrict access="Vendedor">
+								<label for="nomeVendedor">Vendedor</label> <label id="nomeVendedor"
+									class="form-control">{{vendedor.nome}} </label>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="row">
+				<div class="panel panel-default">
+					<div class="panel-heading">Pedidos</div>
+					<div class="panel-body">
+						<div class="table-responsive">
+							<table class="table">
+								<thead class="thead-inverse">
+									<tr>
+										<th>N&uacute;mero</th>
+										<th>Data Pedido</th>
+										<th>Data Entrega</th>
+										<th>Indústria</th>
+										<th>Cliente</th>
+										<th>A&ccedil;&otilde;es</th>
+									</tr>
+								</thead>
+								<tbody>
+									<tr ng-repeat="i in pedidos" ng-class="{destaquePedido: i.alterado}">
+										<td>{{i.idPedidoSalvo}}</td>
+										<td>{{i.dataPedido | date:'dd/MM/yyyy'}}</td>
+										<td>{{i.dataEntrega | date:'dd/MM/yyyy'}}</td>
+										<td>{{i.industria.nome}}</td>
+										<td>{{i.nomeCliente}}</td>
+										<td>
+										<div class="btn-group">
+											<button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+													Ações <span class="caret"></span>
+												</button>
+													<ul class="dropdown-menu dropdown-interno">
+														<li><a href="" ng-click="enviarPedido(i)" ng-show="podeEditar(i)">Enviar</a></li>
+														<li><a href="" ng-click="detalharPedido(i)" ng-show="podeEditar(i)">Detalhar</a></li>
+														<li><a href="" ng-click="editarPedido(i)" ng-show="podeEditar(i)">Editar</a></li>
+														<li><a href="" ng-click="excluirPedido(i)" ng-show="podeEditar(i)">Excluir</a></li>
+												</ul>
+										</div>
+									</tr>
+									<tr ng-show="pedidos.length==0">
+										<td>Nenhum pedido salvo</td>
+									</tr>
+								</tbody>
+							</table>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</form>
+</div>

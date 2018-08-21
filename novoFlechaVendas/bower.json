@@ -1,0 +1,26 @@
+{
+  "name": "gerenciador-financeiro-web-application",
+  "description": "Sistema Frontend Gerenciador Financeiro",
+  "main": "index.js",
+  "authors": [
+    "Rodrigo Freund de Moraes"
+  ],
+  "license": "MIT",
+  "keywords": [
+    "Gerenciador Financeiro",
+    "flecha Vendas",
+    "Web Application"
+  ],
+  "homepage": "",
+  "private": true,
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "jquery": "^3.2.1"
+  }
+}

@@ -1,0 +1,37 @@
+<div class="modal-header">
+  <h4>{{modalOptions.headerText}}</h4>
+</div>
+<div class="modal-body">
+  <div class="table-responsive">
+    <table class="table">
+      <thead ng-show="modalOptions.bodyDataList.length>0">
+        <th>Data</th>
+        <th>Prazo</th>
+        <th>Quantidate</th>
+        <th>Unitário C/ ST</th>
+        <th>Caixa C/ ST</th>
+        <th>Tabela</th>
+      </thead>
+      <thead ng-show="modalOptions.bodyDataList.length==0">
+        <th>Sem dados para exibir</th>
+      </thead>
+      <tbody>
+        <tr ng-repeat="item in modalOptions.bodyDataList track by item.idItemPedido" data-item="{{item}}" ng-click="selectLine($event)">
+          <td>{{item.dataPedido | date:'dd/MM/yyyy'}}</td>
+          <td>{{item.prazo}}</td>
+          <td>{{item.quantidade}}</td>
+          <td>{{item.preco / item.quantidadeCaixa | currency:"R$"}}</td>
+          <td>{{item.preco | currency:"R$"}}</td>
+          <td>{{item.tabela}}</td>
+        </tr>
+        <tr ng-show="modalOptions.bodyDataList.length==0">
+          <td>Nenhum pedido anterior deste cliente para este item.</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+<div class="modal-footer">
+  <button type="button" class="btn" data-ng-click="modalOptions.close()">{{modalOptions.closeButtonText}}</button>
+  <button class="btn btn-primary" data-ng-click="modalOptions.ok(selectedOption)" ng-disabled="modalOptions.bodyDataList.length == 0 || selectedElement == null">{{modalOptions.actionButtonText}}</button>
+</div>

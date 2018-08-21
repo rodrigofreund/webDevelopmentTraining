@@ -1,0 +1,96 @@
+<form>
+	<div class="row">
+		<div class="col-xs-12">
+			<p class="content-title">Industrias</p>
+		</div>
+	</div>
+	<div class="row">
+		<div class="col-xs-12 col-md-4">
+			<ui-select id="industrias" ng-model="industria.selecionado" theme="bootstrap" title="Selecione uma Indústria:" skip-focusser="true"
+			 on-select="carregaDadosIndustria($item)">
+				<ui-select-match placeholder="Selecione uma Indústria">{{$select.selected.nome}}</ui-select-match>
+				<ui-select-choices class="small-font" repeat="industria in listaIndustrias | propsFilter: {nome: $select.search}">
+					<div ng-bind-html="industria.nome | highlight: $select.search">
+						<smal>{{industria.nome}}</smal>
+					</div>
+				</ui-select-choices>
+			</ui-select>
+		</div>
+	</div>
+	<br />
+	<div class="row" ng-if="industria.selecionado">
+		<div class="col-xs-12 col-md-10">
+			<div class="panel panel-default">
+				<div class="panel-heading">Prazos</div>
+				<div class="panel-body">
+					<div class="row">
+						<div class="col-xs-12 col-md-6 form-group">
+							<label for="codigo">Código: </label>
+							<input type="text" class="form-control" id="codigo" ng-model="industriaPrazoDto.codigo">
+						</div>
+						<div class="col-xs-12 col-md-4 form-group">
+							<label for="descricao">Descrição: </label>
+							<input type="text" id="descricao" class="form-control" required ng-model="industriaPrazoDto.descricao">
+						</div>
+					</div>
+					<div class="row">
+						<div class="col-xs-12 col-md-2">
+							<div class="form-inline">
+									<label for="dia">Dia: </label>
+									<input type="number" id="dia" class="form-control" ng-model="prazoDia.prazo" style="width:65px;" min="1"/>
+									<button type="button" class="btn btn-sm" ng-disabled="!prazoDia.prazo" ng-click="adicionaDia()">Adicionar</button>
+							</div>
+						</div>
+						<div class="col-xs-5 col-md-1">
+							<div class="form-group">
+								<select class="form-control" style="width:100px;" size=3 ng-model="diaSelecionado.dia" ng-options="i for i in listaPrazoDia"
+								 ng-selected="exibeSelecionado()">
+								</select>
+							</div>
+						</div>
+						<div class="col-xs-7 col-md-1">
+							<div class="form-group">
+								<button type="button" class="btn btn-warning btn-xs" ng-click="removerDia()" ng-if="diaSelecionado.dia">Remover</button>
+							</div>
+						</div>
+					</div>
+					<br />
+					<hr />
+					<div class="row">
+						<div class="col-xs-12 col-md-6">
+							<button type="submit" class="btn btn-primary" ng-click="salvar()">Salvar</button>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="row" ng-if="industria.selecionado">
+		<div class="col-xs-12 col-md-10">
+			<div class="panel panel-default">
+				<div class="panel-heading">Cadastrados</div>
+				<div class="panel-body">
+					<table class="table">
+						<thead>
+							<th>Código</th>
+							<th>Descrição</th>
+							<th>Dias</th>
+							<th>Remover</th>
+						</thead>
+						<tbody>
+							<tr ng-repeat="prazo in listaPrazo track by prazo.id">
+								<td>{{prazo.codigo}}</td>
+								<td>{{prazo.descricao}}</td>
+								<td>{{buscaDias(prazo)}}</td>
+								<td>
+									<button type="button" class="btn" ng-click="excluirPrazosIndustria(prazo.id)">Remover</button>
+								</td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
+			</div>
+		</div>
+	</div>
+	</div>
+</form>

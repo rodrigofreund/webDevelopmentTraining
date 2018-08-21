@@ -1,0 +1,38 @@
+{
+  "name": "gerenciador-financeiro-web-application",
+  "version": "0.2.6",
+  "description": "Sistema Frontend Gerenciador Financeiro",
+  "engines": {
+    "node": "6.11.1"
+  },
+  "main": "index.js",
+  "scripts": {
+    "postinstall": "bower install",
+    "start": "node index.js"
+  },
+  "dependencies": {
+    "bower": "1.8.0",
+    "consolidate": "^0.14.5",
+    "express": "4.15.2",
+    "gulp": "^3.9.1",
+    "gulp-rename": "^1.2.2"
+  },
+  "devDependencies": {
+    "gulp": "^3.9.1",
+    "gulp-autoprefixer": "^5.0.0",
+    "gulp-concat": "^2.6.1",
+    "gulp-sourcemaps": "^2.6.4",
+    "gulp-uglify": "^3.0.0",
+    "mu2express": "~0.0.1",
+    "request": "^2.81.0",
+    "tape": "^4.7.0"
+  },
+  "repository": "https://github.com/heroku/node-js-getting-started",
+  "keywords": [
+    "flechavendas",
+    "gerenciadorfinanceiro",
+    "angularjs"
+  ],
+  "license": "MIT",
+  "author": "Rodrigo Freund"
+}

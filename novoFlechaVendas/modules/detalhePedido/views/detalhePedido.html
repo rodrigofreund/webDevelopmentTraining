@@ -1,0 +1,185 @@
+<form>
+	<div class="row">
+		<div class="col-xs-12">
+			<p class="content-title">Listagem de Pedidos</p>
+		</div>
+	</div>
+	<div class="row">
+		<div class="col-xs-12">
+			<div class="panel panel-default">
+				<div class="panel-heading">Filtros</div>
+				<div class="panel-body">
+					<div class="row">
+						<div class="col-xs-12 col-md-4">
+							<div class="form-group input-group-sm">
+								<label for="nomeIndustria">Indústria</label>
+								<select class="form-control" ng-model="pedidoSearch.idIndustria" id="nomeIndustria" ng-change="selecionaIndustria()" required>
+									<option value="">Selecione uma Indústria</option>
+									<option ng-repeat="i in industrias" value="{{i.id}}">{{i.nome}}</option>
+								</select>
+							</div>
+						</div>
+						<div class="col-xs-12 col-md-4">
+							<div class="form-group input-group-sm" restrict access="Administrador Gestor">
+								<label for="nomeVendedor">Vendedor</label>
+								<select class="form-control" ng-model="pedidoSearch.idUsuario" id="nomeVendedor" ng-change="selecionaVendedor()" required>
+									<option value="">Todos</option>
+									<option ng-repeat="v in vendedores track by v.id" value="{{v.id}}">{{v.nome}}</option>
+								</select>
+							</div>
+							<div class="form-group input-group-sm" restrict access="Vendedor">
+								<label for="nomeVendedor">Vendedor</label>
+								<label id="nomeVendedor" class="form-control">{{vendedor.nome}} </label>
+							</div>
+						</div>
+						<div class="col-xs-9 col-md-4">
+							<div class="form-group input-group-sm">
+								<label for="nomeStatus">Status
+								</label>
+								<select class="form-control" ng-model="statusPedido" id="nomeStatus" ng-change="selecionaStatus(s)" ng-options="s.descricao for s in listaStatusPedido">
+									<option value="">Todos</option>
+								</select>
+							</div>
+						</div>
+						<div class="col-xs-3 col-md-2">
+							<div class="form-group input-group-sm">
+								<label for="idPedido">Número</label>
+								<input id="idPedido" class="form-control" placeholder="Todos" ng-model-options="{ debounce: 500 }" type="number" ng-change="selecionaIdPedido()"
+								 ng-model="pedidoSearch.idPedido"></input>
+							</div>
+						</div>
+						<div class="col-xs-12 col-md-6">
+							<div class="form-group input-group-sm">
+								<label for="nomeCliente">Cliente</label>
+								<input type="text" ng-model="cliente.selecionado" placeholder="Selecione o Cliente" uib-typeahead="item.nomeFormatado for item in buscaClientes($viewValue)"
+								 typeahead-min-length="3" typeahead-wait-ms="5" typeahead-no-results="noResults"
+								 class="form-control" typeahead-on-select="selectCliente($item)">
+								<i ng-show="loadingLocations" class="glyphicon glyphicon-refresh"></i>
+								<div ng-show="noResults">
+									<i class="glyphicon glyphicon-remove"></i> Nenhum resultado encontrado
+								</div>
+							</div>
+						</div>
+						<div class="col-xs-12 col-md-4">
+							<div class="form-group input-group-sm">
+								<label for="datepicker">Período</label>
+								<div class="input-daterange input-group" id="datepicker">
+									<input id="dtIni" type="text" class="input-sm form-control" name="start" data-date-autoclose="true" data-date-format="dd/mm/yyyy"
+									 data-provide="datepicker" data-date-language="pt-BR" ng-model="pedidoSearch.dtInicio" ng-change="selecionaData()"
+									/>
+									<span class="input-group-addon">até</span>
+									<input type="text" class="input-sm form-control" name="end" data-date-format="dd/mm/yyyy" ng-model="pedidoSearch.dtFim" data-date-autoclose="true"
+									 data-provide="datepicker" data-date-language="pt-BR" ng-disabled="!pedidoSearch.dtInicio" ng-change="selecionaData()"
+									/>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="row">
+						<div class="col-xs-12">
+							<input type="button" class="btn btn-primary" ng-click="limpaFiltro()" value="Limpar" />
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="row">
+		<div class="col-xs-12">
+			<div class="panel panel-default">
+				<div class="panel-heading">Pedidos</div>
+				<div class="panel-body divScroll" style="max-height: 400px">
+					<div class="table-responsive">
+						<table class="table">
+							<thead class="thead-inverse">
+								<tr>
+									<th>Número</th>
+									<th>Código</th>
+									<th>Data Pedido</th>
+									<th>Data Entrega</th>
+									<th>Vendedor</th>
+									<th>Indústria</th>
+									<th>Cliente</th>
+									<th>Total s/ Impostos</th>
+									<th>Status</th>
+									<th>Ações</th>
+								</tr>
+							</thead>
+							<tbody>
+								<tr ng-repeat="i in pedidos" ng-class="{destaquePedido: i.alterado}">
+									<td>{{i.idPedido}}</td>
+									<td>{{i.codigo}}</td>
+									<td>{{i.dataPedido | date:'dd/MM/yyyy'}}</td>
+									<td>{{i.dataEntrega | date:'dd/MM/yyyy'}}</td>
+									<td>{{i.nomeVendedor}}</td>
+									<td>{{i.nomeIndustria}}</td>
+									<td>{{i.nomeCliente}}</td>
+									<td>{{getTotalPedidoSemSt(i) | currency:"R$"}}</td>
+									<td>{{getStatus(i.status)}}</td>
+									<td>
+										<div class="btn-group">
+											<button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+												Ações
+												<span class="caret"></span>
+											</button>
+											<ul class="dropdown-menu dropdown-interno">
+												<li>
+													<a href="" ng-click="exibeDetalhesPedido(i.idPedido)">Detalhar</a>
+												</li>
+												<li>
+													<a href="" ng-click="editarPedido(i.idPedido)" ng-show="podeEditar(i)">Editar</a>
+												</li>
+												<li>
+													<a href="" ng-click="cancelarPedido(i)" ng-show="podeEditar(i)">Cancelar</a>
+												</li>
+											</ul>
+										</div>
+								</tr>
+								<tr ng-show="pedidos.length==0">
+									<td>Nenhum pedido realizado</td>
+								</tr>
+							</tbody>
+						</table>
+					</div>
+				</div>
+				<div style="text-align:center">
+					<nav aria-label="Navegação" style="display:inline-flex;">
+						<ul class="pagination">
+							<li>
+								<a href="" ng-click="anteriorPagina()" aria-label="Anterior">
+									<span aria-hidden="true">&laquo;</span>
+								</a>
+							</li>
+							<li>
+								<a ng-click="mudaPagina(1)" href="">1</a>
+							</li>
+							<li>
+								<a ng-click="mudaPagina(2)" href="">2</a>
+							</li>
+							<li>
+								<a ng-click="mudaPagina(3)" href="">3</a>
+							</li>
+							<li>
+								<a ng-click="mudaPagina(4)" href="">4</a>
+							</li>
+							<li>
+								<a ng-click="mudaPagina(5)" href="">5</a>
+							</li>
+							<li>
+								<a href="" ng-click="proximaPagina()" aria-label="Próxima">
+									<span aria-hidden="true">&raquo;</span>
+								</a>
+							</li>
+						</ul>
+					</nav>
+					<span>Página:
+						<strong>{{paginaAtual}}</strong>
+					</span>
+					<span>Total:
+						<strong>{{totalPaginas}}</strong>
+					</span>
+				</div>
+			</div>
+		</div>
+	</div>
+</form>

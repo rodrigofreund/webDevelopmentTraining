@@ -1,0 +1,71 @@
+<form>
+	<div class="col-sm-12">
+		<div class="row">
+			<p class="content-title">Carga de Tabela</p>
+		</div>
+		<div class="row">
+			<div class="form-group">
+				<label for="industria">Indústria</label> <select
+					class="form-control" ng-model="industria.selecionado"
+					id="nomeIndustria" ng-options="i.nome for i in industrias track by i.id"
+					value="{{i}}" ng-change="selecionaIndustria()" required>
+					<option value="">Selecione uma Indústria</option>
+				</select>
+			</div>
+		</div>
+		<div class="row">
+			<div class="panel panel-default">
+				<div class="panel-heading">Tabelas Cadastradas</div>
+				<div class="panel-body">
+					<table class="table">
+						<thead class="thead-inverse">
+							<tr>
+								<td>Nome</td>
+								<td>Data</td>
+								<td restrict access="Gestor Administrador">A&ccedil;&otilde;es</td>
+							</tr>
+						</thead>
+						<tbody>
+							<tr ng-repeat="t in tabelas">
+								<td><a href="" ng-click="detalheTabela(t.id)">{{t.nome}}</a></td>
+								<td>{{t.data | date : "dd/MM/yyyy HH:mm:ss"}}</td>
+								<td restrict access="Gestor Administrador">
+									<div class="btn-group">
+										<button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+											Ações
+											<span class="caret"></span>
+										</button>
+										<ul class="dropdown-menu">
+											<li>
+												<a href="" ng-click="detalheTabela(t.id)">Detalhar</a>
+											</li>
+											<li>
+												<a href="" ng-click="downloadTabela(t.id)">Download</a>
+											</li>
+											<li>
+												<a href="" ng-click="removerTabela(t)">Excluir</a>
+											</li>
+										</ul>
+									</div>
+								</td>
+							</tr>
+							<tr ng-show="tabelas.length==0">
+								<td colspan="3">Nenhuma tabela cadastrada</td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
+			</div>
+		</div>
+		<div class="row" restrict access="Gestor Administrador">
+			<div class="panel panel-default">
+				<div class="panel-heading">Nova Tabela</div>
+				<div class="panel-body">
+					<input type="file" file-model="fileTabela" id="fileTabela"
+						style="display: inline" /> <input type="submit"
+						ng-click="uploadTabela()" value="Enviar" ng-disabled="industria.selecionado == null" />
+				</div>
+			</div>
+		</div>
+	</div>
+</form>

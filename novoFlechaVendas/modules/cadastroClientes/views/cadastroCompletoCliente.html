@@ -1,0 +1,535 @@
+<div class="divScroll">
+
+	<p class="content-title">Cadastro Cliente</p>
+
+	<form ng-submit="salvarCliente()" name="cadastroCliente">
+		<div class="panel panel-default">
+			<div class="panel-heading">Informações Básicas</div>
+			<div class="panel-body">
+				<div class="row">
+					<div class="col-sm-6">
+						<div class="form-group input-group-sm" ng-class="{'has-error': cadastroCliente.cpfCnpj.$invalid && cadastroCliente.cpfCnpj.$dirty}">
+							<label class="control-label">*CNPJ:</label>
+							<input name="cpfCnpj" class="form-control" type="text" pattern="[0-9]{2}[.][0-9]{3}[.][0-9]{3}[/][0-9]{4}[-][0-9]{2}" ng-model="cliente.cpfCnpj"
+							 required ui-mask="99.999.999/9999-99" check-cpf-cnpj ng-blur="verificaCliente()" />
+						</div>
+					</div>
+					<div class="col-sm-6">
+						<div class="form-group input-group-sm">
+							<label>*RG/IE:</label>
+							<input class="form-control" type="text" ng-model="cliente.rgIe" required ng-disabled="naoEditavel" />
+						</div>
+					</div>
+				</div>
+				<div class="row">
+					<div class="col-sm-12">
+						<div class="form-group input-group-sm">
+							<label>*Razão Social: </label>
+							<input class="form-control" type="text" ng-model="cliente.razaoSocial" required capitalize ng-disabled="naoEditavel" />
+						</div>
+					</div>
+				</div>
+				<div class="row">
+					<div class="col-sm-12">
+						<div class="form-group input-group-sm">
+							<label>Nome Fantasia:</label>
+							<input class="form-control" type="text" ng-model="cliente.nomeFantasia" capitalize ng-disabled="naoEditavel" />
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="panel panel-default">
+			<div class="panel-heading">Endereço</div>
+			<div class="panel-body">
+				<div class="row">
+					<div class="col-sm-8">
+						<div class="form-group input-group-sm">
+							<label>Rua:</label>
+							<input class="form-control" type="text" ng-model="cliente.rua" capitalize ng-disabled="naoEditavel" />
+						</div>
+					</div>
+					<div class="col-sm-4">
+						<div class="form-group input-group-sm">
+							<label>Número:</label>
+							<input class="form-control" type="number" ng-model="cliente.numero" ng-disabled="naoEditavel"></input>
+						</div>
+					</div>
+				</div>
+				<div class="row">
+					<div class="col-sm-4">
+						<div class="form-group input-group-sm">
+							<label>Sala:</label>
+							<input class="form-control" type="text" ng-model="cliente.sala" capitalize ng-disabled="naoEditavel" />
+						</div>
+					</div>
+					<div class="col-sm-4">
+						<div class="form-group input-group-sm">
+							<label>Andar:</label>
+							<input class="form-control" type="text" ng-model="cliente.andar" ng-disabled="naoEditavel" capitalize />
+						</div>
+					</div>
+					<div class="col-sm-4">
+						<div class="form-group input-group-sm">
+							<label>Complemento:</label>
+							<input class="form-control" type="text" ng-model="cliente.complemento" capitalize ng-disabled="naoEditavel" />
+						</div>
+					</div>
+				</div>
+				<div class="row">
+					<div class="col-sm-8">
+						<div class="form-group input-group-sm">
+							<label>Bairro: </label>
+							<input class="form-control" type="text" ng-model="cliente.bairro" capitalize ng-disabled="naoEditavel" />
+						</div>
+					</div>
+					<div class="col-sm-4">
+						<div class="form-group input-group-sm" ng-class="{'has-error': cadastroCliente.cep.$invalid && cadastroCliente.cep.$dirty}">
+							<label class="control-label">CEP: </label>
+							<input class="form-control" type="text" name="cep" ui-mask="99999-999" ng-model="cliente.cep" pattern="[0-9]{5}[-]{1}[0-9]{3}"
+							 ng-disabled="naoEditavel" />
+						</div>
+					</div>
+				</div>
+				<div class="row">
+					<div class="col-sm-8">
+						<div class="form-group input-group-sm">
+							<label>Cidade: </label>
+							<input class="form-control" type="text" ng-model="cliente.cidade" capitalize ng-disabled="naoEditavel"></input>
+						</div>
+					</div>
+					<div class="col-sm-4">
+						<div class="form-group input-group-sm">
+							<label>Estado: </label>
+							<select class="form-control" ng-model="estado.selecionado" id="estado" ng-options="e.sigla for e in estados" value="{{e}}"
+							 ng-disabled="naoEditavel"></select>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="panel panel-default">
+			<div class="panel-heading">Contato</div>
+			<div class="panel-body">
+				<div class="row">
+					<div class="col-sm-8">
+						<div class="form-group input-group-sm">
+							<label>*Telefone: </label>
+							<input class="form-control" type="text" ng-model="cliente.telefone" ui-mask="(99)9999-9999" required ng-disabled="naoEditavel"></input>
+						</div>
+					</div>
+					<div class="col-sm-4">
+						<div class="form-group input-group-sm">
+							<label>*Celular: </label>
+							<input class="form-control" type="text" ng-model="cliente.celular" ui-mask="(99)99999-9999" required ng-disabled="naoEditavel"></input>
+						</div>
+					</div>
+				</div>
+				<div class="row">
+					<div class="col-sm-4">
+						<div class="form-group input-group-sm">
+							<label>*Contato: </label>
+							<input class="form-control" type="text" ng-model="cliente.contato" required capitalize ng-disabled="naoEditavel" />
+						</div>
+					</div>
+					<div class="col-sm-4">
+						<div class="form-group input-group-sm">
+							<label>*E-mail: </label>
+							<input class="form-control" type="text" ng-model="cliente.email" required capitalize ng-disabled="naoEditavel" />
+						</div>
+					</div>
+					<div class="col-sm-4">
+						<div class="form-group input-group-sm">
+							<label>*Referências comerciais: </label>
+							<input class="form-control" type="text" ng-model="cliente.referenciasComerciais" required capitalize ng-disabled="naoEditavel"
+							/>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="panel panel-default">
+			<div class="panel-heading">Informações de Entrega</div>
+			<div class="panel-body">
+				<div class="row">
+					<div class="col-sm-6">
+						<div class="form-group input-group-sm">
+							<label>Dias Entrega: </label>
+							<input class="form-control" type="text" ng-model="cliente.diasEntrega" capitalize ng-disabled="naoEditavel" />
+						</div>
+					</div>
+					<div class="col-sm-6">
+						<div class="form-group input-group-sm">
+							<label>Horário Entrega: </label>
+							<input class="form-control" type="text" ng-model="cliente.horarioEntrega" capitalize ng-disabled="naoEditavel" />
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="panel panel-default" restrict access="Administrador Gestor">
+			<div class="panel-heading">Dados Bancários</div>
+			<div class="panel-body">
+				<div class="row">
+					<div class="col-sm-3">
+						<div class="form-group input-group-sm">
+							<label>Banco: </label>
+							<input class="form-control" auto-complete ui-items="listaNomeBancos" ng-model="banco.nome" ng-disabled="naoEditavel" />
+						</div>
+					</div>
+					<div class="col-sm-2">
+						<div class="form-group input-group-sm">
+							<label>Agência: </label>
+							<input class="form-control" type="number" ng-model="cliente.numeroAgencia" ng-disabled="naoEditavel" />
+						</div>
+					</div>
+					<div class="col-sm-4">
+						<div class="form-group input-group-sm">
+							<label>Nome Agência: </label>
+							<input class="form-control" type="text" ng-model="cliente.nomeAgencia" capitalize ng-disabled="naoEditavel" />
+						</div>
+					</div>
+					<div class="col-sm-3">
+						<div class="form-group input-group-sm">
+							<label>Número conta: </label>
+							<input class="form-control" type="number" ng-model="cliente.numeroConta" ng-disabled="naoEditavel" />
+						</div>
+					</div>
+				</div>
+				<div class="row">
+					<div class="col-sm-9">
+						<div class="form-group input-group-sm">
+							<label>Pessoa: </label>
+							<select class="form-control" ng-model="tipoPessoa.selecionado" id="tipoPessoa" ng-options="tp.descricao for tp in listaTipoPessoa"
+							 value="{{tp}}" ng-disabled="naoEditavel"></select>
+						</div>
+					</div>
+					<div class="col-sm-1">
+						<div class="form-group input-group-sm">
+							<label>Ativo: </label>
+							<input class="form-control" type="checkbox" ng-model="cliente.ativo" ng-disabled="naoEditavel" />
+						</div>
+					</div>
+					<div class="col-sm-2">
+						<div class="form-group input-group-sm">
+							<label>Bloqueio Venda: </label>
+							<input class="form-control" type="checkbox" ng-model="cliente.bloqueioVenda" ng-disabled="naoEditavel" />
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="panel panel-default">
+			<div class="panel-heading">Informações Adicionais</div>
+			<div class="panel-body">
+				<div class="row">
+					<div class="col-sm-12">
+						<div class="form-group input-group-sm">
+							<label>Informações Adicionais: </label>
+							<textarea class="form-control" style="resize:none" type="text" rows="6" cols="100" maxlength="255" ng-model="cliente.informacoesAdicionais"
+							 capitalize ng-disabled="naoEditavel"></textarea>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<hr />
+		<div class="panel panel-default">
+			<div class="panel-heading">Arquivos Cliente</div>
+			<div class="panel-body">
+				<div class="row">
+					<div class="col-xs-12 col-md-8">
+						<div class="form-group input-group-sm">
+							<label>Arquivo Cliente: </label>
+							<input type="file" accept="image/png, image/jpeg, application/pdf, text/plain, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.openxmlformats-officedocument.wordprocessingml.document"
+							 ng-file-model="arquivoCliente" id="fileTabela" style="display: inline" ng-disabled="naoEditavel" multiple/>
+							<input type="button" ng-click="uploadArquivoCliente()" value="Enviar" ng-disabled="naoEditavel || !cliente.cpfCnpj" />
+						</div>
+					</div>
+					<div class="col-xs-12 col-md-4">
+						<div ng-repeat="arquivo in cliente.arquivos">
+							<span>
+								<a href="" ng-click="downloadArquivo(arquivo.nomeArquivo)">{{arquivo.nomeArquivo}}</a>
+							</span>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<hr />
+		<div class="panel panel-default" restrict access="Vendedor">
+			<div class="panel-heading">Associar Indústrias</div>
+			<div class="panel-body">
+				<div class="row">
+					<div class="col-xs-12">
+						<div class="form-group input-group-sm">
+							<label>Indústria: </label>
+							<select class="form-control" ng-model="industria.selecionado" id="industria" ng-options="r.industria.nome for r in listaRepresentacoes"
+							 value="{{r}}" ng-change="selecionaIndustria()" ng-disabled="naoEditavel"></select>
+						</div>
+					</div>
+				</div>
+				<div class="row">
+					<div class="col-xs-12 col-sm-3 form-group">
+						<label for="selecacoPrazo">Prazo:</label>
+						<ui-select id="selecacoPrazo" multiple ng-model="industriaPrazo.selecionado" search-enabled="false" theme="bootstrap" close-on-select="false"
+						 title="Selecione os prazos para o cliente na indústria" on-select="selecionaIndustriaPrazo($item)" on-remove="removeIndustriaPrazo($item)"
+						 ng-disabled="naoEditavel">
+							<ui-select-match placeholder="Selecione os prazos...">{{$item.descricao}}</ui-select-match>
+							<ui-select-choices repeat="item in prazosIndustria">
+								<small>
+									{{item.descricao}}
+								</small>
+							</ui-select-choices>
+						</ui-select>
+					</div>
+					<div class="col-xs-10 col-sm-2 form-group">
+						<label for="prazoPadrao">Prazo Padrão</label>
+						<ui-select id="industriaClientePrazoPadrao" ng-model="industriaClientePrazoPadrao.selecionado" ng-disabled="industriaCliente.listaIndustriaClientePrazo.length < 1"
+						 theme="bootstrap" title="Selecione o prazo padrão:" skip-focusser="true" on-select="selecionaIndustriaPrazoPadrao()">
+							<ui-select-match placeholder="Selecione o prazo padrão">{{$select.selected.descricaoIndustriaPrazo}}</ui-select-match>
+							<ui-select-choices class="small-font" repeat="industriaClientePrazoPadrao in industriaCliente.listaIndustriaClientePrazo">
+								<div ng-bind-html="industriaClientePrazoPadrao.descricaoIndustriaPrazo | highlight: $select.search"></div>
+							</ui-select-choices>
+						</ui-select>
+					</div>
+					<div class="col-xs-2 col-sm-1 form-group">
+						<input class="btn btn-primary btn-xs" style="margin-top: 30%;" type="button" ng-click="removerPadrao()" value="Remove padrão"
+						/>
+					</div>
+				</div>
+				<div class="row">
+					<div class="col-xs-12 form-group">
+						<input type="button" class="btn btn-primary" ng-click="adicionaIndustriaClienteRepresentacaoVendedor()" value="Adicionar"
+						 ng-disabled="!industria.selecionado">
+					</div>
+				</div>
+				<div class="row">
+					<hr />
+					<div class="col-sm-12">
+						<table class="table" ng-show="listaIndustriaCliente.length > 0">
+							<thead class="thead-inverse">
+								<tr>
+									<th>Indústria</th>
+									<th>Código</th>
+									<th>Limite Crédito</th>
+									<th>Ativo</th>
+									<th>Prazo</th>
+									<th>Bloqueio</th>
+									<th>Remover</th>
+								</tr>
+							</thead>
+							<tbody>
+								<tr ng-repeat="ci in listaIndustriaCliente" ng-if="ci.removido == false">
+									<td>{{ci.nomeIndustria}}</td>
+									<td>{{ci.codigo}}</td>
+									<td>{{ci.limiteCredito | currency:"R$"}}</td>
+									<td>{{ci.ativo | sim_nao}}</td>
+									<td>
+										<span ng-bind-html="buscaDescricaoResumidaPrazo(ci)"></span>
+									</td>
+									<td>{{ci.bloqueioVenda | sim_nao}}</td>
+									<td>
+										<input type="button" class="btn" value="Remover" ng-click="removerIndustriaCliente(ci)" ng-disabled="naoEditavel" />
+									</td>
+								</tr>
+							</tbody>
+						</table>
+					</div>
+					<hr />
+				</div>
+			</div>
+		</div>
+		<div class="panel panel-default" restrict access="Vendedor">
+			<div class="panel-heading">Representações</div>
+			<div class="panel-body">
+				<div class="row">
+					<div class="col-sm-12">
+						<table class="table" ng-show="listaRepresentacoesCliente.length > 0">
+							<thead class="thead-inverse">
+								<tr>
+									<th>Indústria</th>
+									<th>Vendedor</th>
+									<th>Ações</th>
+								</tr>
+							</thead>
+							<tbody>
+								<tr ng-repeat="rc in listaRepresentacoesCliente">
+									<td>{{rc.industria.nome}}</td>
+									<td>{{rc.usuario.nome}}</td>
+									<td>
+										<input type="button" class="btn" value="Remover" ng-click="removeRepresentacao(rc)" ng-disabled="naoEditavel" />
+									</td>
+								</tr>
+							</tbody>
+						</table>
+					</div>
+					<hr />
+				</div>
+			</div>
+		</div>
+
+		<div class="panel panel-default" restrict access="Administrador Gestor">
+			<div class="panel-heading">Associar Indústrias</div>
+			<div class="panel-body">
+				<div class="row">
+					<div class="col-sm-4">
+						<div class="form-group input-group-sm">
+							<label>Indústria: </label>
+							<select class="form-control" ng-model="industria.selecionado" id="industria" ng-options="r.industria.nome for r in listaRepresentacoes"
+							 value="{{r}}" ng-change="selecionaIndustria()" ng-disabled="naoEditavel"></select>
+						</div>
+					</div>
+					<div class="col-sm-3">
+						<div class="form-group input-group-sm">
+							<label>Código: </label>
+							<input class="form-control" type="text" ng-model="industriaCliente.codigo"></input>
+						</div>
+					</div>
+					<div class="col-sm-3">
+						<div class="form-group input-group-sm">
+							<label>Limite Crédito: </label>
+							<input class="form-control" type="number" step="any" ng-model="industriaCliente.limiteCredito" ng-disabled="naoEditavel"
+							/>
+						</div>
+					</div>
+					<div class="col-sm-1">
+						<div class="form-group">
+							<label>Ativo:</label>
+							<input class="form-control" type="checkbox" ng-model="industriaCliente.ativo" ng-disabled="naoEditavel" />
+						</div>
+					</div>
+					<div class="col-sm-1">
+						<div class="form-group input-group-sm">
+							<label>Bloqueio:</label>
+							<input class="form-control" type="checkbox" ng-model="industriaCliente.bloqueioVenda" ng-disabled="naoEditavel" />
+						</div>
+					</div>
+				</div>
+				<div class="row">
+					<div class="col-xs-12 col-sm-3 form-group">
+						<label for="selecacoPrazo">Prazo:</label>
+						<ui-select id="selecacoPrazo" multiple ng-model="industriaPrazo.selecionado" search-enabled="false" theme="bootstrap" close-on-select="false"
+						 title="Selecione os prazos para o cliente na indústria" on-select="selecionaIndustriaPrazo($item)" on-remove="removeIndustriaPrazo($item)"
+						 ng-disabled="naoEditavel">
+							<ui-select-match placeholder="Selecione os prazos...">{{$item.descricao}}</ui-select-match>
+							<ui-select-choices repeat="item in prazosIndustria">
+								<small>
+									{{item.descricao}}
+								</small>
+							</ui-select-choices>
+						</ui-select>
+					</div>
+					<div class="col-xs-10 col-sm-2 form-group">
+						<label for="prazoPadrao">Prazo Padrão</label>
+						<ui-select id="industriaClientePrazoPadrao" ng-model="industriaClientePrazoPadrao.selecionado" ng-disabled="industriaCliente.listaIndustriaClientePrazo.length < 1"
+						 theme="bootstrap" title="Selecione o prazo padrão:" skip-focusser="true" on-select="selecionaIndustriaPrazoPadrao()">
+							<ui-select-match placeholder="Selecione o prazo padrão">{{$select.selected.descricaoIndustriaPrazo}}</ui-select-match>
+							<ui-select-choices class="small-font" repeat="industriaClientePrazoPadrao in industriaCliente.listaIndustriaClientePrazo">
+								<div ng-bind-html="industriaClientePrazoPadrao.descricaoIndustriaPrazo | highlight: $select.search"></div>
+							</ui-select-choices>
+						</ui-select>
+					</div>
+					<div class="col-xs-2 col-sm-1 form-group">
+						<input class="btn btn-primary btn-xs" style="margin-top: 30%;" type="button" ng-click="removerPadrao()" value="Remove padrão">
+					</div>
+				</div>
+				<div class="row">
+					<div class="col-xs-12 form-group">
+						<input type="button" class="btn btn-primary" ng-click="adicionaIndustriaCliente()" value="Adicionar" ng-disabled="!industria.selecionado">
+					</div>
+				</div>
+				<div class="row">
+					<hr />
+					<div class="col-sm-12">
+						<table class="table" ng-show="listaIndustriaCliente.length > 0">
+							<thead class="thead-inverse">
+								<tr>
+									<th>Indústria</th>
+									<th>Código</th>
+									<th>Limite Crédito</th>
+									<th>Ativo</th>
+									<th>Prazo</th>
+									<th>Bloqueio</th>
+									<th>Remover</th>
+								</tr>
+							</thead>
+							<tbody>
+								<tr ng-repeat="ci in listaIndustriaCliente" ng-if="ci.removido == false">
+									<td>{{ci.nomeIndustria}}</td>
+									<td>{{ci.codigo}}</td>
+									<td>{{ci.limiteCredito | currency:"R$"}}</td>
+									<td>{{ci.ativo | sim_nao}}</td>
+									<td>
+										<span ng-bind-html="buscaDescricaoResumidaPrazo(ci)"></span>
+									</td>
+									<td>{{ci.bloqueioVenda | sim_nao}}</td>
+									<td>
+										<input type="button" class="btn" value="Remover" ng-click="removerIndustriaCliente(ci)" ng-disabled="naoEditavel"></input>
+									</td>
+								</tr>
+							</tbody>
+						</table>
+					</div>
+					<hr />
+				</div>
+			</div>
+		</div>
+		<div class="panel panel-default" restrict access="Administrador Gestor">
+			<div class="panel-heading">Associar Vendedor</div>
+			<div class="panel-body">
+				<div class="row">
+					<div class="col-sm-12">
+						<div class="form-group input-group-sm">
+							<label>Vendedor: </label>
+							<select class="form-control" ng-model="representacaoVendedor.selecionado" id="representacaoVendedorId" ng-options="rv.usuario.nome for rv in listaRepresentacoesVendedor"
+							 value="{{rv}}" ng-change="selecionaRepresentacaoVendedor()"></select>
+						</div>
+					</div>
+				</div>
+				<div class="row">
+					<div class="col-sm-12">
+						<input type="button" class="btn btn-primary" value="Adicionar" ng-click="adicionaRepresentcaoVendedor()" />
+					</div>
+				</div>
+				<div class="row">
+					<hr />
+					<div class="col-sm-12">
+						<table class="table" ng-show="listaRepresentacoesCliente.length > 0">
+							<thead class="thead-inverse">
+								<tr>
+									<th>Indústria</th>
+									<th>Vendedor</th>
+									<th>Ações</th>
+								</tr>
+							</thead>
+							<tbody>
+								<tr ng-repeat="rc in listaRepresentacoesCliente">
+									<td>{{rc.industria.nome}}</td>
+									<td>{{rc.usuario.nome}}</td>
+									<td>
+										<input type="button" class="btn" value="Remover" ng-click="removeRepresentacao(rc)" />
+									</td>
+								</tr>
+							</tbody>
+						</table>
+					</div>
+					<hr />
+				</div>
+			</div>
+		</div>
+		<div class="panel panel-default">
+			<div class="panel-heading">Finalizar Cadastro</div>
+			<div class="panel-body">
+				<div class="row">
+					<div class="col-sm-12">
+						<div class="form-group" role="group" aria-label="...">
+							<button type="button" ng-click="voltar()" class="btn btn-default btn-primary">Voltar</button>
+							<button type="submit" class="btn btn-default btn-primary" ng-disabled="naoEditavel || bloqueiaSalvar">Salvar</button>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</form>
+</div>
