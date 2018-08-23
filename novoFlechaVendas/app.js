@@ -1,8 +1,8 @@
 'use strict'
 
-angular.module('GerenciadorFinanceiroFlechaVendas', ['ui.router'])
+angular.module('GerenciadorFinanceiroFlechaVendas', ['ui.router', 'blockUI', 'usuario.module', 'ModalApp', 'Notificacao'])
 .run(['$transitions', ($transitions) => {
-	$transitions.onBefore({to:'loginState'}, transition => {
+	$transitions.onBefore({}, transition => {
 		console.log('transacao');
 	});
 }]);

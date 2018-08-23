@@ -1,24 +1,27 @@
 'use strict'
 
-var UsuarioModulo = angular.module('UsuarioModulo')
+var UsuarioModulo = angular.module('usuario.module')
 
 UsuarioModulo.config(function($stateProvider){
   var usuario = {
-      name: 'usuario',
+      name: 'main.usuario',
       abstract: true,
       url:'/usuario',
   }
   var pesquisaUsuarioState = {
-    name:'usuario.pesquisa',
-    template:'<pesquisa-usuario></pesquisa-usuario>'
+    name:'main.usuario.pesquisa',
+    url: '/pesquisa',
+    component: 'pesquisaUsuarioComponent'
   } 
   var cadastroUsuarioState = {
-    name:'usuario.cadastro',
-    template:'<cadastro-completo-usuario></cadastro-completo-usuario>'
+    name:'main.usuario.cadastro',
+    url: '/cadastro',
+    component: 'cadastroCompletoUsuarioComponent'
   }
   var edicaoUsuarioState = {
-    name:'usuario.edicao',
-    template:'<cadastro-completo-usuario></cadastro-completo-usuario>',
+    name:'main.usuario.edicao',
+    url: '/edicao',
+    component:'CadastroCompletoUsuario',
     params: {
       id: {id: null}
     }

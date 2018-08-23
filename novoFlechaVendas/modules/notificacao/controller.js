@@ -1,11 +1,11 @@
 'use strict'
-var NotificacaoModule = angular.module('Notificacao').controller('NotificacaoController', [
+var NotificacaoModule = angular.module('Notificacao', ['ui-notification']).controller('NotificacaoController', [
 	'$scope',
 	'Notificacation',
 	constructor,
 ])
 
-function constructor($scope, Notificacation) {
+function constructor() {
 
 }
 

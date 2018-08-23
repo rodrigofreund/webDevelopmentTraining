@@ -1,12 +1,10 @@
-'use strict'
+'use strict';
 
-var UsuarioModulo = angular.module('UsuarioModulo')
+var UsuarioModulo = angular.module('usuario.module');
 
-UsuarioModulo.component('pesquisaUsuario', {
-	templateUrl: '/modules/usuario/components/pesquisa/views/pesquisa.html',
-	bindings: {},
+UsuarioModulo.component('pesquisaUsuarioComponent', {
+	templateUrl: 'modules/usuario/components/pesquisa/views/pesquisa.html',
 	controllerAs: 'ctrl',
-
 	controller: function usuarioModuloController($scope, $state, UsuarioService, NotificationService, ModalService) {
 		var changeFilter = true
 		$scope.paginaAtual = 0
@@ -20,15 +18,16 @@ UsuarioModulo.component('pesquisaUsuario', {
 			if(!changeFilter) {
 				return
 			}
-			$scope.lista = UsuarioService.pesquisa($scope.filter, function(data) {
-				if(data) {
-					$scope.result = data
-					$scope.lista = $scope.result.content
-					$scope.totalPaginas = $scope.result.totalPages
-					$scope.paginaAtual = $scope.result.number + 1
+
+			UsuarioService.pesquisa($scope.filter).then((result) => {
+				$scope.lista = result.data.content;
+				if($scope.lista) {
+					$scope.totalPaginas = result.data.totalPages
+					$scope.paginaAtual = result.data.number + 1
 					changeFilter = false
 				}
 			})
+
 		}
 
 		//APENAS EFETUA A PESQUISA SE O FILTRO FOI ALTERADO
@@ -107,6 +106,6 @@ UsuarioModulo.component('pesquisaUsuario', {
 
 		$scope.pesquisa()
 
-	},
+	}
 
-})
+});

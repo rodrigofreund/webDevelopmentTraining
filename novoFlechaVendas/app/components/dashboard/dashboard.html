@@ -1,85 +1,57 @@
-<nav class="nav-bar navbar-inverse" role="navigation">
-  <div id="top-menu" class="container-fluid active">
-    <a class="navbar-brand" href="#/dashboard" ng-cloak>{{nomeUsuario}}</a>
-  </div>
-</nav>
-<aside id="side-menu" class="aside" role="navigation">
-  <ul class="nav nav-list accordion">
-    <li class="nav-header">
-      <div class="link">
-        <i class="fa fa-lg fa-globe"></i>Gerenciador Financeiro<i class="fa fa-chevron-down"></i>
-      </div>
-      <ul class="submenu">
-        <li><a href="#/dashboard">Principal</a></li>
-      </ul>
-    </li>
-
-    <li class="nav-header">
-      <div class="link">
-        <i class="fa fa-lg fa-users"></i>Pedidos<i class="fa fa-chevron-down"></i>
-      </div>
-      <ul class="submenu">
-        <li><a href="#/pedido">Novo Pedido</a></li>
-        <li><a href="#/detalhePedido">Exibir Pedidos</a></li>
-        <li><a href="#/detalhePedidoSalvo">Exibir Pedidos Salvos</a></li>
-      </ul>
-    </li>
-
-    <li class="nav-header">
-      <div class="link">
-        <i class="fa fa-cloud"></i>Clientes<i class="fa fa-chevron-down"></i>
-      </div>
-      <ul class="submenu">
-        <li><a href="#/cadastroCompletoCliente">Novo</a></li>
-        <li><a href="#/listaClientes">Listar</a></li>
-      </ul>
-    </li>
-
-    <li class="nav-header">
-      <div class="link">
-        <i class="fa fa-lg fa-map-marker"></i>Tabelas<i class="fa fa-chevron-down"></i>
-      </div>
-      <ul class="submenu">
-        <li><a href="#/cadastroTabela">Cadastro de Tabelas</a></li>
-      </ul>
-    </li>
-
-    <li class="nav-header" ng-show="isMaster">
-      <div class="link">
-        <i class="fa fa-lg fa-map-marker"></i>Industrias<i class="fa fa-chevron-down"></i>
-      </div>
-      <ul class="submenu">
-        <li><a href="#/listaIndustrias">Configuração</a></li>
-      </ul>
-    </li>
-
-    <li class="nav-header" ng-show="isMaster">
-      <div class="link">
-        <i class="fa fa-lg fa-map-marker"></i>Usuários<i class="fa fa-chevron-down"></i>
-      </div>
-      <ul class="submenu">
-        <li><a href="#/usuarioCadastro">Cadastro</a></li>
-        <li><a href="#/usuarioPesquisa">Pesquisa</a></li>
-      </ul>
-    </li>
-
-    <li class="nav-header">
-      <div class="link">
-        <i class="fa fa-lg fa-map-marker"></i><a href="#/">Sair</a><i class="fa fa-chevron-down"></i>
-      </div>
-    </li>
-  </ul>
-</aside>
-
-<div class="content">
-    <div class="top-bar">
-      <a href="#menu" class="side-menu-link burger"> <span class='burger_inside' id='bgrOne'></span> <span class='burger_inside'
-         id='bgrTwo'></span> <span class='burger_inside' id='bgrThree'></span>
-      </a>
+<div class="container-fluid">
+  <div class="row">
+    <div class="col-lg-12">
+      <p class="content-title">Painel de Mensagens</p>
     </div>
-    <section class="content-inner">
-      <div class="container-fluid">
-        <ui-view></ui-view>
-      </div>
-    </section>
   </div>
+
+  <div class="panel panel-primary">
+    <div class="panel-heading">Atividades Recentes</div>
+    <div class="panel-body">
+      <div class="row">
+        <div class="col-xs-12 col-lg-6" ng-if="false">
+          <div class="alert alert-info">
+            <a href="" ng-click="exibePedidosAtivo()">Você possui pedido ativo para o cliente
+              <strong> {{pedidoAtivo.nomeCliente}} </strong> que precisa ser enviado. </a>
+          </div>
+        </div>
+        <div class="col-xs-12 col-lg-3" restrict access="Administrador">
+          <div class="alert alert-info">
+            <a href="" ng-click="ctrl.exibePedidosEnviados()"> Você possui
+              <strong> {{::ctrl.informacoes.numeroPedidosEnviados}} pedido(s) enviado(s) </strong> que precisam de atenção.
+            </a>
+          </div>
+        </div>
+        <div class="col-xs-12 col-lg-3" ng-if="false">
+          <div class="alert alert-info">
+            <a href="" ng-click="exibePedidosSalvos()">Você possui
+              <strong> {{getNumeroPedidosSalvos()}} pedido(s) salvo(s) </strong>. </a>
+          </div>
+        </div>
+        <div class="col-xs-12 col-lg-6" ng-if="false">
+          <span>Não há atividades rescentes!</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="panel panel-danger">
+    <div class="panel-heading panel-dashboard-heading">Alertas</div>
+    <div class="panel-body">
+      <div class="row">
+        <div class="col-xs-12 col-lg-6" ng-if="true">
+          <div class="alert alert-danger">
+            <a href="" ng-click="ctrl.exibePedidosNegados()">Você possui
+              <strong> {{::ctrl.informacoes.numeroPedidosNegados}} pedido(s) negado(s) </strong>. </a>
+          </div>
+        </div>
+        <div class="col-xs-12 col-lg-6" ng-if="false">
+          <div class="alert alert-danger">
+            <a href="" ng-click="exibeClientesPendentes()">Você possui
+              <strong> {{getNumeroClientesPendentes}} cliente(s) pendente(s) </strong>. </a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

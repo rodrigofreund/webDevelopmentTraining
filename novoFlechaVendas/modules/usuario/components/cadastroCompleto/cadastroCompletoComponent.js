@@ -1,8 +1,10 @@
 'use strict'
 
-var UsuarioModulo = angular.module('UsuarioModulo')
+var UsuarioModulo = angular.module('usuario.module')
 
-UsuarioModulo.component('cadastroCompletoUsuario', {
+UsuarioModulo.component('cadastroCompletoUsuarioComponent', {
+	controller: function usuarioCadastroController(){},
+	/*
 	controller: function usuarioModuloController(
 		$scope,
 		$state,
@@ -167,7 +169,8 @@ UsuarioModulo.component('cadastroCompletoUsuario', {
 		function validaSenha() {
 			return $scope.cadastro.senha.senha1 === $scope.cadastro.senha.senha2
 		}
-  },
+	},
+	*/
   templateUrl: 'modules/usuario/components/cadastroCompleto/views/cadastroCompleto.html',
 	bindings: {},
 	controllerAs: 'ctrl',

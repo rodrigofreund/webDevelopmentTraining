@@ -3,8 +3,13 @@
 var app = angular.module('GerenciadorFinanceiroFlechaVendas')
 
 app.component('loginComponent', {
-	controller: function loginController() {
-    console.log('aqui');
+	controller: function loginController($state, LoginService) {
+    let vm = this;
+    vm.doLogin = () => {
+      LoginService.doLogin(vm.login, vm.senha).then((data) => {
+        $state.go('main.dashboard')
+      })
+    }
   },
   templateUrl: 'app/components/login/login.html',
 	bindings: {},

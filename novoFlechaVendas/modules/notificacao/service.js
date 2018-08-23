@@ -1,13 +1,11 @@
 'use strict'
 
-angular.module('GerenciadorFinanceiroFlechaVendas').factory('NotificationService', [
-	'$http',
-	'$rootScope',
+angular.module('Notificacao').factory('NotificationService', [
 	'Notification',
-	constructor,
+	notificacoConstructor,
 ])
 
-function constructor($http, $rootScope, Notification) {
+function notificacoConstructor(Notification) {
 	var service = {};
 
 	service.success = function(msg, data) {
@@ -35,4 +33,4 @@ function constructor($http, $rootScope, Notification) {
 	}
 
 	return service;
-}
+};
