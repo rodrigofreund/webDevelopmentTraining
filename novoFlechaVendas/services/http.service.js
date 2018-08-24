@@ -22,6 +22,9 @@ function constructor($http, blockUI) {
 		}
 		blockUI.start()
 		return $http(req)
+			.then(result => {
+				return result.data
+			})
 			.finally(function () {
 				blockUI.stop()
 			})

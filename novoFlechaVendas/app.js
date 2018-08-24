@@ -1,11 +1,42 @@
 'use strict'
 
-angular.module('GerenciadorFinanceiroFlechaVendas', ['ui.router', 'blockUI', 'usuario.module', 'ModalApp', 'Notificacao'])
+var app = angular.module('GerenciadorFinanceiroFlechaVendas', ['ui.router', 'blockUI', 'usuario.module', 'ModalApp', 'Notificacao'])
 .run(['$transitions', ($transitions) => {
 	$transitions.onBefore({}, transition => {
 		console.log('transacao');
 	});
 }]);
+
+app.filter('propsFilter', function() {
+	return function(items, props) {
+		var out = [];
+
+		if (angular.isArray(items)) {
+			var keys = Object.keys(props);
+			items.forEach(function(item) {
+			var itemMatches = false;
+
+				for (var i = 0; i < keys.length; i++) {
+					var prop = keys[i];
+					var text = props[prop].toLowerCase();
+					if (item[prop].toString().toLowerCase().indexOf(text) !== -1) {
+						itemMatches = true;
+						break;
+					}
+				}
+
+				if (itemMatches) {
+					out.push(item);
+				}
+			});
+		} else {
+			// Let the output be the input untouched
+			out = items;
+		}
+
+		return out;
+	};
+});
 
 /*
 angular.module('Authentication', [])
@@ -138,35 +169,6 @@ app.config(function(blockUIConfig) {
 	blockUIConfig.message = 'Carregando...';
 })
 
-app.filter('propsFilter', function() {
-		return function(items, props) {
-			var out = [];
 
-			if (angular.isArray(items)) {
-				var keys = Object.keys(props);
-				items.forEach(function(item) {
-				var itemMatches = false;
-
-	        for (var i = 0; i < keys.length; i++) {
-	          var prop = keys[i];
-	          var text = props[prop].toLowerCase();
-	          if (item[prop].toString().toLowerCase().indexOf(text) !== -1) {
-	            itemMatches = true;
-	            break;
-	          }
-	        }
-
-	        if (itemMatches) {
-	          out.push(item);
-	        }
-	      });
-	    } else {
-	      // Let the output be the input untouched
-	      out = items;
-	    }
-
-	    return out;
-	  };
-	});
 
 	*/

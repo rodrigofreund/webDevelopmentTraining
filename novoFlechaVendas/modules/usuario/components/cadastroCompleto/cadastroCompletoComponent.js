@@ -3,84 +3,90 @@
 var UsuarioModulo = angular.module('usuario.module')
 
 UsuarioModulo.component('cadastroCompletoUsuarioComponent', {
-	controller: function usuarioCadastroController(){},
-	/*
+	templateUrl: 'modules/usuario/components/cadastroCompleto/views/cadastroCompleto.html',
+	bindings: {},
+	controllerAs: 'ctrl',
 	controller: function usuarioModuloController(
 		$scope,
 		$state,
 		UsuarioService,
-		IndustriasService,
-		CadastroClientesService,
+		IndustriaService,
 		NotificationService,
-		AuthenticationService,
-		ModalService) {
+		LoginService,
+		ModalService,
+		$log
+	) {
 
-		if($state.params.id) {
+		var vm = this;
+
+		if ($state.params.id) {
 			//Buscar dados do usuário
-			UsuarioService.buscaUsuarioPorId($state.params.id, (result) => {
-				$scope.cadastro = result
-				$scope.senhaOriginal = AuthenticationService.getPassword($scope.cadastro.senha.senha1)
-				$scope.cadastro.senha.senha1
-				$scope.representacoes = result.representacoes
+			UsuarioService.buscaUsuarioPorId($state.params.id).then((result) => {
+				vm.cadastro = result
+				vm.senhaOriginal = LoginService.getPassword(vm.cadastro.senha.senha1)
+				vm.cadastro.senha.senha1
+				vm.representacoes = result.representacoes
 			})
 		} else {
-			$scope.cadastro = {
+			vm.cadastro = {
 				ativo: true
 			}
-			$scope.representacoes = []
+			vm.representacoes = []
 		}
 
-		$scope.representacao = {
+		vm.representacao = {
 			industria: null
 		}
-		$scope.listaIndustria = []
-		$scope.senhaAlterada = false
-		$scope.importacao = {
+		vm.listaIndustria = []
+		vm.senhaAlterada = false
+		vm.importacao = {
 			usuario: null
 		}
 
-		UsuarioService.listaPerfil(function(result) {
-			$scope.listaPerfil = result
+		UsuarioService.listaPerfil().then((result) => {
+			vm.listaPerfil = result.data
 		})
 
-		$scope.selecionaTabRepresentacao = function() {
-			IndustriasService.getIndustrias(function(result) {
-				$scope.listaIndustria = result
+		vm.selecionaTabRepresentacao = function () {
+
+			IndustriaService.getIndustrias().then((result) => {
+				vm.listaIndustria = result.data
 			})
-			if($scope.cadastro.id) {
-				UsuarioService.buscaUsuarioCadastroDto($scope.cadastro.id, (result) => {
-					$scope.representacoes = result.representacoes
+			if (vm.cadastro.id) {
+				UsuarioService.buscaUsuarioCadastroDto(vm.cadastro.id).then((result) => {
+					vm.representacoes = result.data.representacoes
 				})
 			}
 		}
 
-		$scope.selecionaTabRepresentacaoCliente = function() {
-			CadastroClientesService.buscaVendedores(function(result) {
-				$scope.usuarios = result
-				$scope.nomeUsuarioFormatado = `${$scope.cadastro.id} - ${$scope.cadastro.nome}`
-			})
+		vm.selecionaTabRepresentacaoCliente = function () {
+
+			UsuarioService.buscaUsuarios().then((result) => {
+				vm.usuarios = result;
+				vm.nomeUsuarioFormatado = `${vm.cadastro.id} - ${vm.cadastro.nome}`;
+			});
 		}
 
-		$scope.criaRepresentacao = function() {
-			var listaEncontrados = $.grep($scope.representacoes, function (e, i) {
-				return e.idIndustria == $scope.representacao.industria.id;
+		vm.criaRepresentacao = function () {
+			var listaEncontrados = $.grep(vm.representacoes, function (e, i) {
+				return e.idIndustria == vm.representacao.industria.id;
 			});
-			if(listaEncontrados && listaEncontrados.length > 0) {
+			if (listaEncontrados && listaEncontrados.length > 0) {
 				NotificationService.alert('Indústria já cadastrada para o usuário.')
 			} else {
-				var representacaoDto = new RepresentacaoDto($scope.cadastro, $scope.representacao.industria);
-				$scope.representacoes.push(representacaoDto)
+				var representacaoDto = new RepresentacaoDto(vm.cadastro, vm.representacao.industria);
+				vm.representacoes.push(representacaoDto)
 			}
 		}
 
-		$scope.salvaUsuario = function() {
+		vm.salvaUsuario = function () {
 			ajustesCriptografiaSenha()
-			$scope.cadastro.representacoes = $scope.representacoes
-			if(validaSenha()) {
-				UsuarioService.salvaUsuario($scope.cadastro, function(result) {
-					$scope.cadastro = result
-					$scope.senhaOriginal = AuthenticationService.getPassword($scope.cadastro.senha.senha1)
-					$scope.senhaAlterada = false
+			vm.cadastro.representacoes = vm.representacoes
+			if (validaSenha()) {
+				UsuarioService.salvaUsuario(vm.cadastro).then((result) => {
+					vm.cadastro = result
+					vm.senhaOriginal = LoginService.getPassword(vm.cadastro.senha.senha1)
+					vm.senhaAlterada = false
 					NotificationService.success('Usuário cadastrado com sucesso!')
 				})
 			} else {
@@ -88,7 +94,7 @@ UsuarioModulo.component('cadastroCompletoUsuarioComponent', {
 			}
 		}
 
-		$scope.excluiUsuario = function() {
+		vm.excluiUsuario = function () {
 			var modalOptions = {
 				closeButtonText: 'Não',
 				actionButtonText: 'Sim',
@@ -96,9 +102,9 @@ UsuarioModulo.component('cadastroCompletoUsuarioComponent', {
 				bodyText: `Ao EXCLUIR o usuário o não será mais possível acessar os dados deste! Confirma?`
 			};
 			ModalService.showModal({}, modalOptions).then(function (result) {
-				UsuarioService.buscaUsuarioPorId($scope.cadastro.id, function(result){
+				UsuarioService.buscaUsuarioPorId(vm.cadastro.id, function (result) {
 					result.excluido = true
-					UsuarioService.salvaUsuario(result, function(usuario) {
+					UsuarioService.salvaUsuario(result, function (usuario) {
 						NotificationService.success("Usuário EXCLUÍDO com sucesso!")
 						$state.go('usuario.pesquisa')
 					})
@@ -106,24 +112,24 @@ UsuarioModulo.component('cadastroCompletoUsuarioComponent', {
 			})
 		}
 
-		$scope.sinalizaSenhaAlterada = function() {
-			$scope.senhaAlterada = true
+		vm.sinalizaSenhaAlterada = function () {
+			vm.senhaAlterada = true
 		}
 
-		$scope.isVendedor = function() {
-			return AuthenticationService.isVendedor();
+		vm.isVendedor = function () {
+			return LoginService.isVendedor();
 		}
 
-		$scope.importar = function() {
-			if($scope.cadastro.id === $scope.importacao.usuario.id) {
+		vm.importar = function () {
+			if (vm.cadastro.id === vm.importacao.usuario.id) {
 				NotificationService.alert('Não é possível importar para o mesmo usuário')
 				return
 			}
 			var importacaoUsuarioDto = {
-				idUsuarioOrigem : $scope.importacao.usuario.id,
-				idUsuarioDestino : $scope.cadastro.id
+				idUsuarioOrigem: vm.importacao.usuario.id,
+				idUsuarioDestino: vm.cadastro.id
 			}
-			UsuarioService.verificarImportacaoBaseUsuario(importacaoUsuarioDto, function(result) {
+			UsuarioService.verificarImportacaoBaseUsuario(importacaoUsuarioDto, function (result) {
 				var modalOptions = {
 					closeButtonText: 'Cancelar',
 					actionButtonText: 'Importar',
@@ -137,41 +143,37 @@ UsuarioModulo.component('cadastroCompletoUsuarioComponent', {
 					templateUrl: 'modules/partials/modalImportacaoClientesUsuario.html',
 				};
 				ModalService.showModal(modalDefaults, modalOptions).then(function (modalResult) {
-					UsuarioService.importarBaseUsuario(result, function(importacaoResult) {
+					UsuarioService.importarBaseUsuario(result, function (importacaoResult) {
 						NotificationService.success(`Importação realizada com sucesso! ${importacaoResult} clientes importados.`)
-						$state.go('usuario.edicao', {'id': $scope.cadastro.id})
+						$state.go('usuario.edicao', { 'id': vm.cadastro.id })
 					})
 				});
 			})
 		}
 
-		$scope.verificaUsuarioCadastradoPorLogin = () => {
-			UsuarioService.buscaUsuarioPorLogin($scope.cadastro.login, (result => {
-				if(result) {
+		vm.verificaUsuarioCadastradoPorLogin = () => {
+			UsuarioService.buscaUsuarioPorLogin(vm.cadastro.login).then(result => {
+				if (result) {
 					NotificationService.error('Login do usuário já existente');
-					$scope.cadastro.login = null
+					vm.cadastro.login = null
 				}
-			}));
+			});
 		}
 
 		function ajustesCriptografiaSenha() {
-			if($scope.cadastro.id) {
-				if($scope.senhaAlterada && $scope.senhaOriginal != $scope.cadastro.senha.senha1) {
-					$scope.cadastro.senha.senha1 = AuthenticationService.getPasswordEncoded($scope.cadastro.senha.senha1)
-					$scope.cadastro.senha.senha2 = AuthenticationService.getPasswordEncoded($scope.cadastro.senha.senha2)
+			if (vm.cadastro.id) {
+				if (vm.senhaAlterada && vm.senhaOriginal != vm.cadastro.senha.senha1) {
+					vm.cadastro.senha.senha1 = LoginService.getPasswordEncoded(vm.cadastro.senha.senha1)
+					vm.cadastro.senha.senha2 = LoginService.getPasswordEncoded(vm.cadastro.senha.senha2)
 				}
 			} else {
-				$scope.cadastro.senha.senha1 = AuthenticationService.getPasswordEncoded($scope.cadastro.senha.senha1)
-				$scope.cadastro.senha.senha2 = AuthenticationService.getPasswordEncoded($scope.cadastro.senha.senha2)
+				vm.cadastro.senha.senha1 = LoginService.getPasswordEncoded(vm.cadastro.senha.senha1)
+				vm.cadastro.senha.senha2 = LoginService.getPasswordEncoded(vm.cadastro.senha.senha2)
 			}
 		}
 
 		function validaSenha() {
-			return $scope.cadastro.senha.senha1 === $scope.cadastro.senha.senha2
+			return vm.cadastro.senha.senha1 === vm.cadastro.senha.senha2
 		}
-	},
-	*/
-  templateUrl: 'modules/usuario/components/cadastroCompleto/views/cadastroCompleto.html',
-	bindings: {},
-	controllerAs: 'ctrl',
+	}
 })
