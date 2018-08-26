@@ -16,8 +16,8 @@ function constructor($http, HttpService) {
 			senha: password
 		};
 		return HttpService.httpPost(SUBPATH + 'doLogin', _loginParam)
-			.then((result) => {
-				setLogin(result.data);
+			.then((usuarioDto) => {
+				setLogin(usuarioDto);
 			})
 	}
 
@@ -27,6 +27,10 @@ function constructor($http, HttpService) {
 
 	service.getUsuario = () => {
 		return getLogin();
+	}
+
+	service.decodePassword = function(authdata) {
+		return Base64.decode(authdata);
 	}
 
 	function setLogin(usuarioDto) {
@@ -124,10 +128,6 @@ function constructor($http, HttpService) {
 	
 	service.getCredentialsRemember = function() {
 		return StorageService.getUsuarioLogado();
-	}
-	
-	service.getPassword = function(authdata) {
-		return Base64.decode(authdata);
 	}
 	
 	service.getPasswordEncoded = function(password) {

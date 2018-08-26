@@ -16,12 +16,12 @@ UsuarioModulo.config(function($stateProvider){
   var cadastroUsuarioState = {
     name:'main.usuario.cadastro',
     url: '/cadastro',
-    component: 'cadastroCompletoUsuarioComponent'
+    component: 'cadastroUsuarioComponent'
   }
   var edicaoUsuarioState = {
     name:'main.usuario.edicao',
     url: '/edicao',
-    component:'CadastroCompletoUsuario',
+    component:'cadastroUsuarioComponent',
     params: {
       id: {id: null}
     }

@@ -7,27 +7,34 @@ UsuarioModulo.component('pesquisaUsuarioComponent', {
 	controllerAs: 'ctrl',
 	controller: function usuarioModuloController($scope, $state, UsuarioService, NotificationService, ModalService) {
 		var changeFilter = true
-		$scope.paginaAtual = 0
-		$scope.totalPaginas = 0
 
+		$scope.totalItens = 0
 		$scope.filter = {
 			pageSize: 10,
 			newPage: 1
 		}
-		$scope.pesquisa = () => {
-			if(!changeFilter) {
+		// SE $event FOR PASSADO O COMPONENTE NAO PERDE O FOCO
+		$scope.pesquisa = ($event) => {
+			if (!changeFilter) {
 				return
 			}
-
 			UsuarioService.pesquisa($scope.filter).then((result) => {
-				$scope.lista = result.data.content;
-				if($scope.lista) {
-					$scope.totalPaginas = result.data.totalPages
-					$scope.paginaAtual = result.data.number + 1
+				$scope.result = result
+				$scope.lista = $scope.result.content;
+				$scope.totalItens = $scope.result.totalElements
+				if ($scope.lista) {
 					changeFilter = false
+					if ($event && $event.target) {
+						$event.target.focus()
+					}
 				}
 			})
+		}
 
+		$scope.verificaPesquisa = ($event) => {
+			if ($event.charCode === ENTER_KEY_CODE) {
+				$scope.pesquisa($event)
+			}
 		}
 
 		//APENAS EFETUA A PESQUISA SE O FILTRO FOI ALTERADO
@@ -35,39 +42,20 @@ UsuarioModulo.component('pesquisaUsuarioComponent', {
 			changeFilter = true
 		}
 
-		$scope.mudaPagina = (pagina) => {
+		$scope.mudaPagina = () => {
 			changeFilter = true
-			$scope.filter.newPage = pagina;
-			$scope.pesquisa()
-		}
-	
-		$scope.proximaPagina = () => {
-			if ($scope.result.last == true) {
-				return
-			}
-			changeFilter = true
-			$scope.filter.newPage += 1;
-			$scope.pesquisa()
-		}
-	
-		$scope.anteriorPagina = () => {
-			if ($scope.result.first == true) {
-				return
-			}
-			changeFilter = true
-			$scope.filter.newPage -= 1;
 			$scope.pesquisa()
 		}
 
 		$scope.editarRegistro = (id) => {
-			$state.go('usuario.edicao', {'id': id})
+			$state.go('main.usuario.edicao', { 'id': id })
 		}
 
-		$scope.novoUsuario = function() {
+		$scope.novoUsuario = function () {
 			$state.go('usuario.cadastro')
 		}
 
-		$scope.inativarUsuario = function(id) {
+		$scope.inativarUsuario = function (id) {
 			var modalOptions = {
 				closeButtonText: 'Não',
 				actionButtonText: 'Sim',
@@ -75,17 +63,18 @@ UsuarioModulo.component('pesquisaUsuarioComponent', {
 				bodyText: `Ao DESABILITAR o usuário o mesmo não poderá mais acessar o sistema! Confirma?`
 			};
 			ModalService.showModal({}, modalOptions).then(function (result) {
-				UsuarioService.buscaUsuarioPorId(id, function(result){
+				UsuarioService.buscaUsuarioPorId(id).then((result) => {
 					result.ativo = false
-					UsuarioService.salvaUsuario(result, function(usuario) {
-						NotificationService.success("Usuário DESABILITADO com sucesso!")
+					UsuarioService.salvaUsuario(result).then((usuario) => {
+						NotificationService.success(`Usuário ${usuario.nome} DESABILITADO com sucesso!`)
 						changeFilter = true
+						$scope.pesquisa()
 					})
 				})
 			})
 		}
 
-		$scope.excluirUsuario = function(id) {
+		$scope.excluirUsuario = function (id) {
 			var modalOptions = {
 				closeButtonText: 'Não',
 				actionButtonText: 'Sim',
@@ -93,10 +82,10 @@ UsuarioModulo.component('pesquisaUsuarioComponent', {
 				bodyText: `Ao EXCLUIR o usuário o não será mais possível acessar os dados deste! Confirma?`
 			};
 			ModalService.showModal({}, modalOptions).then(function (result) {
-				UsuarioService.buscaUsuarioPorId(id, function(result){
+				UsuarioService.buscaUsuarioPorId(id).then((result) => {
 					result.excluido = true
-					UsuarioService.salvaUsuario(result, function(usuario) {
-						NotificationService.success("Usuário EXCLUÍDO com sucesso!")
+					UsuarioService.salvaUsuario(result).then((usuario) => {
+						NotificationService.success(`Usuário ${usuario.nome} EXCLUÍDO com sucesso!`)
 						changeFilter = true
 						$scope.pesquisa()
 					})

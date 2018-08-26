@@ -35,12 +35,15 @@ function constructor($http, blockUI) {
 		var req = {
 			method: 'GET',
 			url: `${MODO_HTTP}/${URL}/${path}`,
-			headers: { 'Authorization': getUsuarioHash()},
+			headers: { 'Authorization': getUsuarioHash() },
 			params: param,
 			timeout: _timeout
 		}
 		blockUI.start()
 		return $http(req)
+			.then(result => {
+				return result.data
+			})
 			.finally(function () {
 				blockUI.stop()
 			})

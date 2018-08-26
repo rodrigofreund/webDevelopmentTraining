@@ -4,7 +4,7 @@ angular.module('ModalApp', ['ui.bootstrap']).service('ModalService', ['$uibModal
             backdrop: true,
             keyboard: true,
             modalFade: true,
-            templateUrl: 'modules/partials/modal.html'
+            templateUrl: 'modules/modal/modal.html'
         };
 
         var modalOptions = {

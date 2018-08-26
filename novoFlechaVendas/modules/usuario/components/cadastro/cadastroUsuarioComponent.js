@@ -2,8 +2,8 @@
 
 var UsuarioModulo = angular.module('usuario.module')
 
-UsuarioModulo.component('cadastroCompletoUsuarioComponent', {
-	templateUrl: 'modules/usuario/components/cadastroCompleto/views/cadastroCompleto.html',
+UsuarioModulo.component('cadastroUsuarioComponent', {
+	templateUrl: 'modules/usuario/components/cadastro/views/cadastroUsuario.html',
 	bindings: {},
 	controllerAs: 'ctrl',
 	controller: function usuarioModuloController(
@@ -23,7 +23,7 @@ UsuarioModulo.component('cadastroCompletoUsuarioComponent', {
 			//Buscar dados do usuário
 			UsuarioService.buscaUsuarioPorId($state.params.id).then((result) => {
 				vm.cadastro = result
-				vm.senhaOriginal = LoginService.getPassword(vm.cadastro.senha.senha1)
+				vm.senhaOriginal = LoginService.decodePassword(vm.cadastro.senha.senha1)
 				vm.cadastro.senha.senha1
 				vm.representacoes = result.representacoes
 			})
@@ -50,11 +50,11 @@ UsuarioModulo.component('cadastroCompletoUsuarioComponent', {
 		vm.selecionaTabRepresentacao = function () {
 
 			IndustriaService.getIndustrias().then((result) => {
-				vm.listaIndustria = result.data
+				vm.listaIndustria = result
 			})
 			if (vm.cadastro.id) {
 				UsuarioService.buscaUsuarioCadastroDto(vm.cadastro.id).then((result) => {
-					vm.representacoes = result.data.representacoes
+					vm.representacoes = result.representacoes
 				})
 			}
 		}
