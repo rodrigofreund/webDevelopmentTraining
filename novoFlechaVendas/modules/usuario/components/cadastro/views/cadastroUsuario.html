@@ -175,10 +175,10 @@
       </div>
       <div class="col-xs-12 col-md-6 form-group">
           <label for="usuario">Usuário de Destino</label>
-          <input class="form-control" type="text" ng-model="nomeUsuarioFormatado" disabled />
+          <input class="form-control" type="text" ng-model="ctrl.nomeUsuarioFormatado" disabled />
       </div>
       <div class="col-xs-12 col-md-2">
-        <input class="btn btn-primary" type="button" value="Importar" ng-click="ctrl.importar()" ng-disabled="!importacao.usuario" />
+        <input class="btn btn-primary" type="button" value="Importar" ng-click="ctrl.importar()" ng-disabled="!ctrl.importacao.usuario" />
       </div>
     </div>
 

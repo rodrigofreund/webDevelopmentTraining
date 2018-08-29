@@ -30,7 +30,7 @@ function constructor($http, HttpService) {
 	}
 
 	service.decodePassword = function(authdata) {
-		return Base64.decode(authdata);
+		return btoa(authdata);
 	}
 
 	function setLogin(usuarioDto) {

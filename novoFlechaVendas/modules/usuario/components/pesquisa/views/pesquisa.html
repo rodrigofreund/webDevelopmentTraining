@@ -18,65 +18,65 @@
           </td>
           <td>
             <div class="form-group" ng-class="{'has-error': pesquisaUsuario.id.$invalid && pesquisaUsuario.id.$dirty}">
-              <input name="id" class="form-control" type="search" placeholder="Código" ng-model="filter.id" ng-keypress="verificaPesquisa($event)"
-                ng-blur="pesquisa()" pattern="[0-9]*" ng-change="changeField()" />
+              <input name="id" class="form-control" type="search" placeholder="Código" ng-model="ctrl.filter.id" ng-keypress="ctrl.verificaPesquisa($event)"
+                ng-blur="ctrl.pesquisa()" pattern="[0-9]*" ng-change="ctrl.changeField()" />
             </div>
           </td>
           <td>
             <div class="form-group" ng-class="{'has-error': pesquisaUsuario.nome.$invalid && pesquisaUsuario.nome.$dirty}">
-              <input name="nome" class="form-control" type="search" placeholder="Nome" ng-model="filter.nome" ng-blur="pesquisa()" ng-keypress="verificaPesquisa($event)"
-                ng-blur="pesquisa($event)" pattern="^[a-zA-Z\s]+$" ng-change="changeField()" />
+              <input name="nome" class="form-control" type="search" placeholder="Nome" ng-model="ctrl.filter.nome" ng-blur="ctrl.pesquisa()" ng-keypress="ctrl.verificaPesquisa($event)"
+                ng-blur="ctrl.pesquisa($event)" pattern="^[a-zA-Z\s]+$" ng-change="ctrl.changeField()" />
             </div>
           </td>
           <td>
             <div class="form-group" ng-class="{'has-error': pesquisaUsuario.login.$invalid && pesquisaUsuario.login.$dirty}">
-              <input name="login" class="form-control" type="search" placeholder="Login" ng-model="filter.login" ng-blur="pesquisa()" ng-keypress="verificaPesquisa($event)"
-                pattern="^[a-zA-Z]+$" ng-change="changeField()" />
+              <input name="login" class="form-control" type="search" placeholder="Login" ng-model="ctrl.filter.login" ng-blur="ctrl.pesquisa()" ng-keypress="ctrl.verificaPesquisa($event)"
+                pattern="^[a-zA-Z]+$" ng-change="ctrl.changeField()" />
             </div>
           </td>
           <td>
             <div class="form-group" ng-class="{'has-error': pesquisaUsuario.regiao.$invalid && pesquisaUsuario.regiao.$dirty}">
-              <input name="regiao" class="form-control" type="search" placeholder="Região" ng-model="filter.regiao" ng-blur="pesquisa()"
-                ng-keypress="verificaPesquisa($event)" pattern="^[a-zA-Z\s]+$" ng-change="changeField()" />
+              <input name="regiao" class="form-control" type="search" placeholder="Região" ng-model="ctrl.filter.regiao" ng-blur="ctrl.pesquisa()"
+                ng-keypress="ctrl.verificaPesquisa($event)" pattern="^[a-zA-Z\s]+$" ng-change="ctrl.changeField()" />
             </div>
           </td>
           <td>
             <div class="form-group" ng-class="{'has-error': pesquisaUsuario.endereco.$invalid && pesquisaUsuario.endereco.$dirty}">
-              <input name="endereco" class="form-control" type="search" placeholder="Endereço" ng-model="filter.endereco" ng-blur="pesquisa()"
-                ng-keypress="verificaPesquisa($event)" pattern="[\w\s]+" ng-change="changeField()" />
+              <input name="endereco" class="form-control" type="search" placeholder="Endereço" ng-model="ctrl.filter.endereco" ng-blur="ctrl.pesquisa()"
+                ng-keypress="ctrl.verificaPesquisa($event)" pattern="[\w\s]+" ng-change="ctrl.changeField()" />
             </div>
           </td>
           <td>
             <div class="form-group" ng-class="{'has-error': pesquisaUsuario.email.$invalid && pesquisaUsuario.email.$dirty}">
-              <input name="email" class="form-control" type="search" placeholder="Email" ng-model="filter.email" ng-blur="pesquisa()" ng-keypress="verificaPesquisa($event)"
-                ng-change="changeField()" />
+              <input name="email" class="form-control" type="search" placeholder="Email" ng-model="ctrl.filter.email" ng-blur="ctrl.pesquisa()" ng-keypress="ctrl.verificaPesquisa($event)"
+                ng-change="ctrl.changeField()" />
             </div>
           </td>
           <td>
             <div class="form-group" ng-class="{'has-error': pesquisaUsuario.cpf.$invalid && pesquisaUsuario.cpf.$dirty}">
-              <input name="cpf" class="form-control" type="search" placeholder="CPF" ng-model="filter.cpf" ng-blur="pesquisa()" ng-keypress="verificaPesquisa($event)"
-                pattern="[0-9]*" ng-change="changeField()" />
+              <input name="cpf" class="form-control" type="search" placeholder="CPF" ng-model="ctrl.filter.cpf" ng-blur="ctrl.pesquisa()" ng-keypress="ctrl.verificaPesquisa($event)"
+                pattern="[0-9]*" ng-change="ctrl.changeField()" />
             </div>
           </td>
           <td>
             <div class="form-group" ng-class="{'has-error': pesquisaUsuario.rg.$invalid && pesquisaUsuario.rg.$dirty}">
-              <input name="rg" class="form-control" type="search" placeholder="RG" ng-model="filter.rg" ng-blur="pesquisa()" ng-keypress="verificaPesquisa($event)"
-                pattern="[0-9]+" ng-change="changeField()" />
+              <input name="rg" class="form-control" type="search" placeholder="RG" ng-model="ctrl.filter.rg" ng-blur="ctrl.pesquisa()" ng-keypress="ctrl.verificaPesquisa($event)"
+                pattern="[0-9]+" ng-change="ctrl.changeField()" />
             </div>
           </td>
         </tr>
       </thead>
       <tbody class="table-striped">
-        <tr ng-repeat="u in lista" ng-class="u.ativo == false ? 'danger' : ''">
+        <tr ng-repeat="u in ctrl.lista" ng-class="u.ativo == false ? 'danger' : ''">
           <td>
             <div class="btn-group">
               <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                 Ações <span class="caret"></span>
               </button>
               <ul class="dropdown-menu">
-                <li><a href="" ng-click="editarRegistro(u.id)">Editar</a></li>
-                <li><a href="" ng-click="inativarUsuario(u.id)" ng-show="u.ativo">Inativar</a></li>
-                <li><a href="" ng-click="excluirUsuario(u.id)">Excluir</a></li>
+                <li><a href="" ng-click="ctrl.editarRegistro(u.id)">Editar</a></li>
+                <li><a href="" ng-click="ctrl.inativarUsuario(u.id)" ng-show="u.ativo">Inativar</a></li>
+                <li><a href="" ng-click="ctrl.excluirUsuario(u.id)">Excluir</a></li>
               </ul>
             </div>
           </td>
@@ -89,14 +89,14 @@
           <td>{{u.cpf}}</td>
           <td>{{u.rg}}</td>
         </tr>
-        <tr ng-if="lista.length === 0">
+        <tr ng-if="ctrl.lista.length === 0">
           <td colspan="9">Não há registros para exibir.</td>
         </tr>
       </tbody>
       <tfoot>
         <div style="text-align: center;">
-          <ul uib-pagination boundary-links="true" total-items="totalItens" ng-model="filter.newPage" class="pagination-sm" previous-text="Anterior"
-            next-text="Próxima" first-text="Primeira" last-text="Última" ng-change="mudaPagina()"></ul>
+          <ul uib-pagination boundary-links="true" total-items="ctrl.totalItens" ng-model="ctrl.filter.newPage" class="pagination-sm" previous-text="Anterior"
+            next-text="Próxima" first-text="Primeira" last-text="Última" ng-change="ctrl.mudaPagina()"></ul>
         </div>
       </tfoot>
     </table>
