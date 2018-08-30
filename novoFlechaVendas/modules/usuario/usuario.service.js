@@ -36,7 +36,7 @@ UsuarioModule.factory('UsuarioService', ['HttpService',
       return HttpService.httpGet(SUBPATH + '/buscaRepresentacoesPorIdUsuario', { 'idUsuario': idUsuario });
     }
 
-    service.importarBaseUsuario = (importacaoUsuarioDto, callback) => {
+    service.importarBaseUsuario = (importacaoUsuarioDto) => {
       return HttpService.httpPost(SUBPATH + '/importarBaseUsuario', importacaoUsuarioDto);
     }
 

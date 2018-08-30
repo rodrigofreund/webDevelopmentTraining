@@ -20,14 +20,28 @@ UsuarioModulo.config(function($stateProvider){
   }
   var edicaoUsuarioState = {
     name:'main.usuario.edicao',
-    url: '/edicao',
+    url: '/edicao/:id',
     component:'cadastroUsuarioComponent',
-    params: {
-      id: {id: null}
+    resolve: {
+      usuarioParaEditar: (UsuarioService, $stateParams, $q) => {
+        const deferred = $q.defer();
+        //efetuar busca pelo usuário
+        if($stateParams.id) {
+          UsuarioService.buscaUsuarioPorId($stateParams.id).then(usuarioDto => {
+            deferred.resolve(usuarioDto);
+          }, (error) => {
+            deferred.reject(error);
+          });
+        } else {
+          deferred.reject(null);
+        }
+        return deferred.promise;
+        //verificar se há permissão
+      }
     }
   }
   $stateProvider.state(usuario)
   $stateProvider.state(pesquisaUsuarioState)
   $stateProvider.state(cadastroUsuarioState)
   $stateProvider.state(edicaoUsuarioState)
-})
+});

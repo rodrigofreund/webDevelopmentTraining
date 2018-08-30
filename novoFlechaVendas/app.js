@@ -1,6 +1,13 @@
 'use strict'
 
-var app = angular.module('GerenciadorFinanceiroFlechaVendas', ['ui.router', 'blockUI', 'usuario.module', 'ModalApp', 'Notificacao'])
+var app = angular.module(
+	'GerenciadorFinanceiroFlechaVendas', 
+	['ui.router',
+	 'blockUI',
+	 'usuario.module',
+	 'ModalApp',
+	 'Notificacao',
+	 'cliente.module'])
 .run(['$transitions', ($transitions) => {
 	$transitions.onBefore({}, transition => {
 		console.log('transacao');
