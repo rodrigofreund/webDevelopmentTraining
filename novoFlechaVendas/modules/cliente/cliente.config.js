@@ -1,8 +1,8 @@
-'use strict'
+'use strict';
 
 var ClienteModulo = angular.module('cliente.module');
 
-ClienteModulo.config(function($stateProvider){
+ClienteModulo.config(($stateProvider) => {
   var cliente = {
     name: 'main.cliente',
     abstract: true,
@@ -10,7 +10,7 @@ ClienteModulo.config(function($stateProvider){
   };
   var pesquisaCliente = {
     name: 'main.cliente.pesquisa',
-    url: 'pesquisa',
+    url: '/pesquisa',
     component: 'pesquisaClienteComponent'
   }
   var cadastroCliente = {
@@ -29,8 +29,8 @@ ClienteModulo.config(function($stateProvider){
       }
     }
   };
-  $stateProvider.state(cliente)
-  $stateProvider.state(pesquisaCliente)
-  $stateProvider.state(cadastroCliente)
-  $stateProvider.state(edicaoCliente)
+  $stateProvider.state(cliente);
+  $stateProvider.state(pesquisaCliente);
+  $stateProvider.state(cadastroCliente);
+  $stateProvider.state(edicaoCliente);
 });

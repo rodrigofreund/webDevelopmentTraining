@@ -7,7 +7,8 @@ var app = angular.module(
 	 'usuario.module',
 	 'ModalApp',
 	 'Notificacao',
-	 'cliente.module'])
+	 'cliente.module',
+	 'pedido.module'])
 .run(['$transitions', ($transitions) => {
 	$transitions.onBefore({}, transition => {
 		console.log('transacao');

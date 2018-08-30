@@ -1,4 +1,4 @@
-'use strict'
+'use strict';
 
 var ClienteModule = angular.module('usuario.module');
 
