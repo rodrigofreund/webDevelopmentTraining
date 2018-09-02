@@ -4,7 +4,6 @@ var UsuarioModulo = angular.module('usuario.module')
 
 UsuarioModulo.component('cadastroUsuarioComponent', {
 	templateUrl: 'modules/usuario/components/cadastro/views/cadastroUsuario.html',
-	bindings: {},
 	controllerAs: 'ctrl',
 	bindings: {
     usuarioParaEditar: '<'

@@ -32,8 +32,8 @@ app.config(function ($stateProvider) {
     url: '/dashboard',
     component: 'dashboardComponent',
     resolve: {
-      informacoes: (LoginService, DashboardService) => {
-        return DashboardService.getInformacoesDashboardDto(LoginService.getUsuario().id);
+      informacoes: (DashboardService, auth) => {
+        return DashboardService.getInformacoesDashboardDto(auth.id);
       }
     }
   }

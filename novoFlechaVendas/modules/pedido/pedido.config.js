@@ -16,7 +16,12 @@ PedidoModulo.config(($stateProvider) => {
   var cadastroPedidoDados = {
     name:'main.pedido.cadastro.dados',
     url: '/dados-pedido',
-    component: 'dadosPedidoComponent'
+    component: 'dadosPedidoComponent',
+    resolve: {
+      listaIndustrias: function (IndustriaService, auth) {
+        return IndustriaService.getIndustriasByIdUsuario(auth.id);
+      },
+    }
   };
   var cadastroPedidoItens = {
     name:'main.pedido.cadastro.itens',
@@ -37,7 +42,7 @@ PedidoModulo.config(($stateProvider) => {
         const deferred = $q.defer();
         return deferred.promisse;
       }
-    }
+    },
   };
   var pesquisaPedido = {
     name: 'main.pedido.pesquisa',

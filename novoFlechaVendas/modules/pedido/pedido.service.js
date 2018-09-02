@@ -4,7 +4,7 @@ var PedidoModule = angular.module('pedido.module');
 
 PedidoModule.factory('PedidoService', ['HttpService',
   function(HttpService){
-    var service = {}
+    var service = {};
     const SUBPATH = 'service/pedido';
 
     const URL_PEDIDO_SALVAR = `${SUBPATH}/salvaPedido`;
