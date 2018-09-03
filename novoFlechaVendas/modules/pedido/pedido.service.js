@@ -53,6 +53,18 @@ PedidoModule.factory('PedidoService', ['HttpService',
       return HttpService.httpGet(URL_PEDIDO_BUSCAR_ULTIMAR_VENDAS_ITEM, ultimasVendasItemSearchDto);
     };
 
+    service.setPedidoAtivo = function(pedidoAtivo) {
+      localStorage.setItem('pedidoAtivo', angular.toJson(pedidoAtivo));
+    }
+  
+    service.getPedidoAtivo = function() {
+      return angular.fromJson(localStorage.getItem('pedidoAtivo'));
+    }
+
+    service.removePedidoAtivo = function() {
+      return localStorage.removeItem('pedidoAtivo');
+    }
+
     return service;
   }
 ]);

@@ -1,29 +1,31 @@
 'use strict'
 
 var app = angular.module(
-	'GerenciadorFinanceiroFlechaVendas', 
+	'GerenciadorFinanceiroFlechaVendas',
 	['ui.router',
-	 'blockUI',
-	 'usuario.module',
-	 'ModalApp',
-	 'Notificacao',
-	 'cliente.module',
-	 'pedido.module',
-		'industria.module'])
-.run(['$transitions', ($transitions) => {
-	$transitions.onBefore({}, transition => {
-		console.log('transacao');
-	});
-}]);
+		'blockUI',
+		'usuario.module',
+		'ModalApp',
+		'Notificacao',
+		'cliente.module',
+		'pedido.module',
+		'industria.module',
+		'tabela.module',
+		'industria.prazo.module'])
+	.run(['$transitions', ($transitions) => {
+		$transitions.onBefore({}, transition => {
+			console.log('transacao');
+		});
+	}]);
 
-app.filter('propsFilter', function() {
-	return function(items, props) {
+app.filter('propsFilter', function () {
+	return function (items, props) {
 		var out = [];
 
 		if (angular.isArray(items)) {
 			var keys = Object.keys(props);
-			items.forEach(function(item) {
-			var itemMatches = false;
+			items.forEach(function (item) {
+				var itemMatches = false;
 
 				for (var i = 0; i < keys.length; i++) {
 					var prop = keys[i];

@@ -1,3 +1,174 @@
-<p>Itens do Pedido</p>
+<style>
+  .select2-container *:focus {
+    outline: none;
+  }
+</style>
+<!--
+<div class="row">
+  <div class="col-xs-12">
+    <img class="img-personal-size image-space" src="images/{{industria.imagem}}" />
+  </div>
+</div>
+<div class="row">
+  <div class="col-xs-12 padding-off">
+    <div class="form-group input-group-sm">
+      <label class="form-control" style="height: auto;" disabled>{{cliente.id}} - {{cliente.razaoSocial}}</label>
+    </div>
+  </div>
+</div>
+<form>
+  <div class="row">
+    <div class="col-xs-12 padding-off">
+      <div class="form-group input-group-sm">
+        <label>Produto</label>
+        <ui-select id="selectItem" ng-model="ctrl.produto.selecionado" ng-disabled="ctrl.editandoItem" ng-change="ctrl.selecionaProduto()" theme="bootstrap"
+          title="Selecione o produto:" skip-focusser="true">
+          <ui-select-match placeholder="Selecione um item">{{$select.selected.codigo}} - {{$select.selected.descricao}}</ui-select-match>
+          <ui-select-choices class="small-font" repeat="produto in ctrl.produtosDisponiveis | propsFilter: {descricao: $select.search, codigo: $select.search}">
+            <div ng-bind-html="produto.descricao | highlight: $select.search"></div>
+            <small>
+              Código: {{produto.codigo}}
+            </small>
+          </ui-select-choices>
+        </ui-select>
+      </div>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-xs-3 padding-off">
+      <div class="form-group input-group-sm">
+        <label>Caixa c/ Imp</label>
+        <input class="form-control" type="number" ng-model="ctrl.produto.selecionado.precoFinal" ng-style="{'border-color': industria.cor}"
+          ng-change="ctrl.alteraPrecoFinalItem()" ng-disabled="ctrl.verificaPropostaPedido()" />
+      </div>
+    </div>
+    <div class="col-xs-3 padding-off">
+      <div class="form-group input-group-sm">
+        <label>Quantidade</label>
+        <input class="form-control" ng-style="{'border-color': industria.cor}" type="number" required ng-model="ctrl.produto.selecionado.quantidadeSolicitada" />
+      </div>
+    </div>
+    <div class="col-xs-3 padding-off">
+      <div class="form-group input-group-sm">
+        <label>Desconto</label>
+        <input class="form-control" ng-style="{'border-color': industria.cor}" ng-model="ctrl.produto.selecionado.desconto" ng-change="ctrl.alteraDescontoItem()"
+          type="text" percent />
+      </div>
+    </div>
+    <div class="col-xs-3 padding-off">
+      <div class="form-group input-group-sm">
+        <label>Unidade c/ Imp</label>
+        <input class="form-control" ng-style="{'border-color': industria.cor}" ng-model="ctrl.precoUnitarioItemComSt" type="number" ng-change="ctrl.atualizaPrecoUnitario()" />
+      </div>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-xs-6 col-sm-6 col-md-3 col-lg-3 padding-off">
+      <div class="form-group input-group-sm">
+        <label>Caixa s/ Imp</label>
+        <label class="form-control" type="number">{{ctrl.precoFinalItemSemSt | currency:"R$"}}</label>
+      </div>
+    </div>
+    <div class="col-xs-6 col-sm-6 col-md-3 col-lg-3 padding-off">
+      <div class="form-group input-group-sm">
+        <label>Unid s/ Imp</label>
+        <label class="form-control">{{ctrl.precoUnitarioItemSemSt | currency:"R$"}}</label>
+      </div>
+    </div>
+    <div class="col-xs-3 col-sm-3 col-md-3 col-lg-1 padding-off">
+      <div class="form-group input-group-sm">
+        <label>ST</label>
+        <label class="form-control">{{ctrl.produto.selecionado.st | percentage}}</label>
+      </div>
+    </div>
+    <div class="col-xs-3 col-sm-3 col-md-3 col-lg-1 padding-off">
+      <div class="form-group input-group-sm">
+        <label>IPI</label>
+        <label class="form-control">{{ctrl.produto.selecionado.ipi | percentage}}</label>
+      </div>
+    </div>
+    <div class="col-xs-6 col-sm-6 col-md-12 col-lg-4 padding-off">
+      <div class="form-group input-group-sm">
+        <label>Total Pedido</label>
+        <label class="form-control">{{ctrl.calculaTotalPedido() | currency:"R$"}}</label>
+      </div>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-xs-4">
+      <input class="btn btn-sm" type="button" ng-disabled="ctrl.produto.selecionado == null" ng-click="ctrl.exibeModalUltimoPedidosItem()"
+        value="Ultimos Pedidos">
+    </div>
+    <div class="col-xs-7">
+      <button class="btn btn-md btn-primary" ng-click="ctrl.adicionaProduto()" ng-disabled="ctrl.produto.selecionado.descricao == null || ctrl.produto.selecionado.quantidadeSolicitada < 1">Inserir</button>
+    </div>
+    <div class="col-xs-11">
+    </div>
+  </div>
+  <hr>
+  <div class="row">
+    <div class="col-xs-12 padding-off">
+      <div class="table-responsive">
+        <table class="table table-condensed">
+          <thead class="thead-inverse">
+            <tr>
+              <th>Código</th>
+              <th>Descrição</th>
+              <th>Preço Final</th>
+              <th>Desconto</th>
+              <th>Quantidade</th>
+              <th ng-if="ctrl.pedidoNegado()">Preço Colocado</th>
+              <th>Ações</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr ng-repeat="i in ctrl.getItensSelecionados()">
+              <td>{{i.codigo}}</td>
+              <td>{{i.descricao}}</td>
+              <td>{{i.precoFinal | currency:"R$"}}</td>
+              <td>{{i.desconto | percentage}}</td>
+              <td>{{i.quantidadeSolicitada}}</td>
+              <td ng-if="ctrl.pedidoNegado()">{{i.precoColocado | currency:"R$"}}</td>
+              <td>
+                <div class="btn-group btn-sm">
+                  <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"
+                    ng-style="{'background-color': industria.cor}" ng-disabled="ctrl.editandoItem">
+                    Ações
+                    <span class="caret"></span>
+                  </button>
+                  <ul class="dropdown-menu dropdown-interno">
+                    <li>
+                      <a href="" ng-click="ctrl.removeProduto(i)">Remover</a>
+                    </li>
+                    <li>
+                      <a href="" ng-click="ctrl.editarProduto(i)">Editar</a>
+                    </li>
+                  </ul>
+                </div>
+              </td>
+            </tr>
+            <tr ng-if="ctrl.getItensSelecionados().length==0">
+              <td>Nenhum item selecionado</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col-xs-12 col-sm-6 col-md-4 col-lg-2 form-group">
+      <button class="btn btn-primary btn-sm btn-block" type="button" ng-click="ctrl.voltar()" ng-disabled="ctrl.editandoItem" ng-style="{'background-color': industria.cor}">Voltar</button>
+
+    </div>
+    <div class="col-md-4 col-lg-8"></div>
+    <div class="col-xs-12 col-sm-6 col-md-4 col-lg-2 form-group">
+      <button class="btn btn-primary btn-sm btn-block" type="button" ng-click="ctrl.finalizarPedido()" ng-style="{'background-color': industria.cor}"
+        ng-disabled="ctrl.getItensSelecionados().length==0 || ctrl.editandoItem">Finalizar Pedido
+      </button>
+    </div>
+  </div>
+</form>
+-->
 <a ui-sref="main.pedido.cadastro.dados">Anterior</a>
 <a ui-sref="main.pedido.cadastro.resumo">Próximo</a>

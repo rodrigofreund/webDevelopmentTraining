@@ -8,37 +8,88 @@ PedidoModulo.component('dadosPedidoComponent', {
     listaIndustrias: '<'
   },
   controllerAs: 'ctrl',
-  controller: function($log, ClienteService, $scope) {
+  controller: function ($log, ClienteService, $scope, TabelaService, IndustriaPrazoService, $state, PedidoService) {
     var ctrl = this;
-    ctrl.idUsuario = $scope.$parent.$resolve.auth.id;
     this.$onInit = init(ctrl);
 
-    debugger
-    console.log('listaIndustrias: ', ctrl.listaIndustrias)
-    console.log('auth: ', auth)
-  
     ctrl.selecionaIndustria = function () {
-      $log.log('seleciona industria');
-      $log.log(ctrl.industria.selecionado);
       const buscaClientesDto = {
-        idUsuario: ctrl.idUsuario
+        idUsuario: ctrl.idUsuario,
+        idIndustria: ctrl.pedido.industria.id
       }
-      //ClienteService.getClientesPorRepresentacao()
+      ClienteService.getClientesPorRepresentacao(buscaClientesDto).then((clienteDtoList) => {
+        ctrl.listaClientes = clienteDtoList;
+      });
+      TabelaService.getTabelasPorIndustria(ctrl.pedido.industria.id).then((tabelaDtoList) => {
+        ctrl.listaTabelas = tabelaDtoList
+      });
     };
 
-    ctrl.selecionaCliente = function() {
-      $log.log('seleciona cliente');
-      $log.log(ctrl.cliente.selecionado);
-    }
+    ctrl.selecionaCliente = function () {
+      $log.log(ctrl.pedido.cliente);
+    };
+
+    ctrl.selecionaTabela = function () {
+      const industriaPrazoSearchDto = {
+        idIndustria: ctrl.pedido.industria.id,
+        idCliente: ctrl.pedido.cliente.id
+      }
+      IndustriaPrazoService.getIndustriaPrazoClientePrazo(industriaPrazoSearchDto).then((industriaPrazoPedidoDtoList) => {
+        ctrl.listaPrazos = industriaPrazoPedidoDtoList;
+      })
+    };
+
+    ctrl.open = function() {
+      ctrl.popup.opened = true;
+    };
+
+    ctrl.geraPedido = function() {
+      $log.log('Pedido: ', ctrl.pedido)
+      PedidoService.setPedidoAtivo(ctrl.pedido);
+      $state.go('main.pedido.cadastro.itens', {'pedido': ctrl.pedido});
+    };
 
     function init(ctrl) {
-      ctrl.industria = {
-        selecionado: null
-      };
-      ctrl.cliente = { 
-        selecionado: null
-      };
+      // entidade principal da tela
+      ctrl.pedido = {}
+      ctrl.pedido.dataPedido = new Date();
+
       ctrl.possuiPedidoAtivo = false;
+      ctrl.idUsuario = $scope.$parent.$resolve.auth.id;
+      ctrl.pedido.dataEntrega = geraDataEntrega();
+
+      ctrl.dateOptions = {
+        formatYear: 'yyyy',
+        minDate: new Date(),
+        startingDay: 1
+      };
+
+      ctrl.popup = {
+        opened: false
+      };
+
+      ctrl.propostaOptions = [
+        {id: 0, text: 'Não'},
+        {id: 1, text: 'Sim'}
+      ];
+
+      ctrl.cargaOptions = [
+        {value: 1, text: 'Batida'},
+        {value: 2, text: 'Paletizada'}
+      ];
+
+      ctrl.proposta = {
+        selecionado : null
+      };
+
+      ctrl.carga = {
+        selecionado: null
+      };
+    }
+
+    function geraDataEntrega() {
+      let dataAtual = new Date(); 
+      return new Date(dataAtual.getFullYear(), dataAtual.getMonth(), dataAtual.getDate() + 1);
     }
   }
 });

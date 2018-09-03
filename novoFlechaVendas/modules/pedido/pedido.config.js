@@ -26,7 +26,12 @@ PedidoModulo.config(($stateProvider) => {
   var cadastroPedidoItens = {
     name:'main.pedido.cadastro.itens',
     url: '/itens-pedido',
-    component: 'itensPedidoComponent'
+    component: 'itensPedidoComponent',
+    resolve: {
+      pedido: (PedidoService) => {
+        return PedidoService.getPedidoAtivo();
+      }
+    }
   };
   var cadastroPedidoResumo = {
     name:'main.pedido.cadastro.resumo',
