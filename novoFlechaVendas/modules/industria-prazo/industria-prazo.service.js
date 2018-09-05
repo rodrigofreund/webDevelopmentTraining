@@ -10,9 +10,9 @@ PedidoModule.factory('IndustriaPrazoService', ['HttpService',
     const URL_INDUSTRIA_PRAZO_SALVAR = `${SUBPATH}/salvaIndustriaPrazo`;
     const URL_INDUSTRIA_PRAZO_BUSCAR_POR_INDUSTRIA = `${SUBPATH}/getIndustriaPrazo`;
     const URL_INDUSTRIA_PRAZO_BUSCAR_POR_ID = `${SUBPATH}/getIndustriaPrazoById`;
-    const URL_INDUSTRIA_PRAZO_CLIENTE = `/getIndustriaPrazoOuIndustriaClientePrazo`;
+    const URL_INDUSTRIA_PRAZO_CLIENTE = `${SUBPATH}/getIndustriaPrazoOuIndustriaClientePrazo`;
     const URL_INDUSTRIA_PRAZO_REMOVER = `${SUBPATH}/removerIndustriaPrazo`;
-    const URL_INDUSTRIA_PRAZO_POR_INDUSTRIA_CLIENTE = `/getIndustriaClientePrazoPorIdIndustriaCliente`;
+    const URL_INDUSTRIA_PRAZO_POR_INDUSTRIA_CLIENTE = `${SUBPATH}/getIndustriaClientePrazoPorIdIndustriaCliente`;
 
     service.salvaIndustriaPrazo = (industriaPrazoDto) => {
       return HttpService.httpPost(URL_INDUSTRIA_PRAZO_SALVAR, industriaPrazoDto);

@@ -115,28 +115,6 @@ var PedidoResumoModule = angular.module('PedidoResumo')
 		})
 	}
 
-	$scope.adicionaObservacao = function() {
-		const _idUsuario = AuthenticationService.getUsuario().id
-		const _observacao = $scope.observacao.msg
-		const _nomeUsuario = AuthenticationService.getUsuario().nome
-		const _dataCriacao = new Date().toISOString();
-		const _idPedido = PedidoService.pedido.id
-		let msg = {
-			idObservacao: undefined,
-			idPedido: _idPedido,
-			dataCriacao: _dataCriacao,
-			dataLeitura: undefined,
-			lido: undefined,
-			idUsuario: _idUsuario,
-			observacao: _observacao,
-			nomeUsuario: _nomeUsuario
-		}
-		$scope.pedido.observacoesPedidoDto.push(msg)
-
-		// Limpa campo da tela
-		$scope.observacao.msg = undefined
-	}
-
 	$scope.getItensPedido = function() {
 		return PedidoService.pedido.itensPedido;
 	}

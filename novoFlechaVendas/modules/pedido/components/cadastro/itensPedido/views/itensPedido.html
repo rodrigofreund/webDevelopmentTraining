@@ -36,8 +36,8 @@
   <div class="col-xs-3 padding-off">
     <div class="form-group input-group-sm">
       <label>Caixa c/ Imp</label>
-      <input class="form-control" type="number" ng-model="ctrl.produto.selecionado.precoFinal" ng-style="{'border-color': ctrl.pedido.industria.cor}"
-        ng-disabled="ctrl.isPedidoProposta()" />
+      <input class="form-control" type="number" ng-model="ctrl.produto.selecionado.precoComImposto" ng-style="{'border-color': ctrl.pedido.industria.cor}"
+        ng-disabled="!ctrl.isPedidoProposta()" ng-change="ctrl.alteraPrecoComImposto()"/>
     </div>
   </div>
   <div class="col-xs-3 padding-off">
@@ -51,14 +51,14 @@
     <div class="form-group input-group-sm">
       <label>Desconto</label>
       <input class="form-control" ng-style="{'border-color': ctrl.pedido.industria.cor}" ng-model="ctrl.produto.selecionado.desconto"
-        type="text" percent />
+        type="text" percent ng-change="ctrl.alteraDesconto()"/>
     </div>
   </div>
   <div class="col-xs-3 padding-off">
     <div class="form-group input-group-sm">
       <label>Unidade c/ Imp</label>
       <input class="form-control" ng-style="{'border-color': ctrl.pedido.industria.cor}" ng-model="ctrl.produto.selecionado.precoUnitarioComImposto"
-        type="number" ng-change="ctrl.atualizaPrecoUnitario()" />
+        type="number" />
     </div>
   </div>
 </div>
@@ -67,7 +67,7 @@
     <div class="form-group input-group-sm">
       <label>Caixa s/ Imp</label>
       <input class="form-control" ng-style="{'border-color': ctrl.pedido.industria.cor}" ng-model="ctrl.produto.selecionado.precoSemImposto"
-        type="number" />
+        type="number" ng-change="ctrl.alteraPrecoSemImposto()"/>
     </div>
   </div>
   <div class="col-xs-6 col-sm-6 col-md-3 col-lg-3 padding-off">
@@ -91,7 +91,7 @@
   <div class="col-xs-6 col-sm-6 col-md-12 col-lg-4 padding-off">
     <div class="form-group input-group-sm">
       <label>Total Pedido</label>
-      <label class="form-control">{{ctrl.calculaTotalPedido() | currency:"R$"}}</label>
+      <label class="form-control">{{ctrl.valorTotalPedido | currency:"R$"}}</label>
     </div>
   </div>
 </div>
@@ -157,31 +157,14 @@
     </div>
   </div>
 </div>
-<!--
 <div class="row">
-
-</div>
--->
-<!--
-<form>
-
-
-  <hr>
-
-
-  <div class="row">
-    <div class="col-xs-12 col-sm-6 col-md-4 col-lg-2 form-group">
-      <button class="btn btn-primary btn-sm btn-block" type="button" ng-click="ctrl.voltar()" ng-disabled="ctrl.editandoItem" ng-style="{'background-color': industria.cor}">Voltar</button>
-
-    </div>
-    <div class="col-md-4 col-lg-8"></div>
-    <div class="col-xs-12 col-sm-6 col-md-4 col-lg-2 form-group">
-      <button class="btn btn-primary btn-sm btn-block" type="button" ng-click="ctrl.finalizarPedido()" ng-style="{'background-color': industria.cor}"
-        ng-disabled="ctrl.getItensSelecionados().length==0 || ctrl.editandoItem">Finalizar Pedido
-      </button>
-    </div>
+  <div class="col-xs-12 col-sm-6 col-md-4 col-lg-2 form-group">
+    <button class="btn btn-primary btn-sm btn-block" type="button" ng-click="ctrl.voltar()" ng-style="{'background-color': industria.cor}">Voltar</button>
   </div>
-</form>
--->
-<a ui-sref="main.pedido.cadastro.dados">Anterior</a>
-<a ui-sref="main.pedido.cadastro.resumo">Próximo</a>
+  <div class="col-md-4 col-lg-8"></div>
+  <div class="col-xs-12 col-sm-6 col-md-4 col-lg-2 form-group">
+    <button class="btn btn-primary btn-sm btn-block" type="button" ng-click="ctrl.finalizarPedido()" ng-style="{'background-color': industria.cor}"
+      ng-disabled="ctrl.getItensSelecionados().length==0 || ctrl.editandoItem">Finalizar Pedido
+    </button>
+  </div>
+</div>

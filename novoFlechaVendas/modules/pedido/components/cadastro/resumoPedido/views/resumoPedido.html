@@ -1,3 +1,119 @@
-<p>Resumo do Pedido</p>
-<a ui-sref="main.pedido.cadastro.itens">Anterior</a>
-<a ui-sref="main.pedido.cadastro.dados">Concluir</a>
+<div class="row">
+  <div class="col-xs-12">
+    <img class="img-personal-size image-space" src="images/{{ctrl.pedido.industria.imagem}}" />
+  </div>
+</div>
+<div class="row">
+  <div class="col-xs-12 padding-off">
+    <div class="form-group input-group-sm">
+      <label class="form-control" disabled="disabled" style="height: auto;">{{ctrl.pedido.cliente.id}} - {{ctrl.pedido.cliente.razaoSocial}}</label>
+    </div>
+  </div>
+</div>
+<form>
+  <div class="row">
+    <div class="col-xs-12">
+      <div class="table-responsive">
+        <table class="table table-condensed">
+          <thead class="thead-inverse">
+            <tr>
+              <th>Código</th>
+              <th>Descrição</th>
+              <th>Quantidade</th>
+              <th>Desconto</th>
+              <th>Caixa s/ Imp</th>
+              <th>Total s/ Imp</th>
+              <th>Caixa c/ Imp</th>
+              <th>Total c/ Imp</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr ng-repeat="i in ctrl.pedido.tabela.itens | itensAdicionadosFilter track by i.id">
+              <td>{{i.codigo}}</td>
+              <td>{{i.descricao}}</td>
+              <td>{{i.quantidadeSolicitada}}</td>
+              <td>{{i.desconto | percentage}}</td>
+              <td>{{i.precoUnitarioSemImposto | currency:"R$"}}</td>
+              <td>{{i.precoUnitarioSemImposto * i.quantidadeSolicitada | currency:"R$"}}
+              </td>
+              <td>{{i.precoUnitarioComImposto | currency:"R$"}}</td>
+              <td>{{i.precoUnitarioComImposto * i.quantidadeSolicitada | currency:"R$"}}
+              </td>
+            </tr>
+            <!--
+            item.desconto = 0;
+            item.valorImposto = PedidoService.getValorImposto(item);
+            item.precoComImposto = item.preco + item.valorImposto - item.desconto;
+            item.precoSemImposto = item.preco - item.desconto;
+            item.quantidadeSolicitada = 1;
+            item.precoUnitarioComImposto = item.precoComImposto / item.quantidade;
+            item.precoUnitarioSemImposto = item.precoSemImposto / item.quantidade;
+            -->
+            <!--
+            <tr ng-show="getItensPedido().length==0">
+              <td>Nenhum item selecionado</td>
+            </tr>
+            -->
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-xs-4 col-sm-4">
+      <div class="form-group">
+        <label>Total Sem Imposto</label> <label class="form-control">{{ctrl.valorTotalPedidoSemImposto | currency:"R$"}}</label>
+      </div>
+    </div>
+    <div class="col-xs-4 col-sm-4">
+      <div class="form-group">
+        <label>Total Com Imposto</label> <label class="form-control">{{ctrl.valorTotalPedidoComImposto | currency:"R$"}}</label>
+      </div>
+    </div>
+    <div class="col-xs-4 col-sm-4">
+      <div class="form-group">
+        <label>Prazo</label> <label class="form-control" ng-bind="ctrl.pedido.prazo.descricao"></label>
+      </div>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-xs-12 col-sm-6">
+      <div class="form-group">
+        <label>Tabela</label> <label class="form-control" ng-bind="ctrl.pedido.tabela.nome"></label>
+      </div>
+    </div>
+    <div class="col-xs-6 col-sm-4">
+      <div class="form-group">
+        <label>Carga</label> <label class="form-control" ng-bind="ctrl.pedido.carga.text"></label>
+      </div>
+    </div>
+    <div class="col-xs-6 col-sm-2">
+      <div class="form-group">
+        <label>Total Itens</label> <label class="form-control" ng-bind="ctrl.totalItens"></label>
+      </div>
+    </div>
+    <div class="col-sm-1"></div>
+    <div class="col-xs-12 col-sm-10">
+      <chat id-pedido="ctrl.pedido.id" mensagens="ctrl.pedido.mensagens" auth="ctrl.auth" observacoes="ctrl.pedido.observacoesPedidoDto"></chat>
+    </div>
+    <div class="col-sm-1"></div>
+  </div>
+
+  <div class="row">
+    <div class="col-xs-12 col-sm-4 col-lg-2 form-group">
+      <button class="btn btn-primary btn-sm btn-block" type="button" ng-style="{'background-color': industria.cor}" ng-click="ctrl.voltar()">Voltar</button>
+    </div>
+    <div class="col-lg-3"></div>
+    <div class="col-xs-12 col-sm-4 col-lg-2 form-group">
+      <button class="btn btn-primary btn-sm btn-block" type="button" ng-style="{'background-color': industria.cor}" ng-click="ctrl.salvarPedido()">Salvar
+        Pedido
+      </button>
+    </div>
+    <div class="col-lg-3"></div>
+    <div class="col-xs-12 col-sm-4 col-lg-2 form-group">
+      <button class="btn btn-primary btn-sm btn-block" type="button" ng-style="{'background-color': industria.cor}" ng-click="ctrl.enviarPedido()">Enviar
+        Pedido
+      </button>
+    </div>
+  </div>
+</form>

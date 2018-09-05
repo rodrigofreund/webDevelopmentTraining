@@ -1,0 +1,93 @@
+<div class="row">
+  <div class="col-sm-12">
+    <span class="content-title">Edição Pedido</span>
+  </div>
+</div>
+<form>
+  <div class="row">
+    <div class="col-xs-12 form-group">
+      <label>Indústria</label>
+      <label type="text" class="form-control" ng-bind="ctrl.pedido.industria.nome"></label>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-xs-12 form-group">
+      <label >Cliente</label>
+      <label type="text" class="form-control" ng-bind="ctrl.pedido.cliente.razaoSocial"></label>
+    </div>
+  </div>
+  <div class="row" ng-if="ctrl.pedido.cliente">
+    <div class="col-xs-12 demonstrate">
+      <label>Endereço: </label><label>{{ctrl.pedido.cliente.rua}}, {{ctrl.pedido.cliente.selecionado.numero}}</label>
+      <label>Bairro:</label><label>{{ctrl.pedido.cliente.bairro}}</label>
+      <label>CNPJ: </label> <label>{{ctrl.pedido.cliente.cpfCnpj}}</label>
+      <label>Telefone: </label><label>{{ctrl.pedido.cliente.telefone}}</label>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-xs-12 form-group">
+      <label for="selTabela">Tabela</label>
+      <select id="selTabela" class="form-control" focus="selectChanged" ng-model="ctrl.pedido.tabela" ng-options="tabela.nome for tabela in ctrl.listaTabelas track by tabela.id"
+        placeholder="Selecione a tabela" required>
+      </select>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-xs-12 form-group">
+      <label for="inDataEntrega">Data de entrega</label>
+      <p class="input-group">
+        <input id="inDataEntrega" type="text" class="form-control" uib-datepicker-popup="dd/MM/yyyy" ng-model="ctrl.pedido.dataEntrega"
+          is-open="ctrl.popup.opened" datepicker-options="ctrl.dateOptions" ng-required="true" close-text="Fechar" datepicker-append-to-body="true"
+          current-text="Hoje" clear-text="Limpa" />
+        <span class="input-group-btn">
+          <button type="button" class="btn btn-default" ng-click="ctrl.open()"><i class="glyphicon glyphicon-calendar"></i></button>
+        </span>
+      </p>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-xs-12 form-group">
+      <label for="selPrazo">Prazo</label>
+      <select id="selPrazo" class="form-control" ng-model="ctrl.pedido.prazo" ng-disabled="!ctrl.pedido.cliente" required
+        ng-options="p as p.descricao for p in ctrl.listaPrazos track by p.idIndustriaPrazo">
+        <option value="">Selecione um prazo</option>
+      </select>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-xs-12 form-group">
+      <label for="selProposta">Proposta</label>
+      <select for="selProposta" class="form-control" ng-model="ctrl.pedido.proposta" ng-options="p as p.text for p in ctrl.propostaOptions track by p.id"
+        ng-init="ctrl.pedido.proposta = ctrl.propostaOptions[1]">
+      </select>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-xs-12 form-group">
+      <label for="carga">Carga</label>
+      <select class="form-control" ng-model="ctrl.pedido.carga" ng-options="p as p.text for p in ctrl.cargaOptions track by p.value" ng-init="ctrl.pedido.carga = ctrl.cargaOptions[0]">
+      </select>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-xs-12 col-sm-2 col-md-2 col-lg-2 form-group">
+      <button class="btn btn-danger btn-sm btn-block" ng-click="ctrl.cancelarPedido()">Cancelar</button>
+    </div>
+    <div class="col-lg-1"></div>
+    <div class="col-xs-12 col-sm-3 col-md-3 col-lg-2 form-group">
+      <button class="btn btn-sm btn-block" type="button" data-toggle="modal" ng-style="{'background-color': industria.cor}" data-target="#modalFaturamentos"
+        disabled>Acampanhamento</button>
+    </div>
+    <div class="col-lg-1"></div>
+    <div class="col-xs-12 col-sm-3 col-md-3 col-lg-2 form-group">
+      <button class="btn btn-sm btn-block" type="button" data-toggle="modal" data-target="#modalDuplicatas" ng-style="{'background-color': industria.cor}"
+        disabled>Duplicatas</button>
+    </div>
+    <div class="col-lg-2"></div>
+    <div class="col-xs-12 col-sm-4 col-md-4 col-lg-2 form-group">
+      <button class="btn btn-primary btn-sm btn-block" type="submit" ng-click="ctrl.geraPedido()" ng-style="{'background-color': industria.cor}">Fazer
+        Pedido
+      </button>
+    </div>
+  </div>
+</form>

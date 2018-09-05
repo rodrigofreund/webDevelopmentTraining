@@ -2,8 +2,8 @@
 
 var PedidoModule = angular.module('pedido.module');
 
-PedidoModule.factory('PedidoService', ['HttpService',
-  function(HttpService){
+PedidoModule.factory('PedidoService', ['HttpService', '$filter',
+  function (HttpService, $filter) {
     var service = {};
     const SUBPATH = 'service/pedido';
 
@@ -53,16 +53,48 @@ PedidoModule.factory('PedidoService', ['HttpService',
       return HttpService.httpGet(URL_PEDIDO_BUSCAR_ULTIMAR_VENDAS_ITEM, ultimasVendasItemSearchDto);
     };
 
-    service.setPedidoAtivo = function(pedidoAtivo) {
+    service.setPedidoAtivo = function (pedidoAtivo) {
       localStorage.setItem('pedidoAtivo', angular.toJson(pedidoAtivo));
     }
-  
-    service.getPedidoAtivo = function() {
+
+    service.getPedidoAtivo = function () {
       return angular.fromJson(localStorage.getItem('pedidoAtivo'));
     }
 
-    service.removePedidoAtivo = function() {
+    service.removePedidoAtivo = function () {
       return localStorage.removeItem('pedidoAtivo');
+    }
+
+    service.getValorImposto = function (item) {
+      return item.preco * (item.st + item.ipi);
+    }
+
+    service.getValorDesconto = function (item) {
+      return item.preco * item.desconto;
+    }
+
+    service.getValorTotalPedido = function (pedido) {
+      let total = 0;
+      $filter('itensAdicionadosFilter', null)(pedido.tabela.itens).forEach(item => {
+        total += item.precoComImposto * item.quantidadeSolicitada;
+      });
+      return total;
+    }
+
+    service.getValorTotalPedidoSemImposto = function (pedido) {
+      let total = 0;
+      $filter('itensAdicionadosFilter', null)(pedido.tabela.itens).forEach(item => {
+        total += item.precoSemImposto * item.quantidadeSolicitada;
+      });
+      return total;
+    }
+
+    service.getTotalItens = function (pedido) {
+      let total = 0;
+      $filter('itensAdicionadosFilter', null)(pedido.tabela.itens).forEach(item => {
+        total += item.quantidadeSolicitada;
+      });
+      return total;
     }
 
     return service;

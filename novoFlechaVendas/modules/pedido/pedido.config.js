@@ -9,12 +9,12 @@ PedidoModulo.config(($stateProvider) => {
     abstract: true
   };
   var cadastroPedido = {
-    name:'main.pedido.cadastro',
+    name: 'main.pedido.cadastro',
     url: '/cadastro',
     abstract: true
   };
   var cadastroPedidoDados = {
-    name:'main.pedido.cadastro.dados',
+    name: 'main.pedido.cadastro.dados',
     url: '/dados-pedido',
     component: 'dadosPedidoComponent',
     resolve: {
@@ -24,18 +24,17 @@ PedidoModulo.config(($stateProvider) => {
     }
   };
   var edicaoPedidoDados = {
-    name: 'main.pedido.edicao.dados',
-    url: '/edicao/:id',
-    abstract: true,
+    name: 'main.pedido.cadastro.edicao',
+    url: '/edicao',
+    component: 'edicaoPedidoComponent',
     resolve: {
-      pedidoParaEditar: ($q) => {
-        const deferred = $q.defer();
-        return deferred.promisse;
+      pedido: (PedidoService) => {
+        return PedidoService.getPedidoAtivo();
       }
     },
   };
   var pedidoItens = {
-    name:'main.pedido.cadastro.itens',
+    name: 'main.pedido.cadastro.itens',
     url: '/itens-pedido',
     component: 'itensPedidoComponent',
     resolve: {
@@ -45,9 +44,14 @@ PedidoModulo.config(($stateProvider) => {
     }
   };
   var pedidoResumo = {
-    name:'main.pedido.cadastro.resumo',
+    name: 'main.pedido.cadastro.resumo',
     url: '/resumo-pedido',
-    component: 'resumoPedidoComponent'
+    component: 'resumoPedidoComponent',
+    resolve: {
+      pedido: (PedidoService) => {
+        return PedidoService.getPedidoAtivo();
+      }
+    }
   };
   var pesquisaPedido = {
     name: 'main.pedido.pesquisa',
