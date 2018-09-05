@@ -79,4 +79,6 @@ const DOCUMENT_FILE_TYPE = [
 	'application/msword'
 ]
 
-const ENTER_KEY_CODE = 13
+const ENTER_KEY_CODE = 13;
+
+const PEDIDO_PROPOSTA = 1;

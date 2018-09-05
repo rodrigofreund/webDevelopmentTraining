@@ -23,23 +23,8 @@ PedidoModulo.config(($stateProvider) => {
       },
     }
   };
-  var cadastroPedidoItens = {
-    name:'main.pedido.cadastro.itens',
-    url: '/itens-pedido',
-    component: 'itensPedidoComponent',
-    resolve: {
-      pedido: (PedidoService) => {
-        return PedidoService.getPedidoAtivo();
-      }
-    }
-  };
-  var cadastroPedidoResumo = {
-    name:'main.pedido.cadastro.resumo',
-    url: '/resumo-pedido',
-    component: 'resumoPedidoComponent'
-  };
-  var edicaoPedido = {
-    name: 'main.pedido.edicao',
+  var edicaoPedidoDados = {
+    name: 'main.pedido.edicao.dados',
     url: '/edicao/:id',
     abstract: true,
     resolve: {
@@ -49,6 +34,21 @@ PedidoModulo.config(($stateProvider) => {
       }
     },
   };
+  var pedidoItens = {
+    name:'main.pedido.cadastro.itens',
+    url: '/itens-pedido',
+    component: 'itensPedidoComponent',
+    resolve: {
+      pedido: (PedidoService) => {
+        return PedidoService.getPedidoAtivo();
+      }
+    }
+  };
+  var pedidoResumo = {
+    name:'main.pedido.cadastro.resumo',
+    url: '/resumo-pedido',
+    component: 'resumoPedidoComponent'
+  };
   var pesquisaPedido = {
     name: 'main.pedido.pesquisa',
     url: '/pesquisa',
@@ -57,8 +57,8 @@ PedidoModulo.config(($stateProvider) => {
   $stateProvider.state(pedido);
   $stateProvider.state(cadastroPedido);
   $stateProvider.state(cadastroPedidoDados);
-  $stateProvider.state(cadastroPedidoItens);
-  $stateProvider.state(cadastroPedidoResumo);
-  $stateProvider.state(edicaoPedido);
+  $stateProvider.state(pedidoItens);
+  $stateProvider.state(pedidoResumo);
+  $stateProvider.state(edicaoPedidoDados);
   $stateProvider.state(pesquisaPedido);
 });
