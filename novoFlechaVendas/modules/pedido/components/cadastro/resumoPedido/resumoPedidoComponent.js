@@ -8,7 +8,7 @@ PedidoModulo.component('resumoPedidoComponent', {
     pedido: '='
   },
   controllerAs: 'ctrl',
-  controller : function ($log, $scope, $state, PedidoService) {
+  controller : function ($scope, $state, PedidoCalculoService, PedidoService) {
     var ctrl = this;
 
     ctrl.voltar = function() {
@@ -17,9 +17,9 @@ PedidoModulo.component('resumoPedidoComponent', {
     }
 
     this.$onInit = function () {
-      ctrl.valorTotalPedidoComImposto = PedidoService.getValorTotalPedido(ctrl.pedido)
-      ctrl.valorTotalPedidoSemImposto = PedidoService.getValorTotalPedidoSemImposto(ctrl.pedido)
-      ctrl.totalItens = PedidoService.getTotalItens(ctrl.pedido)
+      ctrl.valorTotalPedidoComImposto = PedidoCalculoService.getValorTotalPedido(ctrl.pedido)
+      ctrl.valorTotalPedidoSemImposto = PedidoCalculoService.getValorTotalPedidoSemImposto(ctrl.pedido)
+      ctrl.totalItens = PedidoCalculoService.getTotalItens(ctrl.pedido)
       ctrl.auth = $scope.$parent.$resolve.auth
       if(!ctrl.pedido.observacoesPedidoDto) {
         ctrl.pedido.observacoesPedidoDto = [];

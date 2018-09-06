@@ -142,7 +142,7 @@
             </td>
             <td>{{i.codigo}}</td>
             <td>{{i.descricao}}</td>
-            <td>{{i.precoFinal | currency:"R$"}}</td>
+            <td>{{i.precoComImposto | currency:"R$"}}</td>
             <td>{{i.desconto | percentage}}</td>
             <td>{{i.quantidadeSolicitada}}</td>
             <td ng-if="ctrl.pedidoNegado()">{{i.precoColocado | currency:"R$"}}</td>

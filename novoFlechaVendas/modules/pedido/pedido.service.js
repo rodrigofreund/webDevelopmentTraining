@@ -2,8 +2,8 @@
 
 var PedidoModule = angular.module('pedido.module');
 
-PedidoModule.factory('PedidoService', ['HttpService', '$filter',
-  function (HttpService, $filter) {
+PedidoModule.factory('PedidoService', ['HttpService',
+  function (HttpService) {
     var service = {};
     const SUBPATH = 'service/pedido';
 
@@ -63,38 +63,6 @@ PedidoModule.factory('PedidoService', ['HttpService', '$filter',
 
     service.removePedidoAtivo = function () {
       return localStorage.removeItem('pedidoAtivo');
-    }
-
-    service.getValorImposto = function (item) {
-      return item.preco * (item.st + item.ipi);
-    }
-
-    service.getValorDesconto = function (item) {
-      return item.preco * item.desconto;
-    }
-
-    service.getValorTotalPedido = function (pedido) {
-      let total = 0;
-      $filter('itensAdicionadosFilter', null)(pedido.tabela.itens).forEach(item => {
-        total += item.precoComImposto * item.quantidadeSolicitada;
-      });
-      return total;
-    }
-
-    service.getValorTotalPedidoSemImposto = function (pedido) {
-      let total = 0;
-      $filter('itensAdicionadosFilter', null)(pedido.tabela.itens).forEach(item => {
-        total += item.precoSemImposto * item.quantidadeSolicitada;
-      });
-      return total;
-    }
-
-    service.getTotalItens = function (pedido) {
-      let total = 0;
-      $filter('itensAdicionadosFilter', null)(pedido.tabela.itens).forEach(item => {
-        total += item.quantidadeSolicitada;
-      });
-      return total;
     }
 
     return service;

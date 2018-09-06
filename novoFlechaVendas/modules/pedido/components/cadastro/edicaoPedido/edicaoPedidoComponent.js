@@ -8,7 +8,7 @@ PedidoModulo.component('edicaoPedidoComponent', {
     pedido: '<'
   },
   controllerAs: 'ctrl',
-  controller: function ($log, $scope, IndustriaPrazoService, $state, PedidoService, TabelaService, $filter) {
+  controller: function ($log, $scope, IndustriaPrazoService, $state, PedidoService, TabelaService, $filter, PedidoCalculoService) {
     var ctrl = this;
     this.$onInit = init(ctrl);
 
@@ -27,9 +27,8 @@ PedidoModulo.component('edicaoPedidoComponent', {
           $filter('filter')(novaTabela.itens, { codigo: item.codigo }).forEach(novoItem => {
             novoItem['inserido'] = item['inserido']
             novoItem['quantidadeSolicitada'] = item['quantidadeSolicitada']
-            novoItem['precoSemImposto'] = item['precoSemImposto']
-            $log.log('velhoItem: ', item)
-            $log.log('novoItem: ', novoItem)
+            novoItem['desconto'] = item['desconto']
+            PedidoCalculoService.inicializaPreco(novoItem);
           })
         });
       }

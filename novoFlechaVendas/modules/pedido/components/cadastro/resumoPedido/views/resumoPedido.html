@@ -33,11 +33,11 @@
               <td>{{i.descricao}}</td>
               <td>{{i.quantidadeSolicitada}}</td>
               <td>{{i.desconto | percentage}}</td>
-              <td>{{i.precoUnitarioSemImposto | currency:"R$"}}</td>
-              <td>{{i.precoUnitarioSemImposto * i.quantidadeSolicitada | currency:"R$"}}
+              <td>{{i.precoSemImposto | currency:"R$"}}</td>
+              <td>{{i.precoSemImposto * i.quantidadeSolicitada | currency:"R$"}}
               </td>
-              <td>{{i.precoUnitarioComImposto | currency:"R$"}}</td>
-              <td>{{i.precoUnitarioComImposto * i.quantidadeSolicitada | currency:"R$"}}
+              <td>{{i.precoComImposto | currency:"R$"}}</td>
+              <td>{{i.precoComImposto * i.quantidadeSolicitada | currency:"R$"}}
               </td>
             </tr>
             <!--
