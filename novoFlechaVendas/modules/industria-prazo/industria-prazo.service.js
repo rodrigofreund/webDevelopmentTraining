@@ -18,8 +18,8 @@ PedidoModule.factory('IndustriaPrazoService', ['HttpService',
       return HttpService.httpPost(URL_INDUSTRIA_PRAZO_SALVAR, industriaPrazoDto);
     };
 
-    service.atualizarStatusPedido = (idIndustria) => {
-      return HttpService.httpGet(URL_INDUSTRIA_PRAZO_BUSCAR_POR_INDUSTRIA, idIndustria);
+    service.getIndustriaPrazo = (idIndustria) => {
+      return HttpService.httpGet(URL_INDUSTRIA_PRAZO_BUSCAR_POR_INDUSTRIA, {idIndustria});
     };
 
     service.getIndustriaPrazoById = (idIndustriaPrazo) => {
@@ -31,7 +31,7 @@ PedidoModule.factory('IndustriaPrazoService', ['HttpService',
     };
 
     service.removerIndustriaPrazo = (idIndustriaPrazo) => {
-      return HttpService.httpGet(URL_INDUSTRIA_PRAZO_REMOVER, idIndustriaPrazo);
+      return HttpService.httpGet(URL_INDUSTRIA_PRAZO_REMOVER, {idIndustriaPrazo});
     };
 
     service.getIndustriaClientePrazoPorIdIndustriaCliente = () => {

@@ -22,7 +22,6 @@ angular.module('CadastroClientes')
 				$location,
 				$sce,
 				$route,
-				$routeParams,
 				$window,
 				service,
 				ClientesCadastradosService,

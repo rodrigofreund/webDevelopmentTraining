@@ -44,13 +44,11 @@ PedidoModulo.component('dadosPedidoComponent', {
     };
 
     ctrl.geraPedido = function() {
-      $log.log('Pedido: ', ctrl.pedido)
       PedidoService.setPedidoAtivo(ctrl.pedido);
       $state.go('main.pedido.cadastro.itens', {'pedido': ctrl.pedido});
     };
 
     function init(ctrl) {
-      // entidade principal da tela
       ctrl.pedido = {}
       ctrl.pedido.dataPedido = new Date();
 

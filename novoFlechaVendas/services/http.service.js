@@ -11,22 +11,33 @@ app.factory('HttpService', [
 function constructor($http, blockUI) {
 	var service = {};
 
-	service.httpPost = function (path, param, timeout) {
-		var _timeout = timeout !== null ? timeout : TIMEOUT
+	service.httpPost = function (path, param, timeout, header, opt) {
+		let _timeout = timeout !== null ? timeout : TIMEOUT
+		let _header = {
+			'Authorization': getUsuarioHash(),
+		}
+		if (header) {
+			for (let i in header) {
+				_header[i] = header[i];
+			}
+		}
 		var req = {
 			method: 'POST',
 			url: `${MODO_HTTP}/${URL}/${path}`,
-			headers: { 'Authorization': getUsuarioHash() },
+			headers: _header,
 			data: param,
 			timeout: _timeout
+		};
+		if (opt) {
+			for (let i in opt) {
+				req[i] = opt[i];
+			}
 		}
-		blockUI.start()
-		return $http(req)
-			.then(result => {
-				return result.data
-			})
-			.finally(function () {
-				blockUI.stop()
+		blockUI.start();
+		return $http(req).then(result => {
+				return result.data;
+			}).finally(function () {
+				blockUI.stop();
 			})
 	}
 

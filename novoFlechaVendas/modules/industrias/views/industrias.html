@@ -11,7 +11,7 @@
 				<ui-select-match placeholder="Selecione uma Indústria">{{$select.selected.nome}}</ui-select-match>
 				<ui-select-choices class="small-font" repeat="industria in listaIndustrias | propsFilter: {nome: $select.search}">
 					<div ng-bind-html="industria.nome | highlight: $select.search">
-						<smal>{{industria.nome}}</smal>
+						<small>{{industria.nome}}</small>
 					</div>
 				</ui-select-choices>
 			</ui-select>

@@ -23,7 +23,11 @@ ClienteModulo.config(($stateProvider) => {
     url: 'edicao/:id',
     component: 'cadastroClienteComponent',
     resolve: {
-      clienteParaEditar: ($q) => {
+      cliente: ($q) => {
+        const deferred = $q.defer();
+        return deferred.promisse;
+      },
+      listaIndustriaCliente: ($q) => {
         const deferred = $q.defer();
         return deferred.promisse;
       }
