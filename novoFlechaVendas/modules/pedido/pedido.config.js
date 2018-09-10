@@ -56,7 +56,12 @@ PedidoModulo.config(($stateProvider) => {
   var pesquisaPedido = {
     name: 'main.pedido.pesquisa',
     url: '/pesquisa',
-    component: 'pesquisaPedidoComponent'
+    component: 'pesquisaPedidoComponent',
+    resolve: {
+      listaIndustrias: function (IndustriaService, auth) {
+        return IndustriaService.getIndustriasByIdUsuario(auth.id);
+      },
+    }
   };
   $stateProvider.state(pedido);
   $stateProvider.state(cadastroPedido);

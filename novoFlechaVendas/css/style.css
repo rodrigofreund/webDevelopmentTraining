@@ -370,10 +370,6 @@
 	width: 320px;
 }
 
-.dropdown-interno {
-	position: inherit !important;
-}
-
 .chat
 {
     list-style: none;
@@ -408,10 +404,6 @@
 .panel .slidedown .glyphicon, .chat .glyphicon
 {
     margin-right: 5px;
-}
-
-.panel-body
-{
 }
 
 ::-webkit-scrollbar-track
