@@ -9,21 +9,35 @@ PedidoModulo.component('pesquisaPedidoComponent', {
   },
   controllerAs: 'ctrl',
   controller: function ($log, $scope, PedidoService,
-    ModalService, ClienteService, NotificationService) {
+    ModalService, ClienteService, NotificationService, UsuarioService, uibDateParser) {
     var ctrl = this;
     this.$onInit = init();
 
     ctrl.buscaClientes = function (value) {
       ctrl.clienteSearch.razaoSocial = value;
-      return ClienteService.getClientesPorFiltro(ctrl.clienteSearch).then((response) => {
-        return response;
+      return ClienteService.getClientesPorFiltro(ctrl.clienteSearch).then(result => {
+        return result.content;
       });
     };
+
+    UsuarioService.buscaUsuarios().then(response => {
+      ctrl.listaVendedores = response;
+    });
+
+    PedidoService.getListaStatusPedido().then(result => {
+      ctrl.listaStatusPedido = result
+    })
+
+    ctrl.selectCliente = function($item) {
+      ctrl.pedidoSearch.idCliente = $item.id;
+    }
+    
 
     $scope.$watchCollection('ctrl.pedidoSearch', function (novaTabela, antigaTabela) {
       $log.log('filtro: ', ctrl.pedidoSearch);
       PedidoService.getPedidosPorCriteria(ctrl.pedidoSearch).then((result) => {
-        $log.log('pedidos: ', result);
+        $log.log('result: ', result);
+        ctrl.searchResult = result;
         ctrl.pedidos = result.content;
       })
     });
@@ -131,13 +145,16 @@ PedidoModulo.component('pesquisaPedidoComponent', {
     buscaPedidos();
     */
 
-    ctrl.buscaPedidos = function() {
+    ctrl.buscaPedidos = function () {
       //StorageService.setFiltroPedidoAtivo(ctrl.pedidoSearch)
       //ctrl.pedidoSearch.isVendedor = ctrl.isVendedor()
-      PedidoService.getPedidosPorCriteria(ctrl.pedidoSearch, (response) => {
-        $log('response: ', response);
-      });
+      PedidoService.getPedidosPorCriteria(ctrl.pedidoSearch).then((result) => {
+        $log.log('pedidos: ', result);
+        ctrl.searchResult = result;
+        ctrl.pedidos = result.content;
+      })
     }
+
 
 
     ctrl.getStatus = function (i) {
@@ -213,33 +230,24 @@ PedidoModulo.component('pesquisaPedidoComponent', {
       if (!listagemPedidoDto) {
         return
       }
-      return listagemPedidoDto.status === STATUS_PEDIDO.NEGADO && listagemPedidoDto.idVendedor === usuario.id;
+      return listagemPedidoDto.status === STATUS_PEDIDO.NEGADO && listagemPedidoDto.idVendedor === ctrl.usuario.id;
     }
 
-    ctrl.mudaPagina = (pagina) => {
-      ctrl.pedidoSearch.newPage = pagina;
-      buscaPedidos();
-    }
-
-    ctrl.proximaPagina = () => {
-      if (_resultadoBusca.last == true) {
-        return
-      }
-      ctrl.pedidoSearch.newPage += 1;
-      buscaPedidos();
-    }
-
-    ctrl.anteriorPagina = () => {
-      if (_resultadoBusca.first == true) {
-        return
-      }
-      ctrl.pedidoSearch.newPage -= 1;
-      buscaPedidos();
+    ctrl.mudaPagina = () => {
+      ctrl.buscaPedidos();
     }
 
     ctrl.getTotalPedidoSemSt = (pedido) => {
       return service.getTotalPedidoSemSt(pedido)
     }
+
+    ctrl.openIni = function() {
+      ctrl.popup.openedini = true;
+    };
+
+    ctrl.openFim = function() {
+      ctrl.popup.openedfim = true;
+    };
 
     function init() {
 
@@ -263,7 +271,7 @@ PedidoModulo.component('pesquisaPedidoComponent', {
         razaoSocial: null,
         newPage: 1,
         pageSize: 6
-      }
+      };
 
       ctrl.pedidoSearch = {
         idIndustria: null,
@@ -274,6 +282,16 @@ PedidoModulo.component('pesquisaPedidoComponent', {
         idCliente: null,
         newPage: PAGINACAO.PEDIDO.NEW_PAGE,
         pageSize: PAGINACAO.PEDIDO.PAGE_SIZE
+      };
+
+      ctrl.dateOptions = {
+        formatYear: 'yyyy',
+        minDate: new Date(),
+        startingDay: 1
+      };
+
+      ctrl.popup = {
+        opened: false
       };
     };
   }

@@ -1,4 +1,4 @@
-'use strict'
+'use strict';
 
 const STATUS_PEDIDO = {
 	INDEFINIDO: 0,

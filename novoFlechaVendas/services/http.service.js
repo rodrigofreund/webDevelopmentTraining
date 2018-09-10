@@ -5,10 +5,11 @@ var app = angular.module('GerenciadorFinanceiroFlechaVendas')
 app.factory('HttpService', [
 	'$http',
 	'blockUI',
+	'$log',
 	constructor,
 ])
 
-function constructor($http, blockUI) {
+function constructor($http, blockUI, $log) {
 	var service = {};
 
 	service.httpPost = function (path, param, timeout, header, opt) {
@@ -36,6 +37,8 @@ function constructor($http, blockUI) {
 		blockUI.start();
 		return $http(req).then(result => {
 				return result.data;
+			}, error => {
+				$log.log('Erro na chamada ao servidor: ', error);
 			}).finally(function () {
 				blockUI.stop();
 			})

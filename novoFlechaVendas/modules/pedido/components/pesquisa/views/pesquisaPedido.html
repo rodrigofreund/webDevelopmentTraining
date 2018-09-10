@@ -23,10 +23,10 @@
             <div class="col-xs-12 col-md-4">
               <div class="form-group input-group-sm" restrict access="Administrador Gestor">
                 <label for="nomeVendedor">Vendedor</label>
-                <select class="form-control" ng-model="pedidoSearch.idUsuario" id="nomeVendedor" ng-change="ctrl.selecionaVendedor()"
+                <select class="form-control" ng-model="ctrl.pedidoSearch.idUsuario" id="nomeVendedor"
                   required>
                   <option value="">Todos</option>
-                  <option ng-repeat="v in ctrl.listaVendedor track by v.id" value="{{v.id}}">{{v.nome}}</option>
+                  <option ng-repeat="v in ctrl.listaVendedores track by v.id" value="{{v.id}}">{{v.nome}}</option>
                 </select>
               </div>
               <div class="form-group input-group-sm" restrict access="Vendedor">
@@ -38,25 +38,25 @@
               <div class="form-group input-group-sm">
                 <label for="nomeStatus">Status
                 </label>
-                <select id="nomeStatus" class="form-control" ng-model="statusPedido" ng-change="ctrl.selecionaStatus(s)"
-                  ng-options="s.descricao for s in ctrl.listaStatusPedido">
+                <select id="nomeStatus" class="form-control" ng-model="ctrl.pedidoSearch.idStatus">
                   <option value="">Todos</option>
+                  <option ng-repeat="s in ctrl.listaStatusPedido track by s.id" value="{{s.id}}">{{s.descricao}}</option>
                 </select>
               </div>
             </div>
             <div class="col-xs-3 col-md-2">
               <div class="form-group input-group-sm">
                 <label for="idPedido">Número</label>
-                <input id="idPedido" class="form-control" placeholder="Todos" ng-model-options="{ debounce: 500 }" type="number"
-                  ng-change="ctrl.selecionaIdPedido()" ng-model="ctrl.pedidoSearch.idPedido" />
+                <input id="idPedido" class="form-control" placeholder="Todos" ng-model-options="{ debounce: 1000 }" type="number"
+                  ng-model="ctrl.pedidoSearch.idPedido" />
               </div>
             </div>
             <div class="col-xs-12 col-md-6">
               <div class="form-group input-group-sm">
                 <label for="nomeCliente">Cliente</label>
-                <input id="nomeCliente" type="text" ng-model="ctrl.cliente.selecionado" placeholder="Selecione o Cliente"
+                <input id="nomeCliente" type="text" ng-model="ctrl.clienteSelecionado" placeholder="Selecione o Cliente"
                   uib-typeahead="item.nomeFormatado for item in ctrl.buscaClientes($viewValue)" typeahead-min-length="3"
-                  typeahead-wait-ms="5" typeahead-no-results="noResults" class="form-control" typeahead-on-select="ctrl.selectCliente($item)">
+                  typeahead-wait-ms="1000" typeahead-no-results="noResults" class="form-control" typeahead-on-select="ctrl.selectCliente($item)">
                 <i ng-show="loadingLocations" class="glyphicon glyphicon-refresh"></i>
                 <div ng-show="noResults">
                   <i class="glyphicon glyphicon-remove"></i> Nenhum resultado encontrado
@@ -66,15 +66,22 @@
             <div class="col-xs-12 col-md-4">
               <div class="form-group input-group-sm">
                 <label for="datepicker">Período</label>
-                <div class="input-daterange input-group" id="datepicker">
-                  <input id="dtIni" type="text" class="input-sm form-control" name="start" data-date-autoclose="true"
-                    data-date-format="dd/mm/yyyy" data-provide="datepicker" data-date-language="pt-BR" ng-model="ctrl.pedidoSearch.dtInicio"
-                    ng-change="ctrl.selecionaData()" />
-                  <span class="input-group-addon">até</span>
-                  <input type="text" class="input-sm form-control" name="end" data-date-format="dd/mm/yyyy" ng-model="ctrl.pedidoSearch.dtFim"
-                    data-date-autoclose="true" data-provide="datepicker" data-date-language="pt-BR" ng-disabled="!ctrl.pedidoSearch.dtInicio"
-                    ng-change="ctrl.selecionaData()" />
-                </div>
+                <p class="input-group">
+                  <input id="inDataInicio" type="text" class="form-control" uib-datepicker-popup="dd/MM/yyyy" ng-model="ctrl.dtInicio"
+                    is-open="ctrl.popup.openedini" datepicker-options="ctrl.dateOptions" ng-required="true" close-text="Fechar" datepicker-append-to-body="true"
+                    current-text="Hoje" clear-text="Limpa" />
+                  <span class="input-group-btn">
+                    <button type="button" class="btn btn-default" ng-click="ctrl.openIni()"><i class="glyphicon glyphicon-calendar"></i></button>
+                  </span>
+                </p>
+                <p class="input-group">
+                  <input id="inDataFinal" type="text" class="form-control" uib-datepicker-popup="dd/MM/yyyy" ng-model="ctrl.dtFim"
+                    is-open="ctrl.popup.openedfim" datepicker-options="ctrl.dateOptions" ng-required="true" close-text="Fechar" datepicker-append-to-body="true"
+                    current-text="Hoje" clear-text="Limpa" />
+                  <span class="input-group-btn">
+                    <button type="button" class="btn btn-default" ng-click="ctrl.openFim()"><i class="glyphicon glyphicon-calendar"></i></button>
+                  </span>
+                </p>
               </div>
             </div>
           </div>
@@ -146,9 +153,9 @@
               </tbody>
               <tfoot>
                 <div style="text-align: center;">
-                  <ul uib-pagination boundary-links="true" total-items="ctrl.totalItens" ng-model="ctrl.pedidoSearch.newPage"
-                    class="pagination-sm" previous-text="Anterior" next-text="Próxima" first-text="Primeira" last-text="Última"
-                    ng-change="ctrl.mudaPagina()"></ul>
+                  <ul uib-pagination boundary-links="true" boundary-link-numbers="true" rotate="true" total-items="ctrl.searchResult.totalElements"
+                    ng-model="ctrl.pedidoSearch.newPage" class="pagination-sm" previous-text="Anterior" next-text="Próxima"
+                    first-text="Primeira" last-text="Última" ng-change="ctrl.mudaPagina()" max-size="5" items-per-page="ctrl.pedidoSearch.pageSize"></ul>
                 </div>
               </tfoot>
             </table>
