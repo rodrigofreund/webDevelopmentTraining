@@ -1,0 +1,20 @@
+<li class="clearfix" ng-repeat="msg in ctrl.mensagens">
+	<div ng-if="!ctrl.verificaUsuarioLogado(msg)">
+		<div class="chat-body clearfix right">
+			<div class="header">
+				<strong class="primary-font">{{msg.nomeUsuario}}</strong>
+				<small class="text-muted"><span class="glyphicon glyphicon-time"></span>{{ctrl.calculaTempo(msg)}}</small>
+			</div>
+			<p>{{msg.observacao}}</p>
+		</div>
+	</div>
+	<div ng-if="ctrl.verificaUsuarioLogado(msg)">
+		<div class="chat-body clearfix">
+			<div class="header">
+				<strong class="primary-font">{{msg.nomeUsuario}}</strong>
+				<small class="text-muted"><span class="glyphicon glyphicon-time"></span>{{ctrl.calculaTempo(msg)}}</small>
+			</div>
+			<p>{{msg.observacao}}</p>
+		</div>
+	</div>
+</li>

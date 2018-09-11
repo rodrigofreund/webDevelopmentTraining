@@ -15,14 +15,17 @@
     "consolidate": "^0.14.5",
     "express": "4.15.2",
     "gulp": "^3.9.1",
-    "gulp-rename": "^1.2.2"
+    "gulp-jshint": "^2.1.0",
+    "gulp-rename": "^1.2.2",
+    "jshint": "^2.9.6",
+    "uglify-es": "^3.3.9"
   },
   "devDependencies": {
     "gulp": "^3.9.1",
     "gulp-autoprefixer": "^5.0.0",
     "gulp-concat": "^2.6.1",
     "gulp-sourcemaps": "^2.6.4",
-    "gulp-uglify": "^3.0.0",
+    "gulp-uglify": "^3.0.1",
     "mu2express": "~0.0.1",
     "request": "^2.81.0",
     "tape": "^4.7.0"

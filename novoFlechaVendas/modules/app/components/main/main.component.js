@@ -9,11 +9,11 @@ app.component('mainComponent', {
     vm.nomeUsuario = vm.auth.nome;
 
     vm.logoff = () => {
-      LoginService.doLogoff()
+      LoginService.doLogoff();
     }
 
   },
-  templateUrl: 'app/components/main/main.html',
+  templateUrl: 'modules/app/components/main/main.html',
   bindings: {
     auth: '<'
   },

@@ -72,6 +72,12 @@ PedidoModulo.component('edicaoPedidoComponent', {
         { value: 1, text: 'Batida' },
         { value: 2, text: 'Paletizada' }
       ];
+
+      ctrl.tipoPedidoOptions = [
+        { id: 1, descricao: 'Venda de Produtos' },
+        { id: 2, descricao: 'Pedido em Saldo' },
+        { id: 3, descricao: 'Bonificação de Produtos' }
+      ];
     }
   }
 });

@@ -9,6 +9,6 @@ app.component('dashboardComponent', {
   bindings: {
     informacoes: '<'
   },
-  templateUrl: 'app/components/dashboard/dashboard.html',
+  templateUrl: 'modules/app/components/dashboard/dashboard.html',
 	controllerAs: 'ctrl',
 });

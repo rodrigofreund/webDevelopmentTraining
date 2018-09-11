@@ -48,6 +48,10 @@ PedidoModulo.component('dadosPedidoComponent', {
       $state.go('main.pedido.cadastro.itens', {'pedido': ctrl.pedido});
     };
 
+    ctrl.selecionaTipoPedido = function() {
+      $log.log('seleciona tipo pedido');
+    }
+
     function init(ctrl) {
       ctrl.pedido = {}
       ctrl.pedido.dataPedido = new Date();
@@ -66,23 +70,22 @@ PedidoModulo.component('dadosPedidoComponent', {
         opened: false
       };
 
-      ctrl.propostaOptions = [
-        {id: 0, text: 'Não'},
-        {id: 1, text: 'Sim'}
-      ];
-
       ctrl.cargaOptions = [
         {value: 1, text: 'Batida'},
         {value: 2, text: 'Paletizada'}
       ];
 
-      ctrl.proposta = {
-        selecionado : null
-      };
+      ctrl.tipoPedidoOptions = [
+        {id: 1, descricao: 'Venda de Produtos'},
+        {id: 2, descricao: 'Pedido em Saldo'},
+        {id: 3, descricao: 'Bonificação de Produtos'}
+      ];
 
-      ctrl.carga = {
-        selecionado: null
-      };
+      ctrl.pedido.tipoPedido = ctrl.tipoPedidoOptions[0];
+
+      ctrl.pedido.proposta = 'true';
+
+      ctrl.pedido.carga = "1";
     }
 
     function geraDataEntrega() {

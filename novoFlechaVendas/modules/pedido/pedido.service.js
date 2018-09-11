@@ -2,8 +2,8 @@
 
 var PedidoModule = angular.module('pedido.module');
 
-PedidoModule.factory('PedidoService', ['HttpService',
-  function (HttpService) {
+PedidoModule.factory('PedidoService', ['HttpService', '$log',
+  function (HttpService, $log) {
     var service = {};
     const SUBPATH = 'service/pedido';
 
@@ -18,6 +18,7 @@ PedidoModule.factory('PedidoService', ['HttpService',
     const URL_PEDIDO_BUSCAR_ULTIMAR_VENDAS_ITEM = `${SUBPATH}/getUltimasVendasItem`;
 
     service.salvaPedido = (pedidoDto) => {
+      $log.log('Pedido: ', pedidoDto);
       return HttpService.httpPost(URL_PEDIDO_SALVAR, pedidoDto);
     };
 

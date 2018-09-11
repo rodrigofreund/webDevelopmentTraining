@@ -8,12 +8,20 @@ PedidoModulo.component('resumoPedidoComponent', {
     pedido: '='
   },
   controllerAs: 'ctrl',
-  controller : function ($scope, $state, PedidoCalculoService, PedidoService) {
+  controller : function ($scope, $state, PedidoCalculoService, PedidoService, NotificationService) {
     var ctrl = this;
 
     ctrl.voltar = function() {
       PedidoService.setPedidoAtivo(ctrl.pedido);
       $state.go('main.pedido.cadastro.itens');
+    }
+
+    ctrl.enviarPedido = function() {
+      PedidoService.salvaPedido(ctrl.pedido).then(pedidoDto => {
+        NotificationService.success(`Pedido ${pedidoDto.id} gerado com sucesso!`);
+        PedidoService.removePedidoAtivo();
+        $state.go('main.pedido.cadastro.dados');
+      })
     }
 
     this.$onInit = function () {

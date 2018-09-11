@@ -11,7 +11,7 @@ app.component('loginComponent', {
       })
     }
   },
-  templateUrl: 'app/components/login/login.html',
+  templateUrl: 'modules/app/components/login/login.html',
 	bindings: {},
 	controllerAs: 'ctrl',
 });

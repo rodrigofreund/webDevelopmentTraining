@@ -3,7 +3,7 @@
     <span class="content-title">Novo Pedido</span>
   </div>
 </div>
-<form>
+<form ng-submit="ctrl.geraPedido()">
   <div class="row">
     <div class="col-xs-12 form-group">
       <label for="selIndustria">Indústria</label>
@@ -18,7 +18,8 @@
       <label for="selCliente">Cliente</label>
       <ui-select id="selCliente" ng-model="ctrl.pedido.cliente" ng-change="ctrl.selecionaCliente()" ng-disabled="ctrl.possuiPedidoAtivo"
         theme="bootstrap" title="Selecione um Cliente:" skip-focusser="true">
-        <ui-select-match placeholder="Selecione um Cliente">{{$select.selected.razaoSocial}} - {{$select.selected.nomeFantasia}}</ui-select-match>
+        <ui-select-match placeholder="Selecione um Cliente">{{$select.selected.razaoSocial}} -
+          {{$select.selected.nomeFantasia}}</ui-select-match>
         <ui-select-choices class="small-font" repeat="cliente in ctrl.listaClientes | propsFilter: {razaoSocial: $select.search, nomeFantasia: $select.search} track by cliente.id">
           <div ng-bind-html="cliente.razaoSocial | highlight: $select.search"></div>
           <small>
@@ -47,11 +48,20 @@
   </div>
   <div class="row">
     <div class="col-xs-12 form-group">
+      <label for="selTipoPedido">Tipo de Pedido</label>
+      <select id="selTipoPedido" class="form-control" focus="selectChanged" ng-model="ctrl.pedido.tipoPedido"
+        ng-options="tipoPedido.descricao for tipoPedido in ctrl.tipoPedidoOptions track by tipoPedido.id" placeholder="Selecione o tipo do Pedido"
+        ng-change="ctrl.selecionaTipoPedido()" required ng-disabled="!ctrl.pedido.industria">
+      </select>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-xs-12 form-group">
       <label for="inDataEntrega">Data de entrega</label>
       <p class="input-group">
         <input id="inDataEntrega" type="text" class="form-control" uib-datepicker-popup="dd/MM/yyyy" ng-model="ctrl.pedido.dataEntrega"
-          is-open="ctrl.popup.opened" datepicker-options="ctrl.dateOptions" ng-required="true" close-text="Fechar" datepicker-append-to-body="true"
-          current-text="Hoje" clear-text="Limpa" />
+          is-open="ctrl.popup.opened" datepicker-options="ctrl.dateOptions" ng-required="true" close-text="Fechar"
+          datepicker-append-to-body="true" current-text="Hoje" clear-text="Limpa" />
         <span class="input-group-btn">
           <button type="button" class="btn btn-default" ng-click="ctrl.open()"><i class="glyphicon glyphicon-calendar"></i></button>
         </span>
@@ -61,8 +71,8 @@
   <div class="row">
     <div class="col-xs-12 form-group">
       <label for="selPrazo">Prazo</label>
-      <select id="selPrazo" class="form-control" ng-model="ctrl.pedido.prazo" ng-disabled="!ctrl.pedido.cliente" required
-        ng-options="p as p.descricao for p in ctrl.listaPrazos track by p.idIndustriaPrazo">
+      <select id="selPrazo" class="form-control" ng-model="ctrl.pedido.industriaPrazo" ng-disabled="!ctrl.pedido.cliente"
+        required ng-options="p as p.descricao for p in ctrl.listaPrazos track by p.id">
         <option value="">Selecione um prazo</option>
       </select>
     </div>
@@ -70,15 +80,18 @@
   <div class="row">
     <div class="col-xs-12 form-group">
       <label for="selProposta">Proposta</label>
-      <select for="selProposta" class="form-control" ng-model="ctrl.pedido.proposta" ng-options="p as p.text for p in ctrl.propostaOptions track by p.id"
-        ng-init="ctrl.pedido.proposta = ctrl.propostaOptions[1]">
+      <select for="selProposta" class="form-control" ng-model="ctrl.pedido.proposta">
+        <option value="true">Sim</option>
+        <option value="false">Não</option>
       </select>
     </div>
   </div>
   <div class="row">
     <div class="col-xs-12 form-group">
-      <label for="carga">Carga</label>
-      <select class="form-control" ng-model="ctrl.pedido.carga" ng-options="p as p.text for p in ctrl.cargaOptions track by p.value" ng-init="ctrl.pedido.carga = ctrl.cargaOptions[0]">
+      <label for="selCarga">Carga</label>
+      <select id="selCarga" class="form-control" ng-model="ctrl.pedido.carga">
+        <option value="1">Batida</option>
+        <option value="2">Paletizada</option>
       </select>
     </div>
   </div>
@@ -88,8 +101,8 @@
     </div>
     <div class="col-lg-1"></div>
     <div class="col-xs-12 col-sm-3 col-md-3 col-lg-2 form-group">
-      <button class="btn btn-sm btn-block" type="button" data-toggle="modal" ng-style="{'background-color': industria.cor}" data-target="#modalFaturamentos"
-        disabled>Acampanhamento</button>
+      <button class="btn btn-sm btn-block" type="button" data-toggle="modal" ng-style="{'background-color': industria.cor}"
+        data-target="#modalFaturamentos" disabled>Acampanhamento</button>
     </div>
     <div class="col-lg-1"></div>
     <div class="col-xs-12 col-sm-3 col-md-3 col-lg-2 form-group">
@@ -98,14 +111,9 @@
     </div>
     <div class="col-lg-2"></div>
     <div class="col-xs-12 col-sm-4 col-md-4 col-lg-2 form-group">
-      <button class="btn btn-primary btn-sm btn-block" type="submit" ng-click="ctrl.geraPedido()" ng-style="{'background-color': industria.cor}">Fazer
+      <button class="btn btn-primary btn-sm btn-block" type="submit" ng-style="{'background-color': industria.cor}">Fazer
         Pedido
       </button>
     </div>
   </div>
 </form>
-<!--
-
-</form>
-<a ui-sref="main.pedido.cadastro.itens">Próximo</a>
--->
