@@ -286,7 +286,6 @@ PedidoModulo.component('pesquisaPedidoComponent', {
 
       ctrl.dateOptions = {
         formatYear: 'yyyy',
-        minDate: new Date(),
         startingDay: 1
       };
 

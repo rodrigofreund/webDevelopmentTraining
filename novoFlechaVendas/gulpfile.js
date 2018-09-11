@@ -14,7 +14,14 @@ let sourcemaps = require('gulp-sourcemaps');
 //Renomear arquivos
 var rename = require("gulp-rename");
 
-gulp.task('build-js', function() {
+gulp.task('build-lib-js', function() {
+  gulp.src([
+    './js/**'
+  ])
+  .pipe(gulp.dest('./dist/js/lib'));
+});
+
+gulp.task('build-app-js', function() {
   gulp.src([
     './js/**'
   ])
@@ -53,9 +60,9 @@ gulp.task('css', function() {
   .pipe(gulp.dest('build'))
 });
 
-gulp.task('dev', ['build-js', 'dev-context']);
-gulp.task('prod', ['build-js', 'prod-context']);
-gulp.task('test', ['build-js', 'test-context']);
+gulp.task('dev', ['build-lib-js', 'dev-context']);
+gulp.task('prod', ['build-lib-js', 'prod-context']);
+gulp.task('test', ['build-lib-js', 'test-context']);
 
 gulp.task('watch', function() {
   gulp.watch('styles/*.css', ['css']);

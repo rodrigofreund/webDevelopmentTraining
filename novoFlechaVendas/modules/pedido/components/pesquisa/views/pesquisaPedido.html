@@ -67,15 +67,15 @@
               <div class="form-group input-group-sm">
                 <label for="datepicker">Período</label>
                 <p class="input-group">
-                  <input id="inDataInicio" type="text" class="form-control" uib-datepicker-popup="dd/MM/yyyy" ng-model="ctrl.dtInicio"
-                    is-open="ctrl.popup.openedini" datepicker-options="ctrl.dateOptions" ng-required="true" close-text="Fechar" datepicker-append-to-body="true"
+                  <input id="inDataInicio" type="text" class="form-control" uib-datepicker-popup="dd/MM/yyyy" ng-model="ctrl.pedidoSearch.dtInicio"
+                    is-open="ctrl.popup.openedini" datepicker-options="ctrl.dateOptions" ng-required="true" close-text="Fechar"
                     current-text="Hoje" clear-text="Limpa" />
                   <span class="input-group-btn">
                     <button type="button" class="btn btn-default" ng-click="ctrl.openIni()"><i class="glyphicon glyphicon-calendar"></i></button>
                   </span>
                 </p>
                 <p class="input-group">
-                  <input id="inDataFinal" type="text" class="form-control" uib-datepicker-popup="dd/MM/yyyy" ng-model="ctrl.dtFim"
+                  <input id="inDataFinal" type="text" class="form-control" uib-datepicker-popup="dd/MM/yyyy" ng-model="ctrl.pedidoSearch.dtFim"
                     is-open="ctrl.popup.openedfim" datepicker-options="ctrl.dateOptions" ng-required="true" close-text="Fechar" datepicker-append-to-body="true"
                     current-text="Hoje" clear-text="Limpa" />
                   <span class="input-group-btn">
