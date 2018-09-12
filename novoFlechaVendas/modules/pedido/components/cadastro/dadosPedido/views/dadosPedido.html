@@ -3,21 +3,24 @@
     <span class="content-title">Novo Pedido</span>
   </div>
 </div>
-<form ng-submit="ctrl.geraPedido()">
+<form ng-submit="ctrl.geraPedido()" novalidate name="formDadosPedido">
   <div class="row">
     <div class="col-xs-12 form-group">
-      <label for="selIndustria">Indústria</label>
-      <select class="form-control" ng-model="ctrl.pedido.industria" id="selIndustria" ng-options="i.nome for i in ctrl.listaIndustrias track by i.id"
-        value="{{i}}" ng-change="ctrl.selecionaIndustria()" ng-disabled="ctrl.possuiPedidoAtivo">
+      <label for="selIndustria" ng-class="{ 'error-field' : formDadosPedido.selIndustria.$invalid && ctrl.trySubmit}">Indústria</label>
+      <select class="form-control" ng-model="ctrl.pedido.industria" name="selIndustria" ng-options="i.nome for i in ctrl.listaIndustrias track by i.id"
+        value="{{i}}" ng-change="ctrl.selecionaIndustria()" required>
         <option value="">Selecione uma Indústria</option>
       </select>
+      <div ng-if="formDadosPedido.selIndustria.$invalid && ctrl.trySubmit">
+        *O campo é obrigatório
+      </div>
     </div>
   </div>
   <div class="row">
     <div class="col-xs-12 form-group">
-      <label for="selCliente">Cliente</label>
-      <ui-select id="selCliente" ng-model="ctrl.pedido.cliente" ng-change="ctrl.selecionaCliente()" ng-disabled="ctrl.possuiPedidoAtivo"
-        theme="bootstrap" title="Selecione um Cliente:" skip-focusser="true">
+      <label for="selCliente" ng-class="{ 'error-field' : formDadosPedido.selCliente.$invalid && ctrl.trySubmit}">Cliente</label>
+      <ui-select name="selCliente" ng-model="ctrl.pedido.cliente" ng-change="ctrl.selecionaCliente()" theme="bootstrap"
+        title="Selecione um Cliente:" skip-focusser="true" ng-disabled="!ctrl.pedido.industria" required>
         <ui-select-match placeholder="Selecione um Cliente">{{$select.selected.razaoSocial}} -
           {{$select.selected.nomeFantasia}}</ui-select-match>
         <ui-select-choices class="small-font" repeat="cliente in ctrl.listaClientes | propsFilter: {razaoSocial: $select.search, nomeFantasia: $select.search} track by cliente.id">
@@ -27,6 +30,9 @@
           </small>
         </ui-select-choices>
       </ui-select>
+      <div ng-if="formDadosPedido.selCliente.$invalid && ctrl.trySubmit">
+        *O campo é obrigatório
+      </div>
     </div>
   </div>
   <div class="row" ng-if="ctrl.pedido.cliente">
@@ -39,42 +45,52 @@
   </div>
   <div class="row">
     <div class="col-xs-12 form-group">
-      <label for="selTabela">Tabela</label>
-      <select id="selTabela" class="form-control" focus="selectChanged" ng-model="ctrl.pedido.tabela" ng-options="tabela.nome for tabela in ctrl.listaTabelas track by tabela.id"
-        placeholder="Selecione a tabela" ng-change="ctrl.selecionaTabela()" required ng-disabled="!ctrl.pedido.industria">
+      <label for="selTabela" ng-class="{ 'error-field' : formDadosPedido.selTabela.$invalid && ctrl.trySubmit}">Tabela</label>
+      <select name="selTabela" class="form-control" focus="selectChanged" ng-model="ctrl.pedido.tabela" ng-options="tabela.nome for tabela in ctrl.listaTabelas track by tabela.id"
+        placeholder="Selecione a tabela" ng-change="ctrl.selecionaTabela()" ng-disabled="!ctrl.pedido.cliente" required>
         <option value="">Selecione uma tabela</option>
       </select>
+      <div ng-if="formDadosPedido.selTabela.$invalid && ctrl.trySubmit" style="display: inline-block;">
+        *O campo é obrigatório
+      </div>
     </div>
   </div>
   <div class="row">
     <div class="col-xs-12 form-group">
       <label for="selTipoPedido">Tipo de Pedido</label>
-      <select id="selTipoPedido" class="form-control" focus="selectChanged" ng-model="ctrl.pedido.tipoPedido"
+      <select name="selTipoPedido" class="form-control" focus="selectChanged" ng-model="ctrl.pedido.tipoPedido"
         ng-options="tipoPedido.descricao for tipoPedido in ctrl.tipoPedidoOptions track by tipoPedido.id" placeholder="Selecione o tipo do Pedido"
-        ng-change="ctrl.selecionaTipoPedido()" required ng-disabled="!ctrl.pedido.industria">
+        ng-change="ctrl.selecionaTipoPedido()" ng-disabled="!ctrl.pedido.industria" required>
       </select>
     </div>
   </div>
   <div class="row">
     <div class="col-xs-12 form-group">
-      <label for="inDataEntrega">Data de entrega</label>
+      <label for="inDataEntrega" ng-class="{ 'error-field' : formDadosPedido.inDataEntrega.$invalid && formDadosPedido.inDataEntrega.$dirty}">Data
+        de entrega</label>
       <p class="input-group">
-        <input id="inDataEntrega" type="text" class="form-control" uib-datepicker-popup="dd/MM/yyyy" ng-model="ctrl.pedido.dataEntrega"
-          is-open="ctrl.popup.opened" datepicker-options="ctrl.dateOptions" ng-required="true" close-text="Fechar"
-          datepicker-append-to-body="true" current-text="Hoje" clear-text="Limpa" />
+        <input name="inDataEntrega" type="text" class="form-control" uib-datepicker-popup="dd/MM/yyyy" ng-model="ctrl.pedido.dataEntrega"
+          is-open="ctrl.popup.opened" datepicker-options="ctrl.dataEntregaOptions" required close-text="Fechar"
+          datepicker-append-to-body="true" current-text="Hoje" clear-text="Limpa" ng-model-options="ctrl.dataEntregaModelOptions" valid-date/>
         <span class="input-group-btn">
           <button type="button" class="btn btn-default" ng-click="ctrl.open()"><i class="glyphicon glyphicon-calendar"></i></button>
         </span>
+        <div ng-if="formDadosPedido.inDataEntrega.$invalid && formDadosPedido.inDataEntrega.$dirty">
+          *A data é inválida
+        </div>
       </p>
     </div>
   </div>
   <div class="row">
     <div class="col-xs-12 form-group">
-      <label for="selPrazo">Prazo</label>
-      <select id="selPrazo" class="form-control" ng-model="ctrl.pedido.industriaPrazo" ng-disabled="!ctrl.pedido.cliente"
+      <label for="selPrazo" ng-class="{ 'error-field' : formDadosPedido.selPrazo.$invalid && ctrl.trySubmit}">Prazo</label>
+      <select name="selPrazo" class="form-control" ng-model="ctrl.pedido.industriaPrazo" ng-disabled="!ctrl.pedido.cliente"
         required ng-options="p as p.descricao for p in ctrl.listaPrazos track by p.id">
         <option value="">Selecione um prazo</option>
       </select>
+      <div ng-if="formDadosPedido.selPrazo.$invalid && ctrl.trySubmit">
+        *O campo é obrigatório
+      </div>
     </div>
   </div>
   <div class="row">
@@ -101,17 +117,17 @@
     </div>
     <div class="col-lg-1"></div>
     <div class="col-xs-12 col-sm-3 col-md-3 col-lg-2 form-group">
-      <button class="btn btn-sm btn-block" type="button" data-toggle="modal" ng-style="{'background-color': industria.cor}"
+      <button class="btn btn-sm btn-block" type="button" data-toggle="modal" ng-style="{'background-color': ctrl.pedido.industria.cor}"
         data-target="#modalFaturamentos" disabled>Acampanhamento</button>
     </div>
     <div class="col-lg-1"></div>
     <div class="col-xs-12 col-sm-3 col-md-3 col-lg-2 form-group">
-      <button class="btn btn-sm btn-block" type="button" data-toggle="modal" data-target="#modalDuplicatas" ng-style="{'background-color': industria.cor}"
+      <button class="btn btn-sm btn-block" type="button" data-toggle="modal" data-target="#modalDuplicatas" ng-style="{'background-color': ctrl.pedido.industria.cor}"
         disabled>Duplicatas</button>
     </div>
     <div class="col-lg-2"></div>
     <div class="col-xs-12 col-sm-4 col-md-4 col-lg-2 form-group">
-      <button class="btn btn-primary btn-sm btn-block" type="submit" ng-style="{'background-color': industria.cor}">Fazer
+      <button class="btn btn-primary btn-sm btn-block" type="submit" ng-style="{'background-color': ctrl.pedido.industria.cor}">Fazer
         Pedido
       </button>
     </div>

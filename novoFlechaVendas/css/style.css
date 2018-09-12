@@ -22,7 +22,7 @@
 }
 
 .image-space {
-	margin-bottom: 0px !important;
+  margin-bottom: 0px !important;
 }
 
 .img-personal-size {
@@ -346,28 +346,19 @@
 		padding-right: 3px !important;
 	}
 	
-	.padding-off {
-		padding-left: 2px !important;
-		padding-right: 2px !important;
-	}
-	
 	.small-font {
 		font-size: 12px !important;
 	}
-}
-
-.padding-off {
-	
-}
-
-.small-font {
-	
 }
 
 .overflow-table {
 	overflow-y: auto;
 	overflow-x: auto;
 	width: 320px;
+}
+
+.error-field {
+  color: #c14242;
 }
 
 .chat

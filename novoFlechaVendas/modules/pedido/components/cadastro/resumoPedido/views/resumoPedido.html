@@ -28,7 +28,7 @@
             </tr>
           </thead>
           <tbody>
-            <tr ng-repeat="i in ctrl.pedido.tabela.itens | itensAdicionadosFilter track by i.id">
+            <tr ng-repeat="i in ctrl.pedido.itensPedido track by i.id">
               <td>{{i.codigo}}</td>
               <td>{{i.descricao}}</td>
               <td>{{i.quantidadeSolicitada}}</td>

@@ -4,13 +4,13 @@
   }
 </style>
 <div class="row">
-  <div class="col-xs-12">
+  <div class="col-xs-12" style="text-align: center;">
     <img class="img-personal-size image-space" src="images/{{ctrl.pedido.industria.imagem}}" />
   </div>
 </div>
 <div class="row">
-  <div class="col-xs-12 padding-off">
-    <div class="form-group input-group-sm">
+  <div class="col-xs-12">
+    <div class="form-group input-group-sm" style="text-align: center;">
       <label class="form-control" style="height: auto;" disabled>{{ctrl.pedido.cliente.id}} - {{ctrl.pedido.cliente.razaoSocial}}</label>
     </div>
   </div>
@@ -37,7 +37,7 @@
     <div class="form-group input-group-sm">
       <label>Caixa c/ Imp</label>
       <input class="form-control" type="number" ng-model="ctrl.produto.selecionado.precoComImposto" ng-style="{'border-color': ctrl.pedido.industria.cor}"
-        ng-disabled="!ctrl.isPedidoProposta()" ng-change="ctrl.alteraPrecoComImposto()"/>
+        ng-disabled="ctrl.isPedidoProposta()" ng-change="ctrl.alteraPrecoComImposto()"/>
     </div>
   </div>
   <div class="col-xs-3 padding-off">
@@ -58,7 +58,7 @@
     <div class="form-group input-group-sm">
       <label>Unidade c/ Imp</label>
       <input class="form-control" ng-style="{'border-color': ctrl.pedido.industria.cor}" ng-model="ctrl.produto.selecionado.precoUnitarioComImposto"
-        type="number" />
+        type="number" ng-change="ctrl.alteraPrecoUnitarioComImposto()" />
     </div>
   </div>
 </div>
@@ -107,8 +107,8 @@
   </div>
 </div>
 <div class="row">
-  <div class="col-xs-12 padding-off">
-    <div class="table-responsive">
+  <div class="col-xs-12">
+    <div>
       <table class="table table-condensed">
         <thead class="thead-inverse">
           <tr>
@@ -124,7 +124,7 @@
         <tbody>
           <tr ng-repeat="i in ctrl.pedido.tabela.itens | itensAdicionadosFilter track by i.id">
             <td>
-              <div class="btn-group btn-sm">
+              <div class="btn-group btn-group-sm">
                 <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"
                   ng-style="{'background-color': ctrl.pedido.industria.cor}">
                   Ações

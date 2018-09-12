@@ -8,7 +8,7 @@ PedidoModulo.component('resumoPedidoComponent', {
     pedido: '='
   },
   controllerAs: 'ctrl',
-  controller : function ($scope, $state, PedidoCalculoService, PedidoService, NotificationService) {
+  controller : function ($scope, $state, PedidoCalculoService, PedidoService, NotificationService, $filter) {
     var ctrl = this;
 
     ctrl.voltar = function() {
@@ -17,8 +17,8 @@ PedidoModulo.component('resumoPedidoComponent', {
     }
 
     ctrl.enviarPedido = function() {
-      PedidoService.salvaPedido(ctrl.pedido).then(pedidoDto => {
-        NotificationService.success(`Pedido ${pedidoDto.id} gerado com sucesso!`);
+      PedidoService.salvaPedido(ctrl.pedido).then(idPedido => {
+        NotificationService.success(`Pedido ${idPedido} gerado com sucesso!`);
         PedidoService.removePedidoAtivo();
         $state.go('main.pedido.cadastro.dados');
       })
@@ -32,6 +32,7 @@ PedidoModulo.component('resumoPedidoComponent', {
       if(!ctrl.pedido.observacoesPedidoDto) {
         ctrl.pedido.observacoesPedidoDto = [];
       }
+      ctrl.pedido.itensPedido = $filter('itensAdicionadosFilter', null)(ctrl.pedido.tabela.itens)
     };
   }
 });

@@ -31,51 +31,82 @@ PedidoModule.factory('PedidoCalculoService', ['$filter',
       return total;
     }
 
-    service.getValorImposto = function (item) {
-      return item.preco * (item.st + item.ipi);
-    }
-
-    service.getValorDesconto = function (item) {
-      return item.preco * item.desconto;
-    }
-
+    //RECALCULA VALORES APOS ALTERAÇÃO DO PREÇO SEM IMPOSTO
     service.alteraPrecoSemImposto = function (item) {
       let diferenca = item.preco - item.precoSemImposto;
       let desconto = diferenca / item.preco;
       item.desconto = desconto;
-      item.precoComImposto = item.precoSemImposto + item.valorImposto;
-      item.precoUnitarioComImposto = item.precoComImposto / item.quantidade;
-      item.precoUnitarioSemImposto = item.precoSemImposto / item.quantidade;
+      item.precoComImposto = calculaPrecoComImposto(item);
+      calculaPrecoUnitario(item);
     }
 
+    //RECALCULA VALORES APOS ALTERAÇÃO DO PREÇO COM IMPOSTO
     service.alteraPrecoComImposto = function (item) {
       let diferenca = item.preco + item.valorImposto - item.precoComImposto;
       let desconto = diferenca / (item.preco + item.valorImposto);
       item.desconto = desconto;
-      item.precoSemImposto = item.precoComImposto - item.valorImposto;
-      item.precoUnitarioComImposto = item.precoComImposto / item.quantidade;
-      item.precoUnitarioSemImposto = item.precoSemImposto / item.quantidade;
+      item.precoSemImposto = calculaPrecoSemImposto(item);
+      calculaPrecoUnitario(item);
     }
 
+    //RECALCULA VALORES APOS ALTERAÇÃO DO DESCONTO
     service.alteraDesconto = function (item) {
-      item.precoComImposto = item.preco - service.getValorDesconto(item) + service.getValorImposto(item);
-      item.precoSemImposto = item.preco - service.getValorDesconto(item);
-      item.precoUnitarioComImposto = item.precoComImposto / item.quantidade;
-      item.precoUnitarioSemImposto = item.precoSemImposto / item.quantidade;
+      item.precoComImposto = calculaPrecoComImposto(item);
+      item.precoSemImposto = calculaPrecoSemImposto(item);
+      calculaPrecoUnitario(item);
     }
 
+    //RECALCULA VALORES APOS ALTERAÇÃO DO PRECO UNITÁRIO COM IMPOSTO
+    service.alteraPrecoUnitarioComImposto = function(item) {
+      item.precoComImposto = item.precoUnitarioComImposto * item.quantidade;
+      service.alteraPrecoComImposto(item);
+    }
+
+    //RECALCULA VALORES APOS ALTERAÇÃO DO PRECO UNITÁRIO SEM IMPOSTO
+    service.alteraPrecoUnitarioSemImposto = function(item) {
+      item.precoComImposto = item.precoUnitarioSemImposto * item.quantidade;
+      service.alteraPrecoSemImposto(item);
+    }
+
+    //INICIALIZA OS VALORES DO ITEM PARA OS CÁLCULOS
     service.inicializaPreco = function (item) {
-      if (!item.desconto) {
-        item.desconto = 0;
-      }
       if (!item.quantidadeSolicitada) {
         item.quantidadeSolicitada = 1;
       }
-      item.valorImposto = service.getValorImposto(item);
-      item.precoComImposto = item.preco + item.valorImposto - service.getValorDesconto(item);
-      item.precoSemImposto = item.preco - service.getValorDesconto(item);
-      item.precoUnitarioComImposto = item.precoComImposto / item.quantidade;
-      item.precoUnitarioSemImposto = item.precoSemImposto / item.quantidade;
+      item.desconto = 0;
+      item.valorImposto = getValorImposto(item);
+      item.precoComImposto = calculaPrecoComImposto(item);
+      item.precoSemImposto = calculaPrecoSemImposto(item);
+      calculaPrecoUnitario(item);
+    }
+
+    function getValorImposto (item) {
+      return item.preco * (item.st + item.ipi);
+    }
+
+    function getValorDesconto (item) {
+      return item.preco * item.desconto;
+    }
+
+    function getValorDescontoComImposto (item) {
+      return (item.preco + getValorImposto(item)) * item.desconto;
+    }
+
+    function calculaPrecoComImposto(item) {
+      return round(item.preco - getValorDescontoComImposto(item) + getValorImposto(item));
+    }
+
+    function calculaPrecoSemImposto(item) {
+      return round(item.preco - getValorDesconto(item));
+    }
+
+    function calculaPrecoUnitario(item) {
+      item.precoUnitarioComImposto = round(item.precoComImposto / item.quantidade);
+      item.precoUnitarioSemImposto = round(item.precoSemImposto / item.quantidade);
+    }
+
+    function round(value) {
+      return Math.round(value * 100) / 100;
     }
 
     return service;
