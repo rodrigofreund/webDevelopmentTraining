@@ -21,6 +21,8 @@ PedidoModulo.component('resumoPedidoComponent', {
         NotificationService.success(`Pedido ${idPedido} gerado com sucesso!`);
         PedidoService.removePedidoAtivo();
         $state.go('main.pedido.cadastro.dados');
+      }, error => {
+        NotificationService.error(`Erro ao cadastrar o pedido: ${error.data.message}`);
       })
     }
 

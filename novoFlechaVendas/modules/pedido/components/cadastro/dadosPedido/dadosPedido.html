@@ -59,7 +59,7 @@
     <div class="col-xs-12 form-group">
       <label for="selTipoPedido">Tipo de Pedido</label>
       <select name="selTipoPedido" class="form-control" focus="selectChanged" ng-model="ctrl.pedido.tipoPedido"
-        ng-options="tipoPedido.descricao for tipoPedido in ctrl.tipoPedidoOptions track by tipoPedido.id" placeholder="Selecione o tipo do Pedido"
+        ng-options="tipoPedido.id as tipoPedido.descricao for tipoPedido in ctrl.tipoPedidoOptions" placeholder="Selecione o tipo do Pedido"
         ng-change="ctrl.selecionaTipoPedido()" ng-disabled="!ctrl.pedido.industria" required>
       </select>
     </div>

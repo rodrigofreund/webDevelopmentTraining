@@ -11,7 +11,8 @@
 <div class="row">
   <div class="col-xs-12">
     <div class="form-group input-group-sm" style="text-align: center;">
-      <label class="form-control" style="height: auto;" disabled>{{ctrl.pedido.cliente.id}} - {{ctrl.pedido.cliente.razaoSocial}}</label>
+      <label class="form-control" style="height: auto;" disabled>{{ctrl.pedido.cliente.id}} -
+        {{ctrl.pedido.cliente.razaoSocial}}</label>
     </div>
   </div>
 </div>
@@ -37,21 +38,21 @@
     <div class="form-group input-group-sm">
       <label>Caixa c/ Imp</label>
       <input class="form-control" type="number" ng-model="ctrl.produto.selecionado.precoComImposto" ng-style="{'border-color': ctrl.pedido.industria.cor}"
-        ng-disabled="ctrl.isPedidoProposta()" ng-change="ctrl.alteraPrecoComImposto()"/>
+        ng-disabled="ctrl.isPedidoProposta()" ng-change="ctrl.alteraPrecoComImposto()" />
     </div>
   </div>
   <div class="col-xs-3 padding-off">
     <div class="form-group input-group-sm">
       <label>Quantidade</label>
-      <input class="form-control" ng-style="{'border-color': ctrl.pedido.industria.cor}" type="number" required ng-model="ctrl.produto.selecionado.quantidadeSolicitada"
-      />
+      <input class="form-control" ng-style="{'border-color': ctrl.pedido.industria.cor}" type="number" required
+        ng-model="ctrl.produto.selecionado.quantidadeSolicitada" />
     </div>
   </div>
   <div class="col-xs-3 padding-off">
     <div class="form-group input-group-sm">
       <label>Desconto</label>
       <input class="form-control" ng-style="{'border-color': ctrl.pedido.industria.cor}" ng-model="ctrl.produto.selecionado.desconto"
-        type="text" percent ng-change="ctrl.alteraDesconto()"/>
+        type="text" percent ng-change="ctrl.alteraDesconto()" />
     </div>
   </div>
   <div class="col-xs-3 padding-off">
@@ -67,13 +68,14 @@
     <div class="form-group input-group-sm">
       <label>Caixa s/ Imp</label>
       <input class="form-control" ng-style="{'border-color': ctrl.pedido.industria.cor}" ng-model="ctrl.produto.selecionado.precoSemImposto"
-        type="number" ng-change="ctrl.alteraPrecoSemImposto()"/>
+        type="number" ng-change="ctrl.alteraPrecoSemImposto()" />
     </div>
   </div>
   <div class="col-xs-6 col-sm-6 col-md-3 col-lg-3 padding-off">
     <div class="form-group input-group-sm">
       <label>Unid s/ Imp</label>
-      <label class="form-control">{{ctrl.produto.selecionado.precoUnitarioSemImposto | currency:"R$"}}</label>
+      <input class="form-control" ng-style="{'border-color': ctrl.pedido.industria.cor}" ng-model="ctrl.produto.selecionado.precoUnitarioSemImposto"
+        type="number" ng-change="ctrl.alteraPrecoUnitarioSemImposto()" />
     </div>
   </div>
   <div class="col-xs-3 col-sm-3 col-md-3 col-lg-1 padding-off">
@@ -125,8 +127,8 @@
           <tr ng-repeat="i in ctrl.pedido.tabela.itens | itensAdicionadosFilter track by i.id">
             <td>
               <div class="btn-group btn-group-sm">
-                <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"
-                  ng-style="{'background-color': ctrl.pedido.industria.cor}">
+                <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true"
+                  aria-expanded="false" ng-style="{'background-color': ctrl.pedido.industria.cor}">
                   Ações
                   <span class="caret"></span>
                 </button>

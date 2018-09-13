@@ -84,7 +84,11 @@
     </div>
     <div class="col-xs-6 col-sm-4">
       <div class="form-group">
-        <label>Carga</label> <label class="form-control" ng-bind="ctrl.pedido.carga.text"></label>
+        <label for="selCarga">Carga</label>
+        <select id="selCarga" class="form-control" ng-model="ctrl.pedido.carga" disabled>
+          <option value="1">Batida</option>
+          <option value="2">Paletizada</option>
+        </select>
       </div>
     </div>
     <div class="col-xs-6 col-sm-2">

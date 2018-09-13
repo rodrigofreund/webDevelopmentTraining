@@ -1,0 +1,207 @@
+<div class="row">
+  <div class="col-xs-12">
+    <img class="img-personal-size image-space" src="images/{{ctrl.pedido.industria.imagem}}" />
+    <p class="content-title">Detalhes do Pedido</p>
+  </div>
+</div>
+<form>
+  <div class="row">
+    <div class="col-xs-12">
+      <div class="panel panel-default">
+        <div class="panel-heading">Pedido</div>
+        <div class="panel-body">
+          <div class="row">
+            <div class="col-xs-12 padding-off">
+              <div class="form-group input-group-sm">
+                <label>Cliente: </label>
+                <label class="form-control" style="height: auto;">{{ctrl.pedido.cliente.razaoSocial}}</label>
+              </div>
+            </div>
+            <div class="col-xs-6 padding-off">
+              <div class="form-group input-group-sm">
+                <label>Pedido: </label>
+                <label class="form-control">{{ctrl.pedido.id}}</label>
+              </div>
+            </div>
+            <div class="col-xs-6 padding-off">
+              <div class="form-group input-group-sm">
+                <label>Código Cliente: </label>
+                <label class="form-control">{{ctrl.idIndustriaCliente}}</label>
+              </div>
+            </div>
+            <div class="col-xs-6 padding-off">
+              <div class="form-group input-group-sm">
+                <label>Data do Pedido: </label>
+                <label class="form-control">{{ctrl.pedido.dataPedido | date:'dd/MM/yyyy'}}</label>
+              </div>
+            </div>
+            <div class="col-xs-6 padding-off">
+              <div class="form-group input-group-sm">
+                <label>Data de Entrega: </label>
+                <label class="form-control">{{ctrl.pedido.dataEntrega | date:'dd/MM/yyyy'}}</label>
+              </div>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-xs-12 padding-off">
+              <div class="form-group input-group-sm">
+                <label>Vendedor: </label>
+                <label class="form-control">{{ctrl.pedido.usuario.nome}}</label>
+              </div>
+            </div>
+            <div class="col-xs-12 padding-off">
+              <div class="form-group input-group-sm">
+                <label>Tabela: </label>
+                <label class="form-control">{{ctrl.pedido.tabela.nome}}</label>
+              </div>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-xs-6 padding-off">
+              <div class="form-group input-group-sm">
+                <label>Dias Entrega: </label>
+                <label class="form-control" style="color: red">{{ctrl.pedido.cliente.diasEntrega}}</label>
+              </div>
+            </div>
+            <div class="col-xs-6 padding-off">
+              <div class="form-group input-group-sm">
+                <label>Horario Entrega: </label>
+                <label class="form-control" style="color: red">{{ctrl.pedido.cliente.horarioEntrega}}</label>
+              </div>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-xs-4 padding-off">
+              <div class="form-group input-group-sm">
+                <label>Prazo: </label>
+                <label class="form-control">{{ctrl.pedido.industriaPrazo.descricao}}</label>
+              </div>
+            </div>
+            <div class="col-xs-4 padding-off">
+              <div class="form-group input-group-sm">
+                <label>Carga: </label>
+                <label class="form-control">{{ctrl.valorCarga()}}</label>
+              </div>
+            </div>
+            <div class="col-xs-4 padding-off">
+              <div class="form-group input-group-sm">
+                <label>Proposta: </label>
+                <label class="form-control">{{(ctrl.pedido.proposta == 1 ? 'Sim' : 'Não')}}</label>
+              </div>
+            </div>
+            <div class="col-xs-12 padding-off">
+              <div class="form-group input-group-sm">
+                <label>Código Pedido na {{ctrl.pedido.industria.nome}}: </label>
+                <input class="form-control" ng-model="ctrl.pedido.codigoPedidoIndustria" ng-disabled="!ctrl.podeEditarCodigoPedido()" />
+              </div>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-xs-6 padding-off">
+              <div class="form-group input-group-sm">
+                <label>Total Itens: </label>
+                <label class="form-control">{{ctrl.totalItensPedido}}</label>
+              </div>
+            </div>
+            <div class="col-xs-6 padding-off">
+              <div class="form-group input-group-sm">
+                <label>Total Pedido: </label>
+                <label class="form-control">{{ctrl.totalPedido | currency:"R$"}}</label>
+              </div>
+            </div>
+
+            <div class="col-sm-1"></div>
+            <div class="col-xs-12 col-sm-10">
+              <div class="form-group">
+                <uib-accordion close-others="oneAtATime">
+                  <div uib-accordion-group class="panel-default" is-open="true">
+                    <uib-accordion-heading>
+                      Observações
+                      <i class="pull-right glyphicon" ng-class="{'glyphicon-chevron-down': status.open, 'glyphicon-chevron-right': !status.open}"></i>
+                    </uib-accordion-heading>
+                    <div class="panel-body">
+                      <ul class="chat">
+                        <chat-message mensagens="ctrl.pedido.observacoesPedidoDto"></chat-message>
+                      </ul>
+                    </div>
+                    <div class="panel-footer">
+                      <div class="input-group">
+                        <input id="btn-input" type="text" class="form-control input-sm" placeholder="Escreva sua mensagem aqui..."
+                          ng-model="observacao.msg" />
+                        <span class="input-group-btn">
+                          <button class="btn btn-warning btn-sm" id="btn-chat" ng-click="ctrl.adicionaObservacao()">Enviar</button>
+                        </span>
+                      </div>
+                    </div>
+                </uib-accordion>
+              </div>
+            </div>
+
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-xs-12">
+      <div class="panel panel-default">
+        <div class="panel-heading">Itens do Pedido</div>
+        <div class="panel-body">
+          <div class="table-responsive">
+            <table class="table">
+              <thead class="thead-inverse">
+                <tr>
+                  <th>Código</th>
+                  <th>Descrição</th>
+                  <th>Quantidade</th>
+                  <th>Preço Base</th>
+                  <th>Desconto</th>
+                  <th>Preço Vendido</th>
+                  <th>Preço Unitário</th>
+                  <th>Total</th>
+                  <th>Preço Colocado</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr ng-repeat="i in ctrl.pedido.itensPedido" ng-class="{destaquePedido: verificaPedidoAlterado(i)}">
+                  <td>{{i.codigo}}</td>
+                  <td>{{i.descricao}}</td>
+                  <td>{{i.quantidadeSolicitada}}</td>
+                  <td>{{i.preco | currency:"R$"}}</td>
+                  <td>{{i.desconto | percentage}}</td>
+                  <td>{{buscaPrecoSemSt(i) | currency:"R$"}}</td>
+                  <td>{{buscaPrecoSemSt(i) / i.quantidade | currency:"R$"}}</td>
+                  <td>{{buscaPrecoSemSt(i) * i.quantidadeSolicitada | currency:"R$"}}
+                  </td>
+                  <td ng-if="isVendedor()">{{i.precoColocado | currency:"R$"}}</td>
+                  <td>
+                    <input class="form-control" ng-model="i.precoColocado" ng-if="!isVendedor()" type="number"
+                      ng-change="ctrl.alteraPrecoColocado(i)" ng-disabled="isVendedor()" />
+                  </td>
+                </tr>
+                <tr ng-show="ctrl.pedidos.length==0">
+                  <td>Nenhum item no pedido</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-xs-12">
+      <div class="panel panel-default">
+        <div class="panel-heading">Ações</div>
+        <div class="panel-body">
+          <input type="button" ng-style="{'background-color': pedido.industria.cor}" class="btn btn-primary" value="Voltar"
+            ng-click="ctrl.voltar()" />
+          <input type="button" ng-style="{'background-color': pedido.industria.cor}" class="btn btn-primary" value="Negar"
+            ng-click="ctrl.negarPedido()" restrict access="Gestor Administrador" ng-if="ctrl.podeNegarPedido()" />
+          <input type="button" ng-style="{'background-color': pedido.industria.cor}" class="btn btn-primary" value="Colocar"
+            ng-click="ctrl.colocarPedido()" restrict access="Gestor Administrador" ng-show="ctrl.podeColocarPedido()" />
+        </div>
+      </div>
+    </div>
+  </div>
+</form>

@@ -68,6 +68,10 @@ PedidoModulo.component('itensPedidoComponent', {
       PedidoCalculoService.alteraPrecoUnitarioComImposto(ctrl.produto.selecionado);
     }
 
+    ctrl.alteraPrecoUnitarioSemImposto = function () {
+      PedidoCalculoService.alteraPrecoUnitarioSemImposto(ctrl.produto.selecionado);
+    }
+
     this.$onInit = function () {
       ctrl.produto = {
         selecionado: null

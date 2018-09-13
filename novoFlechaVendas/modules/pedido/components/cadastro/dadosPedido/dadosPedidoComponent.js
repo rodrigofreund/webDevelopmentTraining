@@ -3,7 +3,7 @@
 var PedidoModulo = angular.module('pedido.module');
 
 PedidoModulo.component('dadosPedidoComponent', {
-  templateUrl: 'modules/pedido/components/cadastro/dadosPedido/views/dadosPedido.html',
+  templateUrl: 'modules/pedido/components/cadastro/dadosPedido/dadosPedido.html',
   bindings: {
     listaIndustrias: '<'
   },
@@ -44,7 +44,6 @@ PedidoModulo.component('dadosPedidoComponent', {
     };
 
     ctrl.geraPedido = function () {
-      debugger
       if(validate()) {
         PedidoService.setPedidoAtivo(ctrl.pedido);
         $state.go('main.pedido.cadastro.itens', { 'pedido': ctrl.pedido });
@@ -94,7 +93,8 @@ PedidoModulo.component('dadosPedidoComponent', {
         { id: 3, descricao: 'Bonificação de Produtos' }
       ];
 
-      ctrl.pedido.tipoPedido = ctrl.tipoPedidoOptions[0];
+      //PADRAO VENDA DE PRODUTOS
+      ctrl.pedido.tipoPedido = 1;
 
       ctrl.pedido.statusPedido = STATUS_PEDIDO.ENVIADO;
 

@@ -3,7 +3,7 @@
 var PedidoModulo = angular.module('pedido.module');
 
 PedidoModulo.component('edicaoPedidoComponent', {
-  templateUrl: 'modules/pedido/components/cadastro/edicaoPedido/views/edicaoPedido.html',
+  templateUrl: 'modules/pedido/components/cadastro/edicaoPedido/edicaoPedido.html',
   bindings: {
     pedido: '<'
   },
@@ -35,6 +35,7 @@ PedidoModulo.component('edicaoPedidoComponent', {
     });
 
     function init(ctrl) {
+      $log.log('Pedido: ', ctrl.pedido);
       TabelaService.getTabelasPorIndustria(ctrl.pedido.industria.id).then((tabelaDtoList) => {
         ctrl.listaTabelas = tabelaDtoList
       });
@@ -52,6 +53,17 @@ PedidoModulo.component('edicaoPedidoComponent', {
       }
 
       ctrl.pedido.dataEntrega = geraDataEntrega(ctrl.pedido.dataEntrega);
+
+      ctrl.pedido.itensPedido.forEach((itemInserido) => {
+        ctrl.pedido.tabela.itens.forEach((itemTabela) => {
+          if(itemInserido.codigo == itemTabela.codigo) {
+            itemTabela['inserido'] = true;
+            itemTabela['quantidadeSolicitada'] = itemInserido['quantidadeSolicitada']
+            itemTabela['desconto'] = itemInserido['desconto']
+            PedidoCalculoService.inicializaPreco(itemTabela);
+          }
+        });
+      });
 
       ctrl.dateOptions = {
         formatYear: 'yyyy',

@@ -64,7 +64,7 @@ PedidoModule.factory('PedidoCalculoService', ['$filter',
 
     //RECALCULA VALORES APOS ALTERAÇÃO DO PRECO UNITÁRIO SEM IMPOSTO
     service.alteraPrecoUnitarioSemImposto = function(item) {
-      item.precoComImposto = item.precoUnitarioSemImposto * item.quantidade;
+      item.precoSemImposto = item.precoUnitarioSemImposto * item.quantidade;
       service.alteraPrecoSemImposto(item);
     }
 
@@ -73,7 +73,9 @@ PedidoModule.factory('PedidoCalculoService', ['$filter',
       if (!item.quantidadeSolicitada) {
         item.quantidadeSolicitada = 1;
       }
-      item.desconto = 0;
+      if(!item.desconto) {
+        item.desconto = 0;
+      }
       item.valorImposto = getValorImposto(item);
       item.precoComImposto = calculaPrecoComImposto(item);
       item.precoSemImposto = calculaPrecoSemImposto(item);

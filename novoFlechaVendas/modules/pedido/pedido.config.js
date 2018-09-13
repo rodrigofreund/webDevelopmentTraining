@@ -63,6 +63,20 @@ PedidoModulo.config(($stateProvider) => {
       },
     }
   };
+  var detalhePedido = {
+    name: 'main.pedido.detalhe',
+    url: '/detalhe',
+    component: 'detalhePedidoComponent',
+    params: {
+      idPedido: null
+    },
+    resolve: {
+      pedido: function (PedidoService, $log, $stateParams) {
+        $log.log('idPedido: ', $stateParams);
+        return PedidoService.getPedido($stateParams.idPedido);
+      },
+    }
+  };
   $stateProvider.state(pedido);
   $stateProvider.state(cadastroPedido);
   $stateProvider.state(cadastroPedidoDados);
@@ -70,4 +84,5 @@ PedidoModulo.config(($stateProvider) => {
   $stateProvider.state(pedidoResumo);
   $stateProvider.state(edicaoPedidoDados);
   $stateProvider.state(pesquisaPedido);
+  $stateProvider.state(detalhePedido);
 });

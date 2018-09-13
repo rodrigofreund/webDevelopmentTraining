@@ -9,7 +9,7 @@ PedidoModulo.component('pesquisaPedidoComponent', {
   },
   controllerAs: 'ctrl',
   controller: function ($log, $scope, PedidoService,
-    ModalService, ClienteService, NotificationService, UsuarioService, uibDateParser) {
+    ModalService, ClienteService, NotificationService, UsuarioService, $state) {
     var ctrl = this;
     this.$onInit = init();
 
@@ -30,6 +30,14 @@ PedidoModulo.component('pesquisaPedidoComponent', {
 
     ctrl.selectCliente = function($item) {
       ctrl.pedidoSearch.idCliente = $item.id;
+    }
+
+    /* EDITAR PEDIDO */
+    ctrl.editarPedido = function(idPedido) {
+      PedidoService.getPedido(idPedido).then(pedido => {
+        PedidoService.setPedidoAtivo(pedido);
+        $state.go('main.pedido.cadastro.edicao');
+      })
     }
     
 
@@ -182,26 +190,7 @@ PedidoModulo.component('pesquisaPedidoComponent', {
 
     /* DETALHAR PEDIDO */
     ctrl.exibeDetalhesPedido = function (idPedido) {
-      if (!idPedido) {
-        return
-      }
-      PedidoService.getPedido(idPedido, (result) => {
-        let pedidoCompleto = result
-        service.setPedido(pedidoCompleto);
-        $location.path('/detalhePedidoItens')
-      })
-    }
-
-    /* EDITAR PEDIDO */
-    ctrl.editarPedido = function (idPedido) {
-      if (!idPedido) {
-        return
-      }
-      StorageService.setFiltroPedidoAtivo(ctrl.pedidoSearch)
-      PedidoService.getPedido(idPedido, (result) => {
-        PedidoService.pedidoParaEditar = result;
-        $location.path('/pedido');
-      })
+      $state.go('main.pedido.detalhe', {'idPedido' : idPedido});
     }
 
     /* CANCELAR PEDIDO */
