@@ -3,11 +3,11 @@
   <div class="row">
     <div class="col-xs-12 col-sm-6 col-md-5">
       <label>Nome: </label>
-      <label>{{tabela.nome}}</label>
+      <label>{{ctrl.tabela.nome}}</label>
     </div>
     <div class="col-xs-12 col-sm-6 col-md-7">
       <label>Data: </label>
-      <label>{{tabela.data | date:'dd/MM/yyyy'}}</label>
+      <label>{{ctrl.tabela.data | date:'dd/MM/yyyy'}}</label>
     </div>
   </div>
 
@@ -31,7 +31,7 @@
             </tr>
           </thead>
           <tbody>
-            <tr ng-repeat="item in tabela.itens">
+            <tr ng-repeat="item in ctrl.tabela.itens">
               <td>{{item.codigo}}</td>
               <td>{{item.descricao}}</td>
               <td>{{item.st | percentage}}</td>

@@ -425,3 +425,9 @@
   color:#fff;
   background-color: #4b4a5e;
 }
+
+.msg-erro-cadastro-cliente {
+  position: absolute; 
+  margin-top: 0px !important;
+  font-size: smaller;
+}

@@ -44,6 +44,14 @@ UsuarioModule.factory('UsuarioService', ['HttpService',
       return HttpService.httpGet(SUBPATH + '/buscaUsuarios');
     }
 
+    service.buscaRepresentacoesUsuario = (idUsuario) => {
+      return HttpService.httpGet(SUBPATH + '/URL_POST_BUSCA_REPRESENTACOES_USUARIO', {'idUsuario':idUsuario});
+    }
+
+    service.removerRepresentacao = (idRepresentacao) => {
+      return HttpService.httpPost(SUBPATH + '/removerRepresentacao', idRepresentacao);
+    }
+
     return service;
   }
 ])

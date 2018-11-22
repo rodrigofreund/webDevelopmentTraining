@@ -206,7 +206,7 @@ angular.module('CadastroClientes')
 					if (!cpfCnpj) {
 						return
 					}
-					ClientesCadastradosService.getClienteExistente(cpfCnpj, (response) => {
+					ClientesService.getClientePorCnpj(cpfCnpj).then(response => {
 						if (response) {
 							if (AuthenticationService.isVendedor() && !$scope.cliente.id) {
 								NotificationService.alert('Cliente já cadastrado! Entre em contato com a administração.')

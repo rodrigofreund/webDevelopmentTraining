@@ -31,7 +31,7 @@ PedidoModule.factory('PedidoCalculoService', ['$filter',
       return total;
     }
 
-    //RECALCULA VALORES APOS ALTERAÇÃO DO PREÇO SEM IMPOSTO
+    // RECALCULA VALORES APOS ALTERAÇÃO DO PREÇO SEM IMPOSTO
     service.alteraPrecoSemImposto = function (item) {
       let diferenca = item.preco - item.precoSemImposto;
       let desconto = diferenca / item.preco;
@@ -40,7 +40,7 @@ PedidoModule.factory('PedidoCalculoService', ['$filter',
       calculaPrecoUnitario(item);
     }
 
-    //RECALCULA VALORES APOS ALTERAÇÃO DO PREÇO COM IMPOSTO
+    // RECALCULA VALORES APOS ALTERAÇÃO DO PREÇO COM IMPOSTO
     service.alteraPrecoComImposto = function (item) {
       let diferenca = item.preco + item.valorImposto - item.precoComImposto;
       let desconto = diferenca / (item.preco + item.valorImposto);
@@ -49,26 +49,35 @@ PedidoModule.factory('PedidoCalculoService', ['$filter',
       calculaPrecoUnitario(item);
     }
 
-    //RECALCULA VALORES APOS ALTERAÇÃO DO DESCONTO
+    // RECALCULA VALORES APOS ALTERAÇÃO DO DESCONTO
     service.alteraDesconto = function (item) {
       item.precoComImposto = calculaPrecoComImposto(item);
       item.precoSemImposto = calculaPrecoSemImposto(item);
       calculaPrecoUnitario(item);
     }
 
-    //RECALCULA VALORES APOS ALTERAÇÃO DO PRECO UNITÁRIO COM IMPOSTO
+    // RECALCULA VALORES APOS ALTERAÇÃO DO PRECO UNITÁRIO COM IMPOSTO
     service.alteraPrecoUnitarioComImposto = function(item) {
       item.precoComImposto = item.precoUnitarioComImposto * item.quantidade;
       service.alteraPrecoComImposto(item);
     }
 
-    //RECALCULA VALORES APOS ALTERAÇÃO DO PRECO UNITÁRIO SEM IMPOSTO
+    // RECALCULA VALORES APOS ALTERAÇÃO DO PRECO UNITÁRIO SEM IMPOSTO
     service.alteraPrecoUnitarioSemImposto = function(item) {
       item.precoSemImposto = item.precoUnitarioSemImposto * item.quantidade;
       service.alteraPrecoSemImposto(item);
     }
 
-    //INICIALIZA OS VALORES DO ITEM PARA OS CÁLCULOS
+    service.inicializaPrecosPedido = (pedido) => {
+      pedido.numeroItens = 0;
+      pedido.itensPedido.forEach((item) => {
+        service.inicializaPreco(item);
+        pedido.numeroItens += item.quantidadeSolicitada;
+      });
+      pedido.totalSemImposto = getValorTotalPedidoListaItens(pedido);
+      pedido.totalComImposto = getValorTotalPedidoListaItens(pedido);;
+    }
+    // INICIALIZA OS VALORES DO ITEM PARA OS CÁLCULOS
     service.inicializaPreco = function (item) {
       if (!item.quantidadeSolicitada) {
         item.quantidadeSolicitada = 1;
@@ -80,6 +89,14 @@ PedidoModule.factory('PedidoCalculoService', ['$filter',
       item.precoComImposto = calculaPrecoComImposto(item);
       item.precoSemImposto = calculaPrecoSemImposto(item);
       calculaPrecoUnitario(item);
+    }
+
+    function getValorTotalPedidoListaItens (pedido) {
+      let total = 0;
+      pedido.itensPedido.forEach(item => {
+        total += item.precoComImposto * item.quantidadeSolicitada;
+      });
+      return total;
     }
 
     function getValorImposto (item) {

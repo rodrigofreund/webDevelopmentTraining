@@ -13,6 +13,7 @@ angular.module('ModalApp', ['ui.bootstrap']).service('ModalService', ['$uibModal
             headerText: 'Continua?',
             bodyText: 'Executar esta ação?',
             bodyDataList: [],
+            showCloseButton: true
         };
 
         this.showModal = function (customModalDefaults, customModalOptions) {
@@ -38,21 +39,21 @@ angular.module('ModalApp', ['ui.bootstrap']).service('ModalService', ['$uibModal
                     $scope.selectedElement = null //Elemento atualmente selecionado
                     $scope.modalOptions = tempModalOptions;
                     $scope.modalOptions.ok = function (result) {
-                    	$uibModalInstance.close(result);
+                        $uibModalInstance.close(result);
                     };
                     $scope.modalOptions.close = function (result) {
-                    	$uibModalInstance.dismiss('cancel');
+                        $uibModalInstance.dismiss('cancel');
                     };
                     $scope.selecionaTodos = false
                     $scope.selectLine = function ($event) {
                         let element = $event.currentTarget
-                        if(!element) {
+                        if (!element) {
                             return
                         }
-                        if(!$scope.selectedElement) {
+                        if (!$scope.selectedElement) {
                             selectLine(element)
                         } else {
-                            if($scope.selectedElement == element) {
+                            if ($scope.selectedElement == element) {
                                 desselectLine($scope.selectedElement)
                             } else {
                                 desselectLine()
@@ -61,11 +62,29 @@ angular.module('ModalApp', ['ui.bootstrap']).service('ModalService', ['$uibModal
                         }
                     }
                     $scope.pesquisa = null
-                    $scope.filtroClientes = function(item) {
-                        if($scope.pesquisa) {
+                    $scope.filtroClientes = function (item) {
+                        if ($scope.pesquisa) {
                             return item.nome.indexOf($scope.pesquisa.toUpperCase()) !== -1
                         } else {
                             return true
+                        }
+                    }
+                    $scope.getStatusPedido = function (pedido) {
+                        switch (pedido.status) {
+                            case 0:
+                                return "Indefinido";
+                            case 1:
+                                return "Criado";
+                            case 2:
+                                return "Salvo";
+                            case 3:
+                                return "Enviado";
+                            case 4:
+                                return "Negado";
+                            case 5:
+                                return "Colocado";
+                            case 6:
+                                return "Cancelado";
                         }
                     }
                     function selectLine(element) {
@@ -79,7 +98,7 @@ angular.module('ModalApp', ['ui.bootstrap']).service('ModalService', ['$uibModal
                         $scope.selectedOption = null
                     }
 
-                    $scope.marcarTodos = function() {
+                    $scope.marcarTodos = function () {
                         $scope.selecionaTodos = !$scope.selecionaTodos
                         $scope.modalOptions.bodyDataList.forEach(element => {
                             element.listaCliente.forEach(cliente => {

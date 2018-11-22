@@ -18,7 +18,6 @@ PedidoModule.factory('PedidoService', ['HttpService', '$log',
     const URL_PEDIDO_BUSCAR_ULTIMAR_VENDAS_ITEM = `${SUBPATH}/getUltimasVendasItem`;
 
     service.salvaPedido = (pedidoDto) => {
-      $log.log('Pedido: ', pedidoDto);
       return HttpService.httpPost(URL_PEDIDO_SALVAR, pedidoDto);
     };
 
@@ -47,11 +46,11 @@ PedidoModule.factory('PedidoService', ['HttpService', '$log',
     };
 
     service.setObservacoesPedido = (observacaoPedidoUpdateDto) => {
-      return HttpService.httpGet(URL_PEDIDO_ADICIONAR_OBSERVACOES_PEDIDO, observacaoPedidoUpdateDto);
+      return HttpService.httpPost(URL_PEDIDO_ADICIONAR_OBSERVACOES_PEDIDO, observacaoPedidoUpdateDto);
     };
 
     service.getUltimasVendasItem = (ultimasVendasItemSearchDto) => {
-      return HttpService.httpGet(URL_PEDIDO_BUSCAR_ULTIMAR_VENDAS_ITEM, ultimasVendasItemSearchDto);
+      return HttpService.httpPost(URL_PEDIDO_BUSCAR_ULTIMAR_VENDAS_ITEM, ultimasVendasItemSearchDto);
     };
 
     service.setPedidoAtivo = function (pedidoAtivo) {
@@ -64,6 +63,18 @@ PedidoModule.factory('PedidoService', ['HttpService', '$log',
 
     service.removePedidoAtivo = function () {
       return localStorage.removeItem('pedidoAtivo');
+    }
+
+    service.setFiltroPedido = function (filtroPedido) {
+      sessionStorage.setItem('filtroPedido', angular.toJson(filtroPedido));
+    }
+
+    service.getFiltroPedido = function () {
+      return angular.fromJson(sessionStorage.getItem('filtroPedido'));
+    }
+
+    service.removeFiltroAtivo = function () {
+      return sessionStorage.removeItem('filtroPedido');
     }
 
     return service;

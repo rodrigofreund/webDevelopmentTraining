@@ -3,12 +3,12 @@
 var PedidoModulo = angular.module('pedido.module');
 
 PedidoModulo.component('itensPedidoComponent', {
-  templateUrl: 'modules/pedido/components/cadastro/itensPedido/views/itensPedido.html',
+  templateUrl: 'modules/pedido/components/cadastro/itensPedido/itensPedido.html',
   bindings: {
     pedido: '='
   },
   controllerAs: 'ctrl',
-  controller: function ($log, $state, PedidoService, PedidoCalculoService) {
+  controller: function ($log, $state, PedidoService, PedidoCalculoService, ModalService) {
     var ctrl = this;
 
     ctrl.selecionaProduto = function () {
@@ -70,6 +70,44 @@ PedidoModulo.component('itensPedidoComponent', {
 
     ctrl.alteraPrecoUnitarioSemImposto = function () {
       PedidoCalculoService.alteraPrecoUnitarioSemImposto(ctrl.produto.selecionado);
+    }
+
+    ctrl.exibeModalUltimoPedidosItem = function () {
+      let ultimasVendasItemSearchDto = {
+        idCliente: ctrl.pedido.cliente.id,
+        idUsuario: ctrl.pedido.usuario.id,
+        codigoItem: ctrl.produto.selecionado.codigo
+      }
+      PedidoService.getUltimasVendasItem(ultimasVendasItemSearchDto).then(response => {
+        var modalOptions = {
+          closeButtonText: 'Cancelar',
+          actionButtonText: 'Selecionar',
+          headerText: `Histórico - ${ctrl.produto.selecionado.descricao}`,
+          bodyDataList: response
+        };
+        var modalDefaults = {
+          backdrop: true,
+          keyboard: true,
+          modalFade: true,
+          templateUrl: 'modules/modal/modalUltimosPedidosItem.html',
+        };
+
+        ModalService.showModal(modalDefaults, modalOptions).then(function (result) {
+          if (!result) {
+            return
+          }
+          var itemSelecionado = JSON.parse(result)
+          if (itemSelecionado && itemSelecionado.hasOwnProperty("quantidade") && itemSelecionado.hasOwnProperty("preco")) {
+            ctrl.produto.selecionado.quantidadeSolicitada = itemSelecionado.quantidade
+            ctrl.produto.selecionado.precoFinal = itemSelecionado.preco
+            ctrl.alteraPrecoFinalItem()
+          } else {
+            NotificationService.error("Erro ao buscar informações do item. Contate o administrador")
+          }
+        }, function (result) {
+          return
+        });
+      });
     }
 
     this.$onInit = function () {

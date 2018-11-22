@@ -6,13 +6,14 @@ app.factory('HttpService', [
 	'$http',
 	'blockUI',
 	'$log',
+	'$q',
 	constructor,
 ])
 
-function constructor($http, blockUI, $log) {
+function constructor($http, blockUI, $log, $q) {
 	var service = {};
 
-	service.httpPost = function (path, param, timeout, header, opt) {
+	service.httpPost = function (path, param, timeout, header, opt, unblock) {
 		let _timeout = timeout !== null ? timeout : TIMEOUT
 		let _header = {
 			'Authorization': getUsuarioHash(),
@@ -34,13 +35,20 @@ function constructor($http, blockUI, $log) {
 				req[i] = opt[i];
 			}
 		}
-		blockUI.start();
-		return $http(req).then(result => {
+		if(!unblock) {
+			blockUI.start();
+		}
+		return $http(req).then(
+			function(result) {
 				return result.data;
-			}, error => {
-				$log.log('Erro na chamada ao servidor: ', error);
-			}).finally(function () {
-				blockUI.stop();
+			},
+			function(error) {
+				throw `${error.data.errorCode} - ${error.data.message}`;
+			},
+			).finally(function () {
+				if(!unblock) {
+					blockUI.stop();
+				}
 			})
 	}
 

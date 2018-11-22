@@ -3,15 +3,96 @@
 var PedidoModulo = angular.module('pedido.module');
 
 PedidoModulo.component('pesquisaPedidoComponent', {
-  templateUrl: 'modules/pedido/components/pesquisa/views/pesquisaPedido.html',
+  templateUrl: 'modules/pedido/components/pesquisa/pesquisaPedido.html',
   bindings: {
-    listaIndustrias: '<'
+    listaIndustrias: '<',
+    pedidoSearch: '<'
   },
   controllerAs: 'ctrl',
-  controller: function ($log, $scope, PedidoService,
-    ModalService, ClienteService, NotificationService, UsuarioService, $state) {
+  controller: function ($log, $scope, PedidoService, ModalService,
+    ClienteService, NotificationService, UsuarioService, $state, PedidoCalculoService) {
+
     var ctrl = this;
+
     this.$onInit = init();
+
+    ctrl.selectCliente = function ($item) {
+      ctrl.pedidoSearch.idCliente = $item.id;
+    }
+
+    /* EDITAR PEDIDO */
+    ctrl.editarPedido = function (idPedido) {
+      PedidoService.getPedido(idPedido).then(pedido => {
+        PedidoService.setPedidoAtivo(pedido);
+        $state.go('main.pedido.cadastro.edicao');
+      })
+    }
+
+    $scope.$watchCollection('ctrl.pedidoSearch', function () {
+      PedidoService.getPedidosPorCriteria(ctrl.pedidoSearch).then((result) => {
+        ctrl.searchResult = result;
+        ctrl.pedidos = result.content;
+        calculaPrecosPedidos();
+        PedidoService.setFiltroPedido(ctrl.pedidoSearch);
+        ctrl.page = ctrl.pedidoSearch.newPage;
+      })
+    });
+
+    ctrl.buscaPedidos = function () {
+      PedidoService.getPedidosPorCriteria(ctrl.pedidoSearch).then((result) => {
+        ctrl.searchResult = result;
+        ctrl.pedidos = result.content;
+        calculaPrecosPedidos()
+      })
+    }
+
+    ctrl.formatDate = function (date) {
+      return new Date(date).toLocaleDateString("pt-BR");
+    }
+
+    /* DETALHAR PEDIDO */
+    ctrl.exibeDetalhesPedido = function (idPedido) {
+      $state.go('main.pedido.detalhe', { 'idPedido': idPedido });
+    }
+
+    /* CANCELAR PEDIDO */
+    ctrl.cancelarPedido = function (listagemPedidoDto) {
+      var modalOptions = {
+        closeButtonText: 'Não',
+        actionButtonText: 'Sim',
+        headerText: 'Confirmar',
+        bodyText: 'Confirma CANCELAMENTO do pedido para o cliente ' + listagemPedidoDto.nomeCliente + ' ?'
+      };
+      ModalService.showModal({}, modalOptions).then(function (result) {
+        PedidoService.getPedido(listagemPedidoDto.idPedido, (pedidoDto) => {
+          pedidoDto.statusPedido = STATUS_PEDIDO.CANCELADO
+          PedidoService.salvaPedido(pedidoDto, function () {
+            NotificationService.success("Pedido cancelado com sucesso!")
+          }), function () {
+            NotificationService.error("Erro ao cancelar pedido!")
+          }
+        })
+      });
+    }
+
+    ctrl.podeEditar = function (listagemPedidoDto) {
+      if (!listagemPedidoDto) {
+        return
+      }
+      return listagemPedidoDto.status === STATUS_PEDIDO.NEGADO && listagemPedidoDto.idVendedor === ctrl.usuario.id;
+    }
+
+    ctrl.mudaPagina = () => {
+      ctrl.pedidoSearch.newPage = ctrl.page;
+    }
+
+    ctrl.openIni = function () {
+      ctrl.popup.openedini = true;
+    };
+
+    ctrl.openFim = function () {
+      ctrl.popup.openedfim = true;
+    };
 
     ctrl.buscaClientes = function (value) {
       ctrl.clienteSearch.razaoSocial = value;
@@ -20,152 +101,12 @@ PedidoModulo.component('pesquisaPedidoComponent', {
       });
     };
 
-    UsuarioService.buscaUsuarios().then(response => {
-      ctrl.listaVendedores = response;
-    });
-
-    PedidoService.getListaStatusPedido().then(result => {
-      ctrl.listaStatusPedido = result
-    })
-
-    ctrl.selectCliente = function($item) {
-      ctrl.pedidoSearch.idCliente = $item.id;
-    }
-
-    /* EDITAR PEDIDO */
-    ctrl.editarPedido = function(idPedido) {
-      PedidoService.getPedido(idPedido).then(pedido => {
-        PedidoService.setPedidoAtivo(pedido);
-        $state.go('main.pedido.cadastro.edicao');
-      })
-    }
-    
-
-    $scope.$watchCollection('ctrl.pedidoSearch', function (novaTabela, antigaTabela) {
-      $log.log('filtro: ', ctrl.pedidoSearch);
-      PedidoService.getPedidosPorCriteria(ctrl.pedidoSearch).then((result) => {
-        $log.log('result: ', result);
-        ctrl.searchResult = result;
-        ctrl.pedidos = result.content;
-      })
-    });
-
-    /*
-    ctrl.selectCliente = function (item) {
-      ctrl.pedidoSearch.idCliente = item.id
-      buscaPedidos()
-    }
-
-    let filtroPedido = StorageService.getFiltroPedidoAtivo()
-    if (filtroPedido) {
-      ctrl.pedidoSearch = filtroPedido
-    } else {
-      ctrl.pedidoSearch = {
-        idIndustria: null,
-        idUsuario: null,
-        idStatus: null,
-        dtInicio: null,
-        dtFim: null,
-        idCliente: null,
-        newPage: PAGINACAO.PEDIDO.NEW_PAGE,
-        pageSize: PAGINACAO.PEDIDO.PAGE_SIZE
-      };
-    }
-
-    if (AuthenticationService.isVendedor()) {
-      ctrl.vendedor = usuario;
-      ctrl.pedidoSearch.idUsuario = usuario.id;
-    } else {
-      CadastroClientesService.buscaVendedores(function (response) {
-        ctrl.vendedores = response;
-      });
-    }
-
-    ctrl.statusPedido = undefined;
-    */
-    /*
-     service.getListaStatusPedido((response) => {
-       ctrl.listaStatusPedido = response;
-       if (ctrl.pedidoSearch.idStatus) {
-         ctrl.listaStatusPedido.forEach(function (item, index) {
-           if (item.id === ctrl.pedidoSearch.idStatus) {
-             ctrl.statusPedido = item
-           }
-         });
-       }
-     });
-     */
-
-    /*
-    var paginationOptions = {
-      pageNumber: PAGINACAO.PEDIDO.NEW_PAGE,
-      pageSize: PAGINACAO.PEDIDO.PAGE_SIZE,
-      sort: null
-    };
-    */
-
-    /* FILTROS DE PESQUISA
-
-    ctrl.selecionaVendedor = function () {
-      buscaPedidos()
-    }
-
-    ctrl.selecionaData = function () {
-      buscaPedidos();
-    }
-
     ctrl.limpaFiltro = function () {
-      ctrl.pedidoSearch = {
-        idIndustria: null,
-        idUsuario: ctrl.isVendedor() ? usuario.id : null,
-        idStatus: null,
-        dtInicio: null,
-        dtFim: null,
-        idCliente: null,
-        newPage: PAGINACAO.PEDIDO.NEW_PAGE,
-        pageSize: PAGINACAO.PEDIDO.PAGE_SIZE
-      };
-      ctrl.statusPedido = undefined
-      ctrl.cliente.selecionado = undefined
-      buscaPedidos()
-      StorageService.resetFiltroPedidoAtivo()
-    }
-    */
+      PedidoService.removeFiltroAtivo();
+      $state.go($state.current, {}, { reload: true });
+    };
 
-    /* ----------------------------------------------------*/
-
-    /*
-    ctrl.selecionaStatus = function () {
-      if (ctrl.statusPedido) {
-        ctrl.pedidoSearch.idStatus = ctrl.statusPedido.id
-      } else {
-        ctrl.pedidoSearch.idStatus = null
-      }
-      if (StorageService.getFiltroPedidoAtivo()) {
-        StorageService.resetFiltroPedidoAtivo()
-      }
-      buscaPedidos();
-    }
-    */
-
-    /*
-
-    buscaPedidos();
-    */
-
-    ctrl.buscaPedidos = function () {
-      //StorageService.setFiltroPedidoAtivo(ctrl.pedidoSearch)
-      //ctrl.pedidoSearch.isVendedor = ctrl.isVendedor()
-      PedidoService.getPedidosPorCriteria(ctrl.pedidoSearch).then((result) => {
-        $log.log('pedidos: ', result);
-        ctrl.searchResult = result;
-        ctrl.pedidos = result.content;
-      })
-    }
-
-
-
-    ctrl.getStatus = function (i) {
+    ctrl.getStatusPedido = function (i) {
       switch (i) {
         case 0:
           return "Indefinido";
@@ -184,69 +125,18 @@ PedidoModulo.component('pesquisaPedidoComponent', {
       }
     }
 
-    ctrl.formatDate = function (date) {
-      return new Date(date).toLocaleDateString("pt-BR")
+    function calculaPrecosPedidos() {
+      ctrl.pedidos.forEach(pedido => {
+        PedidoCalculoService.inicializaPrecosPedido(pedido);
+      })
     }
-
-    /* DETALHAR PEDIDO */
-    ctrl.exibeDetalhesPedido = function (idPedido) {
-      $state.go('main.pedido.detalhe', {'idPedido' : idPedido});
-    }
-
-    /* CANCELAR PEDIDO */
-    ctrl.cancelarPedido = function (listagemPedidoDto) {
-      var modalOptions = {
-        closeButtonText: 'Não',
-        actionButtonText: 'Sim',
-        headerText: 'Confirmar',
-        bodyText: 'Confirma CANCELAMENTO do pedido para o cliente ' + listagemPedidoDto.nomeCliente + ' ?'
-      };
-      ModalService.showModal({}, modalOptions).then(function (result) {
-        PedidoService.getPedido(listagemPedidoDto.idPedido, (pedidoDto) => {
-          pedidoDto.statusPedido = STATUS_PEDIDO.CANCELADO
-          PedidoService.salvaPedido(pedidoDto, function () {
-            NotificationService.success("Pedido cancelado com sucesso!")
-            //$route.reload()
-          }), function () {
-            NotificationService.error("Erro ao cancelar pedido!")
-            //$route.reload()
-          }
-        })
-      });
-    }
-
-    ctrl.podeEditar = function (listagemPedidoDto) {
-      if (!listagemPedidoDto) {
-        return
-      }
-      return listagemPedidoDto.status === STATUS_PEDIDO.NEGADO && listagemPedidoDto.idVendedor === ctrl.usuario.id;
-    }
-
-    ctrl.mudaPagina = () => {
-      ctrl.buscaPedidos();
-    }
-
-    ctrl.getTotalPedidoSemSt = (pedido) => {
-      return service.getTotalPedidoSemSt(pedido)
-    }
-
-    ctrl.openIni = function() {
-      ctrl.popup.openedini = true;
-    };
-
-    ctrl.openFim = function() {
-      ctrl.popup.openedfim = true;
-    };
 
     function init() {
-
       ctrl.cliente = {
         selecionado: undefined
       }
 
       ctrl.resultadoBusca = undefined
-      ctrl.paginaAtual = 0
-      ctrl.totalPaginas = 0
 
       ctrl.canEditPedido = false;
       ctrl.pedidoSelecionado = undefined;
@@ -262,17 +152,6 @@ PedidoModulo.component('pesquisaPedidoComponent', {
         pageSize: 6
       };
 
-      ctrl.pedidoSearch = {
-        idIndustria: null,
-        idUsuario: null,
-        idStatus: null,
-        dtInicio: null,
-        dtFim: null,
-        idCliente: null,
-        newPage: PAGINACAO.PEDIDO.NEW_PAGE,
-        pageSize: PAGINACAO.PEDIDO.PAGE_SIZE
-      };
-
       ctrl.dateOptions = {
         formatYear: 'yyyy',
         startingDay: 1
@@ -281,6 +160,25 @@ PedidoModulo.component('pesquisaPedidoComponent', {
       ctrl.popup = {
         opened: false
       };
+
+      if (ctrl.usuario.administrador) {
+        UsuarioService.buscaUsuarios().then(response => {
+          ctrl.listaVendedores = response;
+        });
+      }
+
+      if (ctrl.pedidoSearch.dtInicio) {
+        ctrl.pedidoSearch.dtInicio = new Date(ctrl.pedidoSearch.dtInicio);
+      }
+
+      if (ctrl.pedidoSearch.dtFim) {
+        ctrl.pedidoSearch.dtFim = new Date(ctrl.pedidoSearch.dtFim);
+      }
+
+      PedidoService.getListaStatusPedido().then(result => {
+        ctrl.listaStatusPedido = result
+      });
+      $log.log('pedidoSearch: ', ctrl.pedidoSearch)
     };
   }
 });

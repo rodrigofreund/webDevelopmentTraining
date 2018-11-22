@@ -8,7 +8,7 @@ PedidoModulo.component('detalhePedidoComponent', {
     pedido: '<'
   },
   controllerAs: 'ctrl',
-  controller: function ($log, ModalService, $state, PedidoService, NotificationService) {
+  controller: function ($log, ModalService, $state, PedidoService, NotificationService, PedidoCalculoService, $scope) {
     var ctrl = this;
     this.$onInit = init();
 
@@ -33,8 +33,19 @@ PedidoModulo.component('detalhePedidoComponent', {
       });
     }
 
+    ctrl.valorCarga = function() {
+      if(ctrl.pedido.carga == 1) {
+        return "Batida";
+      } else {
+        return "Paletizada";
+      }
+    }
+
     function init() {
-      $log.log('Pedido: ', ctrl.pedido);
+      $log.log('Pedido--: ', ctrl.pedido);
+      PedidoCalculoService.inicializaPrecosPedido(ctrl.pedido);
+      ctrl.auth = $scope.$parent.$resolve.auth
+      $log.log('--Pedido: ', ctrl.pedido);
     }
   }
 });

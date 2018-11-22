@@ -12,7 +12,7 @@ function constructor (HttpService) {
 		service.getInformacoesDashboardDto = (idUsuario) => {
 			return HttpService.httpGet(SUBPATH + 'informacoes', {'idUsuario': idUsuario})
 				.then((informacoes) => {
-					return informacoes.data;
+					return informacoes;
 				})
 		}
 

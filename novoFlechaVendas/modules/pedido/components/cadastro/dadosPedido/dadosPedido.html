@@ -8,7 +8,7 @@
     <div class="col-xs-12 form-group">
       <label for="selIndustria" ng-class="{ 'error-field' : formDadosPedido.selIndustria.$invalid && ctrl.trySubmit}">Indústria</label>
       <select class="form-control" ng-model="ctrl.pedido.industria" name="selIndustria" ng-options="i.nome for i in ctrl.listaIndustrias track by i.id"
-        value="{{i}}" ng-change="ctrl.selecionaIndustria()" required>
+        value="{{i}}" ng-change="ctrl.selecionaIndustria()" required ng-disabled="ctrl.isPedidoRelacionado">
         <option value="">Selecione uma Indústria</option>
       </select>
       <div ng-if="formDadosPedido.selIndustria.$invalid && ctrl.trySubmit">
@@ -19,8 +19,8 @@
   <div class="row">
     <div class="col-xs-12 form-group">
       <label for="selCliente" ng-class="{ 'error-field' : formDadosPedido.selCliente.$invalid && ctrl.trySubmit}">Cliente</label>
-      <ui-select name="selCliente" ng-model="ctrl.pedido.cliente" ng-change="ctrl.selecionaCliente()" theme="bootstrap"
-        title="Selecione um Cliente:" skip-focusser="true" ng-disabled="!ctrl.pedido.industria" required>
+      <ui-select name="selCliente" ng-model="ctrl.pedido.cliente" theme="bootstrap"
+        title="Selecione um Cliente:" skip-focusser="true" ng-disabled="!ctrl.pedido.industria || ctrl.isPedidoRelacionado" required>
         <ui-select-match placeholder="Selecione um Cliente">{{$select.selected.razaoSocial}} -
           {{$select.selected.nomeFantasia}}</ui-select-match>
         <ui-select-choices class="small-font" repeat="cliente in ctrl.listaClientes | propsFilter: {razaoSocial: $select.search, nomeFantasia: $select.search} track by cliente.id">
@@ -60,7 +60,7 @@
       <label for="selTipoPedido">Tipo de Pedido</label>
       <select name="selTipoPedido" class="form-control" focus="selectChanged" ng-model="ctrl.pedido.tipoPedido"
         ng-options="tipoPedido.id as tipoPedido.descricao for tipoPedido in ctrl.tipoPedidoOptions" placeholder="Selecione o tipo do Pedido"
-        ng-change="ctrl.selecionaTipoPedido()" ng-disabled="!ctrl.pedido.industria" required>
+        ng-change="ctrl.selecionaTipoPedido('{{ctrl.pedido.tipoPedido}}')" ng-disabled="!ctrl.pedido.industria || ctrl.isPedidoRelacionado" required>
       </select>
     </div>
   </div>

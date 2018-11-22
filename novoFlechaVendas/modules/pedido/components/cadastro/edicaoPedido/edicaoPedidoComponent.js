@@ -8,7 +8,7 @@ PedidoModulo.component('edicaoPedidoComponent', {
     pedido: '<'
   },
   controllerAs: 'ctrl',
-  controller: function ($log, $scope, IndustriaPrazoService, $state, PedidoService, TabelaService, $filter, PedidoCalculoService) {
+  controller: function ($log, $scope, IndustriaPrazoService, $state, PedidoService, TabelaService, $filter, PedidoCalculoService, PedidoStorageService, ModalService) {
     var ctrl = this;
     this.$onInit = init(ctrl);
 
@@ -17,6 +17,7 @@ PedidoModulo.component('edicaoPedidoComponent', {
     };
 
     ctrl.geraPedido = function () {
+      debugger
       PedidoService.setPedidoAtivo(ctrl.pedido);
       $state.go('main.pedido.cadastro.itens', { 'pedido': ctrl.pedido });
     };
@@ -34,10 +35,15 @@ PedidoModulo.component('edicaoPedidoComponent', {
       }
     });
 
+    ctrl.alteraPrazo = function() {
+      $log.log('altera prazo')
+      $log.log(ctrl.pedido.industriaPrazo);
+    }
+
     function init(ctrl) {
-      $log.log('Pedido: ', ctrl.pedido);
+
       TabelaService.getTabelasPorIndustria(ctrl.pedido.industria.id).then((tabelaDtoList) => {
-        ctrl.listaTabelas = tabelaDtoList
+        ctrl.listaTabelas = tabelaDtoList;
       });
 
       const industriaPrazoSearchDto = {
@@ -48,22 +54,20 @@ PedidoModulo.component('edicaoPedidoComponent', {
         ctrl.listaPrazos = industriaPrazoPedidoDtoList;
       })
 
-      function geraDataEntrega(dataEntrega) {
-        return new Date(dataEntrega)
-      }
-
       ctrl.pedido.dataEntrega = geraDataEntrega(ctrl.pedido.dataEntrega);
 
-      ctrl.pedido.itensPedido.forEach((itemInserido) => {
-        ctrl.pedido.tabela.itens.forEach((itemTabela) => {
-          if(itemInserido.codigo == itemTabela.codigo) {
-            itemTabela['inserido'] = true;
-            itemTabela['quantidadeSolicitada'] = itemInserido['quantidadeSolicitada']
-            itemTabela['desconto'] = itemInserido['desconto']
-            PedidoCalculoService.inicializaPreco(itemTabela);
-          }
+      if (ctrl.pedido.itensPedido != null) {
+        ctrl.pedido.itensPedido.forEach((itemInserido) => {
+          ctrl.pedido.tabela.itens.forEach((itemTabela) => {
+            if (itemInserido.codigo == itemTabela.codigo) {
+              itemTabela['inserido'] = true;
+              itemTabela['quantidadeSolicitada'] = itemInserido['quantidadeSolicitada']
+              itemTabela['desconto'] = itemInserido['desconto']
+              PedidoCalculoService.inicializaPreco(itemTabela);
+            }
+          });
         });
-      });
+      }
 
       ctrl.dateOptions = {
         formatYear: 'yyyy',
@@ -76,13 +80,13 @@ PedidoModulo.component('edicaoPedidoComponent', {
       };
 
       ctrl.propostaOptions = [
-        { id: 0, text: 'Não' },
-        { id: 1, text: 'Sim' }
+        { id: "false", text: 'Não' },
+        { id: "true", text: 'Sim' }
       ];
 
       ctrl.cargaOptions = [
-        { value: 1, text: 'Batida' },
-        { value: 2, text: 'Paletizada' }
+        { value: "1", text: 'Batida' },
+        { value: "2", text: 'Paletizada' }
       ];
 
       ctrl.tipoPedidoOptions = [
@@ -91,5 +95,10 @@ PedidoModulo.component('edicaoPedidoComponent', {
         { id: 3, descricao: 'Bonificação de Produtos' }
       ];
     }
+
+    function geraDataEntrega(dataEntrega) {
+      return new Date(dataEntrega)
+    }
+
   }
 });

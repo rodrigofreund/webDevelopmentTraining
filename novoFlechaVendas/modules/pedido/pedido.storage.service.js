@@ -2,22 +2,15 @@
 
 var PedidoModule = angular.module('pedido.module');
 
-PedidoModule.factory('PedidoStorageService', ['$filter',
-  function ($filter) {
+PedidoModule.factory('PedidoStorageService', ['$log',
+  function ($log) {
 
     var service = {};
-
-    service.setPedidosSalvo = function (pedido) {
-      let listaPedidosSalvos = []
-      listaPedidosSalvos.push(pedido)
-      pedido.idPedidoSalvo = 1
-      localStorage.setItem('pedidos', JSON.stringify(listaPedidosSalvos))
-    }
 
     service.addPedidosSalvo = function (pedido) {
       let listaPedidosSalvos = service.getPedidosSalvo()
       if (!listaPedidosSalvos) {
-        service.setPedidosSalvo(pedido)
+        return setPedidosSalvo(pedido)
       } else {
         let indice = undefined
         listaPedidosSalvos.forEach(function (item, index) {
@@ -40,6 +33,7 @@ PedidoModule.factory('PedidoStorageService', ['$filter',
           listaPedidosSalvos.push(pedido)
         }
         localStorage.setItem('pedidos', JSON.stringify(listaPedidosSalvos))
+        return pedido.idPedidoSalvo;
       }
     }
 
@@ -51,9 +45,38 @@ PedidoModule.factory('PedidoStorageService', ['$filter',
       }
     }
 
+    service.getPedido = function (idPedido) {
+      let listaPedidosSalvos = service.getPedidosSalvo();
+      let pedidoEncontrado = listaPedidosSalvos.filter(function(pedido) {
+        return pedido.idPedidoSalvo == idPedido;
+      });
+      return pedidoEncontrado[0];
+    }
+
+    service.getPedidoPorFiltro = function (idCliente, idUsuario, idIndustria) {
+      let listaPedidosSalvos = service.getPedidosSalvo();
+      let pedidoEncontrado = listaPedidosSalvos.filter(function(pedido) {
+        return (pedido.cliente.id == idCliente && pedido.usuario.id == idUsuario && pedido.industria.id == idIndustria);
+      });
+      let result = [];
+      pedidoEncontrado.forEach(function(item) {
+        let pedido = {
+          numero: null,
+          codigo: item.codigo,
+          dataPedido: item.dataPedido,
+          nomeIndustria: item.industria.nome,
+          status: item.statusPedido,
+          itensPedido: item.itensPedido,
+          idPedidoSalvo: item.idPedidoSalvo
+        }
+        result.push(pedido);
+      })
+      return result;
+    }
+
     service.removePedidoSalvo = function (pedido) {
       let listaPedidosSalvos = service.getPedidosSalvo()
-      if (listaPedidosSalvos) {
+      if (listaPedidosSalvos && pedido.idPedidoSalvo) {
         let indice = undefined
         listaPedidosSalvos.forEach(function (item, index) {
           if (item.idPedidoSalvo === pedido.idPedidoSalvo) {
@@ -75,6 +98,14 @@ PedidoModule.factory('PedidoStorageService', ['$filter',
       if (localStorage.getItem('pedidos')) {
         localStorage.removeItem('pedidos');
       }
+    }
+
+    function setPedidosSalvo (pedido) {
+      let listaPedidosSalvos = []
+      listaPedidosSalvos.push(pedido)
+      pedido.idPedidoSalvo = 1
+      localStorage.setItem('pedidos', JSON.stringify(listaPedidosSalvos))
+      return pedido.idPedidoSalvo;
     }
 
     return service;

@@ -9,26 +9,26 @@
     <div class="panel-heading">Atividades Recentes</div>
     <div class="panel-body">
       <div class="row">
-        <div class="col-xs-12 col-lg-6" ng-if="false">
+        <div class="col-xs-12 col-lg-6" ng-if="ctrl.info.exibePedidoAtivo">
           <div class="alert alert-info">
-            <a href="" ng-click="exibePedidosAtivo()">Você possui pedido ativo para o cliente
-              <strong> {{pedidoAtivo.nomeCliente}} </strong> que precisa ser enviado. </a>
+            <a href="" ng-click="ctrl.exibePedidoAtivo()">Você possui <strong>pedido ativo</strong> para o cliente
+              <strong> {{ctrl.info.pedidoAtivo.cliente.razaoSocial}} </strong> que precisa ser enviado. </a>
           </div>
         </div>
-        <div class="col-xs-12 col-lg-3" restrict access="Administrador">
+        <div class="col-xs-12 col-lg-3" restrict access="Administrador" ng-if="ctrl.info.exibePedidosEnviados">
           <div class="alert alert-info">
             <a href="" ng-click="ctrl.exibePedidosEnviados()"> Você possui
-              <strong> {{::ctrl.informacoes.numeroPedidosEnviados}} pedido(s) enviado(s) </strong> que precisam de atenção.
+              <strong> {{ctrl.info.numeroPedidosEnviados}} pedido(s) enviado(s) </strong> que precisam de atenção.
             </a>
           </div>
         </div>
-        <div class="col-xs-12 col-lg-3" ng-if="false">
+        <div class="col-xs-12 col-lg-3" ng-if="ctrl.info.exibePedidosSalvos">
           <div class="alert alert-info">
-            <a href="" ng-click="exibePedidosSalvos()">Você possui
-              <strong> {{getNumeroPedidosSalvos()}} pedido(s) salvo(s) </strong>. </a>
+            <a href="" ng-click="ctrl.exibePedidosSalvos()">Você possui
+              <strong> {{ctrl.info.numeroPedidosSalvos}} pedido(s) salvo(s) </strong> aguardando envio. </a>
           </div>
         </div>
-        <div class="col-xs-12 col-lg-6" ng-if="false">
+        <div class="col-xs-12 col-lg-6" ng-if="ctrl.info.exibeNaoHaInformacoes">
           <span>Não há atividades rescentes!</span>
         </div>
       </div>
@@ -39,17 +39,20 @@
     <div class="panel-heading panel-dashboard-heading">Alertas</div>
     <div class="panel-body">
       <div class="row">
-        <div class="col-xs-12 col-lg-6" ng-if="true">
+        <div class="col-xs-12 col-lg-6" ng-if="ctrl.info.exibePedidosNegados">
           <div class="alert alert-danger">
             <a href="" ng-click="ctrl.exibePedidosNegados()">Você possui
-              <strong> {{::ctrl.informacoes.numeroPedidosNegados}} pedido(s) negado(s) </strong>. </a>
+              <strong> {{ctrl.info.numeroPedidosNegados}} pedido(s) negado(s) </strong>. </a>
           </div>
         </div>
-        <div class="col-xs-12 col-lg-6" ng-if="false">
+        <div class="col-xs-12 col-lg-6" ng-if="ctrl.info.exibeClientesPendente">
           <div class="alert alert-danger">
-            <a href="" ng-click="exibeClientesPendentes()">Você possui
-              <strong> {{getNumeroClientesPendentes}} cliente(s) pendente(s) </strong>. </a>
+            <a href="" ng-click="ctrl.exibeClientesPendentes()">Você possui
+              <strong> {{ctrl.info.numeroClientesPendente}} cliente(s) pendente(s) </strong>. </a>
           </div>
+        </div>
+        <div class="col-xs-12 col-lg-6" ng-if="ctrl.info.exibeNaoHaAlertas">
+          <span>Não há alertas!</span>
         </div>
       </div>
     </div>

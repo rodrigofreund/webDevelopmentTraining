@@ -1,7 +1,7 @@
 'use strict'
 
 angular.module('GerenciadorFinanceiroFlechaVendas').component('chatMessage', {
-	templateUrl: './components/chat-message/chat-message-template.html',
+	templateUrl: './modules/app/components/shared/chat-message/chat-message-template.html',
 	controller: function chatMessageController() {
 		var ctrl = this
 

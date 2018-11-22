@@ -1,0 +1,40 @@
+<div class="modal-header">
+  <h4>{{modalOptions.headerText}}</h4>
+</div>
+<div class="modal-body">
+  <div ng-show="modalOptions.bodyDataList.length>0">
+    <span style="display: inline-block; min-width: 10%;">Número</span>
+    <span style="display: inline-block; min-width: 12%;">Código</span>
+    <span style="display: inline-block; min-width: 20%;">Data</span>
+    <span style="display: inline-block; min-width: 20%;">Indústria</span>
+    <span style="display: inline-block; min-width: 16%;">Total</span>
+    <span style="display: inline-block; min-width: 16%;">Status</span>
+  </div>
+  <div style="overflow-y: scroll; height: 300px;">
+      <table class="table">
+        <thead ng-show="modalOptions.bodyDataList.length==0">
+          <th>Não há dados para serem importados.</th>
+        </thead>
+        <tbody>
+          <tr ng-repeat="pedido in modalOptions.bodyDataList" data-item="{{pedido}}" ng-click="selectLine($event)">
+            <td style="width: 10%">{{pedido.idPedido}}</td>
+            <td style="width: 12%">{{pedido.codigo}}</td>
+            <td style="width: 20%">{{pedido.dataPedido | date:'dd/MM/yyyy'}}</td>
+            <td style="width: 20%">{{pedido.nomeIndustria}}</td>
+            <td style="width: 16%">{{pedido.totalComImposto | currency:'R$'}}</td>
+            <td style="width: 16%">{{getStatusPedido(pedido)}}</td>
+          </tr>
+          <tr ng-show="item.length==0">
+            <td>Nenhum dados a exibir.</td>
+          </tr>
+        </tbody>
+      </table>
+    <div ng-show="modalOptions.bodyDataList.length==0">
+      <span>Não há clientes para importação.</span>
+    </div>
+  </div>
+</div>
+<div class="modal-footer">
+  <button type="button" class="btn" data-ng-click="modalOptions.close()">{{modalOptions.closeButtonText}}</button>
+  <button class="btn btn-primary" data-ng-click="modalOptions.ok(selectedOption)" ng-disabled="modalOptions.bodyDataList.length === 0">{{modalOptions.actionButtonText}}</button>
+</div>

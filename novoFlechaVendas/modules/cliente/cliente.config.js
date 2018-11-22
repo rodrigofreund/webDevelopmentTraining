@@ -11,20 +11,34 @@ ClienteModulo.config(($stateProvider) => {
   var pesquisaCliente = {
     name: 'main.cliente.pesquisa',
     url: '/pesquisa',
-    component: 'pesquisaClienteComponent'
+    component: 'pesquisaClienteComponent',
+    resolve: {
+      listaVendedor: (auth, UsuarioService)=>{
+        let vendedores = []
+        if(auth.vendedor) {
+          vendedores.push(auth);
+          return vendedores;
+        } else {
+          return UsuarioService.buscaUsuarios();
+        }
+      }
+    }
   }
   var cadastroCliente = {
     name:'main.cliente.cadastro',
     url: 'cadastro',
     component: 'cadastroClienteComponent'
   };
-  var  edicaoCliente = {
+  var edicaoCliente = {
     name: 'main.cliente.edicao',
-    url: 'edicao/:id',
+    url: 'edicao/:cnpj',
     component: 'cadastroClienteComponent',
     resolve: {
-      cliente: ($q) => {
+      cliente: ($q, ClienteService, $stateParams) => {
         const deferred = $q.defer();
+        ClienteService.getClientePorCnpj($stateParams.cnpj).then((clienteDto) => {
+          deferred.resolve(clienteDto);
+        })
         return deferred.promisse;
       },
       listaIndustriaCliente: ($q) => {

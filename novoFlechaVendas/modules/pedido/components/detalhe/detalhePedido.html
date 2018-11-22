@@ -1,6 +1,10 @@
 <div class="row">
-  <div class="col-xs-12">
+  <div class="col-xs-12" style="text-align:center;">
     <img class="img-personal-size image-space" src="images/{{ctrl.pedido.industria.imagem}}" />
+  </div>
+</div>
+<div class="row">
+  <div class="col-xs-12">
     <p class="content-title">Detalhes do Pedido</p>
   </div>
 </div>
@@ -100,43 +104,20 @@
             <div class="col-xs-6 padding-off">
               <div class="form-group input-group-sm">
                 <label>Total Itens: </label>
-                <label class="form-control">{{ctrl.totalItensPedido}}</label>
+                <label class="form-control">{{ctrl.pedido.numeroItens}}</label>
               </div>
             </div>
             <div class="col-xs-6 padding-off">
               <div class="form-group input-group-sm">
                 <label>Total Pedido: </label>
-                <label class="form-control">{{ctrl.totalPedido | currency:"R$"}}</label>
+                <label class="form-control">{{ctrl.pedido.totalSemImposto | currency:"R$"}}</label>
               </div>
             </div>
 
             <div class="col-sm-1"></div>
             <div class="col-xs-12 col-sm-10">
-              <div class="form-group">
-                <uib-accordion close-others="oneAtATime">
-                  <div uib-accordion-group class="panel-default" is-open="true">
-                    <uib-accordion-heading>
-                      Observações
-                      <i class="pull-right glyphicon" ng-class="{'glyphicon-chevron-down': status.open, 'glyphicon-chevron-right': !status.open}"></i>
-                    </uib-accordion-heading>
-                    <div class="panel-body">
-                      <ul class="chat">
-                        <chat-message mensagens="ctrl.pedido.observacoesPedidoDto"></chat-message>
-                      </ul>
-                    </div>
-                    <div class="panel-footer">
-                      <div class="input-group">
-                        <input id="btn-input" type="text" class="form-control input-sm" placeholder="Escreva sua mensagem aqui..."
-                          ng-model="observacao.msg" />
-                        <span class="input-group-btn">
-                          <button class="btn btn-warning btn-sm" id="btn-chat" ng-click="ctrl.adicionaObservacao()">Enviar</button>
-                        </span>
-                      </div>
-                    </div>
-                </uib-accordion>
-              </div>
+              <chat id-pedido="ctrl.pedido.id" mensagens="ctrl.pedido.mensagens" auth="ctrl.auth" observacoes="ctrl.pedido.observacoesPedidoDto"></chat>
             </div>
-
           </div>
         </div>
       </div>
@@ -169,9 +150,9 @@
                   <td>{{i.quantidadeSolicitada}}</td>
                   <td>{{i.preco | currency:"R$"}}</td>
                   <td>{{i.desconto | percentage}}</td>
-                  <td>{{buscaPrecoSemSt(i) | currency:"R$"}}</td>
-                  <td>{{buscaPrecoSemSt(i) / i.quantidade | currency:"R$"}}</td>
-                  <td>{{buscaPrecoSemSt(i) * i.quantidadeSolicitada | currency:"R$"}}
+                  <td>{{i.precoSemImposto | currency:"R$"}}</td>
+                  <td>{{i.precoSemImposto / i.quantidade | currency:"R$"}}</td>
+                  <td>{{i.precoSemImposto * i.quantidadeSolicitada | currency:"R$"}}
                   </td>
                   <td ng-if="isVendedor()">{{i.precoColocado | currency:"R$"}}</td>
                   <td>
@@ -195,7 +176,7 @@
         <div class="panel-heading">Ações</div>
         <div class="panel-body">
           <input type="button" ng-style="{'background-color': pedido.industria.cor}" class="btn btn-primary" value="Voltar"
-            ng-click="ctrl.voltar()" />
+            ui-sref="main.pedido.pesquisa" />
           <input type="button" ng-style="{'background-color': pedido.industria.cor}" class="btn btn-primary" value="Negar"
             ng-click="ctrl.negarPedido()" restrict access="Gestor Administrador" ng-if="ctrl.podeNegarPedido()" />
           <input type="button" ng-style="{'background-color': pedido.industria.cor}" class="btn btn-primary" value="Colocar"

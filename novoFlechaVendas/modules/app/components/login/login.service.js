@@ -29,8 +29,32 @@ function constructor($http, HttpService) {
 		return getLogin();
 	}
 
-	service.decodePassword = function(authdata) {
+	service.decodePassword = function (authdata) {
 		return btoa(authdata);
+	}
+
+	service.encodePassword = function (authdata) {
+		return btoa(authdata);
+	}
+
+	service.getPassword = function(password) {
+		return atob(password);
+	}
+
+	service.salvaDadosAutenticacao = function(_login, _senha) {
+		var autenticacao = {
+			login: _login,
+			senha: _senha
+		};
+		localStorage.setItem('currentUser', angular.toJson(autenticacao))
+	}
+
+	service.limpaDadosAutenticacao = function() {
+		localStorage.removeItem('currentUser');
+	}
+
+	service.getDadosAuthenticacao = function() {
+		return angular.fromJson(localStorage.getItem('currentUser'));
 	}
 
 	function setLogin(usuarioDto) {
@@ -43,105 +67,8 @@ function constructor($http, HttpService) {
 	}
 
 	function clearLogin() {
-		console.log('clean')
 		sessionStorage.setItem('login', null);
 	}
-
-	/*
-	service.ClearCredentials = function() {
-		$rootScope.globals = {};
-		if(!StorageService.getPasswordRemember()) {
-			StorageService.clearUsuarioLogado();	
-		}
-		$http.defaults.headers.common.Authorization = 'Basic ';
-		service.usuario = undefined
-	};
-
-
-	service.SetCredentials = function(senha, remember, usuario) {
-		var authdata = Base64.encode(senha)
-		StorageService.resetFiltroAtivo()
-		StorageService.resetFiltroPedidoAtivo()
-		service.usuario = usuario;
-
-		$rootScope.globals = {
-			currentUser: {
-				authdata: authdata,
-				user : usuario
-			}
-		};
-
-		$http.defaults.headers.common['Authorization'] = 'Basic ' + authdata; // jshint ignore:line
-		var dataFinal = new Date();
-		dataFinal.setDate(dataFinal.getDate() + 30);
-		
-		if(remember) {
-			StorageService.setPasswordRemember(true);
-		} else {
-			StorageService.setPasswordRemember(false);
-		}
-		
-		StorageService.setUsuarioLogado(authdata, usuario);
-	};
-	
-	service.getUsuario = function() {
-		return service.usuario;
-	}
-	
-	service.setUsuario = function(usuario) {
-		return service.usuario = usuario;
-	}
-	
-	service.isAdministrador = function() {
-		if(!service.usuario) {
-			return false
-		}
-		if(service.usuario.perfil.id === 2) {
-			return true;
-		}
-		return false;
-	}
-	
-	service.isMaster = function() {
-		if(!service.usuario) {
-			return false
-		}
-		if(service.usuario.perfil.id === 2) {
-			return true;
-		}
-		return false;
-	}
-	
-	service.isVendedor = function() {
-		if(!service.usuario) {
-			return false
-		}
-		if(service.usuario.perfil.id === 1) {
-			return true;
-		}
-		return false;
-	}
-	
-	service.getPasswordRemember = function() {
-		return StorageService.getPasswordRemember();
-	}
-	
-	service.getCredentialsRemember = function() {
-		return StorageService.getUsuarioLogado();
-	}
-	
-	service.getPasswordEncoded = function(password) {
-		return Base64.encode(password);
-	}
-	
-	service.getNomeUsuario = function() {
-		if(service.usuario) {
-			return service.usuario.nome	
-		} else {
-			""
-		}
-	}
-	*/
 
 	return service;
 }

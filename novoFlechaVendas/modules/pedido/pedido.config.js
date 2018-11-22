@@ -3,27 +3,50 @@
 var PedidoModulo = angular.module('pedido.module');
 
 PedidoModulo.config(($stateProvider) => {
-  var pedido = {
+  let pedido = {
     name: 'main.pedido',
     url: '/pedido',
     abstract: true
   };
-  var cadastroPedido = {
+  let cadastroPedido = {
     name: 'main.pedido.cadastro',
     url: '/cadastro',
     abstract: true
   };
-  var cadastroPedidoDados = {
+  let cadastroPedidoDados = {
     name: 'main.pedido.cadastro.dados',
     url: '/dados-pedido',
     component: 'dadosPedidoComponent',
+    params: {
+      idPedidoRelacionado: null,
+      tipoPedido: null,
+      idIndustria: null,
+      idCliente: null,
+    },
     resolve: {
       listaIndustrias: function (IndustriaService, auth) {
         return IndustriaService.getIndustriasByIdUsuario(auth.id);
       },
+      pedidoRelacionado: function($stateParams, PedidoStorageService) {
+        if($stateParams.idPedidoRelacionado && $stateParams.tipoPedido && $stateParams.idIndustria && $stateParams.idCliente) {
+          let pedido = PedidoStorageService.getPedido($stateParams.idPedidoRelacionado)
+          if(!pedido) {
+            return undefined;
+          }
+          return {
+            'pedidoPrincipal' : pedido,
+            'tipoPedido' : $stateParams.tipoPedido,
+            'idIndustria' : $stateParams.idIndustria,
+            'idCliente' : $stateParams.idCliente
+          };
+        } else {
+          return undefined;
+        }
+
+      }
     }
   };
-  var edicaoPedidoDados = {
+  let edicaoPedidoDados = {
     name: 'main.pedido.cadastro.edicao',
     url: '/edicao',
     component: 'edicaoPedidoComponent',
@@ -33,7 +56,7 @@ PedidoModulo.config(($stateProvider) => {
       }
     },
   };
-  var pedidoItens = {
+  let pedidoItens = {
     name: 'main.pedido.cadastro.itens',
     url: '/itens-pedido',
     component: 'itensPedidoComponent',
@@ -43,7 +66,7 @@ PedidoModulo.config(($stateProvider) => {
       }
     }
   };
-  var pedidoResumo = {
+  let pedidoResumo = {
     name: 'main.pedido.cadastro.resumo',
     url: '/resumo-pedido',
     component: 'resumoPedidoComponent',
@@ -53,27 +76,57 @@ PedidoModulo.config(($stateProvider) => {
       }
     }
   };
-  var pesquisaPedido = {
+  let pesquisaPedido = {
     name: 'main.pedido.pesquisa',
     url: '/pesquisa',
+    params: {
+      status : null
+    },
     component: 'pesquisaPedidoComponent',
     resolve: {
       listaIndustrias: function (IndustriaService, auth) {
         return IndustriaService.getIndustriasByIdUsuario(auth.id);
       },
+      pedidoSearch: function(PedidoService, auth, $stateParams) {
+        if($stateParams.status) {
+          return new filtroPedidoDto(auth, $stateParams.status);
+        } else {
+          if(PedidoService.getFiltroPedido()) {
+            return PedidoService.getFiltroPedido();
+          } else {
+            return new filtroPedidoDto(auth);
+          }
+        }
+      }
     }
   };
-  var detalhePedido = {
+  let detalhePedido = {
     name: 'main.pedido.detalhe',
-    url: '/detalhe',
+    url: '/detalhe/:idPedido',
     component: 'detalhePedidoComponent',
-    params: {
-      idPedido: null
-    },
     resolve: {
-      pedido: function (PedidoService, $log, $stateParams) {
-        $log.log('idPedido: ', $stateParams);
+      pedido: function (PedidoService, $stateParams) {
         return PedidoService.getPedido($stateParams.idPedido);
+      },
+    }
+  };
+  let detalhePedidoSalvo = {
+    name: 'main.pedido.detalhe-pedido-local',
+    url: '/detalhe/:idPedidoSalvo',
+    component: 'detalhePedidoComponent',
+    resolve: {
+      pedido: function (PedidoStorageService, $stateParams) {
+        return PedidoStorageService.getPedido($stateParams.idPedidoSalvo);
+      },
+    }
+  };
+  let pedidoLocal = {
+    name: 'main.pedido.local',
+    url: '/local',
+    component: 'pedidoLocalComponent',
+    resolve: {
+      listaIndustrias: function (IndustriaService, auth) {
+        return IndustriaService.getIndustriasByIdUsuario(auth.id);
       },
     }
   };
@@ -85,4 +138,6 @@ PedidoModulo.config(($stateProvider) => {
   $stateProvider.state(edicaoPedidoDados);
   $stateProvider.state(pesquisaPedido);
   $stateProvider.state(detalhePedido);
+  $stateProvider.state(pedidoLocal);
+  $stateProvider.state(detalhePedidoSalvo);
 });

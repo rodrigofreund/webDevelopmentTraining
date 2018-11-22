@@ -37,8 +37,8 @@
       <label for="selTipoPedido">Tipo de Pedido</label>
       <select name="selTipoPedido" class="form-control" focus="selectChanged" ng-model="ctrl.pedido.tipoPedido"
         ng-options="tipoPedido.id as tipoPedido.descricao for tipoPedido in ctrl.tipoPedidoOptions" placeholder="Selecione o tipo do Pedido"
-        ng-change="ctrl.selecionaTipoPedido()" ng-disabled="!ctrl.pedido.industria" required>
-      </select>
+        ng-disabled="true" required>
+    </select>
     </div>
   </div>
   <div class="row">
@@ -58,7 +58,7 @@
     <div class="col-xs-12 form-group">
       <label for="selPrazo">Prazo</label>
       <select id="selPrazo" class="form-control" ng-model="ctrl.pedido.industriaPrazo" ng-disabled="!ctrl.pedido.cliente"
-        required ng-options="p as p.descricao for p in ctrl.listaPrazos track by p.idIndustriaPrazo">
+        required ng-options="p as p.descricao for p in ctrl.listaPrazos track by p.idIndustriaPrazo" ng-change="ctrl.alteraPrazo()">
         <option value="">Selecione um prazo</option>
       </select>
     </div>
@@ -66,18 +66,14 @@
   <div class="row">
     <div class="col-xs-12 form-group">
       <label for="selProposta">Proposta</label>
-      <select id="selProposta" class="form-control" ng-model="ctrl.pedido.proposta">
-        <option value="true">Sim</option>
-        <option value="false">Não</option>
+      <select id="selProposta" class="form-control" ng-model="ctrl.pedido.proposta" ng-options="p.id as p.text for p in ctrl.propostaOptions">
       </select>
     </div>
   </div>
   <div class="row">
     <div class="col-xs-12 form-group">
       <label for="selCarga">Carga</label>
-      <select id="selCarga" class="form-control" ng-model="ctrl.pedido.carga">
-        <option value="1">Batida</option>
-        <option value="2">Paletizada</option>
+      <select id="selCarga" class="form-control" ng-model="ctrl.pedido.carga" ng-options="c.value as c.text for c in ctrl.cargaOptions">
       </select>
     </div>
   </div>

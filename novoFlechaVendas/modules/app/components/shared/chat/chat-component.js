@@ -1,16 +1,16 @@
 'use strict'
 
 angular.module('GerenciadorFinanceiroFlechaVendas').component('chat', {
-	templateUrl: './components/chat/chat-template.html',
+	templateUrl: './modules/app/components/shared/chat/chat-template.html',
 	bindings: {
 		observacoes: '=',
 		auth: '<',
 		idPedido: '<'
 	},
 	controllerAs: 'ctrl',
-	controller: function chatController() {
+	controller: function chatController(PedidoService) {
 		var ctrl = this
-		ctrl.adicionaObservacao = function() {
+		ctrl.adicionaObservacao = function () {
 			const dataCriacao = new Date().toISOString();
 			let msg = {
 				idObservacao: undefined,
@@ -22,10 +22,19 @@ angular.module('GerenciadorFinanceiroFlechaVendas').component('chat', {
 				observacao: ctrl.observacao,
 				nomeUsuario: ctrl.auth.nome
 			}
-			console.log('msg: ', msg);
+			if(!ctrl.observacoes) {
+				ctrl.observacoes = [];
+			}
 			ctrl.observacoes.push(msg);
-			console.log('ctrl.observacoes: ', ctrl.observacoes);
-	
+
+			let observacaoPedidoUpdateDto = {
+				idPedido: ctrl.idPedido,
+				listaObservacaoPedidoDto: ctrl.observacoes
+			}
+
+			if (ctrl.idPedido !== null) {
+				PedidoService.setObservacoesPedido(observacaoPedidoUpdateDto);
+			}
 			// Limpa campo da tela
 			ctrl.observacao = undefined
 		}

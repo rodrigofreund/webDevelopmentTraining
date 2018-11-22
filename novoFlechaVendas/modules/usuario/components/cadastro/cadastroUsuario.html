@@ -19,7 +19,8 @@
         </div>
         <div class="col-xs-12 col-md-3 form-group">
           <label for="login">*Login:</label>
-          <input id="login" class="form-control" type="text" ng-model="ctrl.cadastro.login" ng-blur="ctrl.verificaUsuarioCadastradoPorLogin()" required>
+          <input id="login" class="form-control" type="text" ng-model="ctrl.cadastro.login" ng-blur="ctrl.verificaUsuarioCadastradoPorLogin()"
+            required>
         </div>
         <div class="col-xs-12 col-md-3 form-group">
           <label for="email">Email:</label>
@@ -53,7 +54,8 @@
         </div>
         <div class="col-xs-5 col-md-3 form-group">
           <label for="senha1">*Nova Senha:</label>
-          <input id="senha1" class="form-control" type="password" ng-model="ctrl.cadastro.senha.senha1" required ng-change="ctrl.sinalizaSenhaAlterada()">
+          <input id="senha1" class="form-control" type="password" ng-model="ctrl.cadastro.senha.senha1" required
+            ng-change="ctrl.sinalizaSenhaAlterada()">
         </div>
         <div class="col-xs-5 col-md-3 form-group">
           <label for="senha2">*Repetir Senha:</label>
@@ -81,9 +83,36 @@
       </div>
 
       <div class="row">
+        <div class="col-sm-3">
+          <div class="form-group input-group-sm">
+            <label>Banco: </label>
+            <input class="form-control" ng-model="ctrl.cadastro.nomeBanco" />
+          </div>
+        </div>
+        <div class="col-sm-2">
+          <div class="form-group input-group-sm">
+            <label>Agência: </label>
+            <input class="form-control" type="number" ng-model="ctrl.cadastro.numeroAgencia" />
+          </div>
+        </div>
+        <div class="col-sm-4">
+          <div class="form-group input-group-sm">
+            <label>Nome Agência: </label>
+            <input class="form-control" type="text" ng-model="ctrl.cadastro.nomeAgencia" />
+          </div>
+        </div>
+        <div class="col-sm-3">
+          <div class="form-group input-group-sm">
+            <label>Número conta: </label>
+            <input class="form-control" type="number" ng-model="ctrl.cliente.numeroConta" />
+          </div>
+        </div>
+      </div>
+
+      <div class="row">
         <div class="col-xs-12 form-group">
           <button class="btn btn-primary" id="btn-cadastrar" ng-click="ctrl.salvaUsuario()" ng-disabled="dadosUsuario.$pristine || dadosUsuario.$invalid">Salvar</button>
-          <button class="btn btn-warning" id="btn-excluir" ng-click="ctrl.excluiUsuario()" ng-disabled="dadosUsuario.$pristine || dadosUsuario.$invalid">Excluir</button>
+          <button class="btn btn-warning" id="btn-excluir" ng-click="ctrl.excluiUsuario()" ng-disabled="!ctrl.cadastro.id">Excluir</button>
         </div>
       </div>
     </form>
@@ -96,7 +125,7 @@
         <h3>Dados da Representação</h3>
       </div>
     </div>
-    <form name="dadosRepresentacao">
+    <form name="formDadosRepresentacao" novalidate>
       <div class="row">
         <div class="col-xs-6 form-group">
           <label for="industria">Indústria:</label>
@@ -122,13 +151,14 @@
                 <tr ng-repeat="r in ctrl.representacoes">
                   <td>
                     <div class="btn-group">
-                      <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                      <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown"
+                        aria-haspopup="true" aria-expanded="false">
                         Ações
                         <span class="caret"></span>
                       </button>
                       <ul class="dropdown-menu">
                         <li>
-                          <a href="">Excluir</a>
+                          <a href="" ng-click="ctrl.removerIndustria(r)">Excluir</a>
                         </li>
                       </ul>
                     </div>
@@ -146,24 +176,55 @@
       </div>
       <div class="row">
         <div class="col-xs-12 form-group">
-          <button class="btn btn-primary" id="btn-cadastrar-industrias" ng-disabled="dadosRepresentacao.$pristine || dadosRepresentacao.$invalid"
+          <button class="btn btn-primary" id="btn-cadastrar-industrias" ng-disabled="formDadosRepresentacao.$pristine || formDadosRepresentacao.$invalid"
             ng-click="ctrl.salvaUsuario()">Salvar</button>
         </div>
       </div>
     </form>
   </uib-tab>
 
-  <uib-tab index="2" heading="Importação de Dados" select="ctrl.selecionaTabRepresentacaoCliente()" disable="!ctrl.cadastro.id">
+  <!--
+  <uib-tab index="2" heading="Lista de Clientes" select="ctrl.selecionaTabClientes()" disable="!ctrl.cadastro.id">
     <div class="row">
-        <div class="col-xs-12">
-          <h3>Importação dados usuário</h3>
+      <div class="col-xs-12">
+        <h3>Lista de Clientes</h3>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-xs-12">
+        <div class="table-responsive" style="height: 90%;">
+          <table class="table table-striped table-hover">
+            <thead>
+              <tr>
+                <th>CNPJ</th>
+                <th>Razão Social</th>
+                <th>Nome Fantasia</th>
+              </tr>
+            </thead>
+            <tbody class="table-striped">
+              <tr rolspan="{{c.listaIndustriaCliente.length}}" ng-repeat="c in ctrl.clientes">
+                <td>{{c.cpfCnpj}}</td>
+                <td>{{c.razaoSocial}}</td>
+                <td>{{c.nomeFantasia}}</td>
+            </tbody>
+          </table>
         </div>
       </div>
+    </div>
+  </uib-tab>
+  -->
+
+  <uib-tab index="2" heading="Importação de Dados" select="ctrl.selecionaTabImportacao()" disable="!ctrl.cadastro.id">
+    <div class="row">
+      <div class="col-xs-12">
+        <h3>Importação dados usuário</h3>
+      </div>
+    </div>
     <div class="row">
       <div class="col-xs-12 col-md-6 form-group">
         <label for="usuario">Usuário de Origem</label>
-        <ui-select id="usuario" ng-model="ctrl.importacao.usuario" ng-change="ctrl.selecionaUsuario()" theme="bootstrap" title="Selecione um Usuário:"
-          skip-focusser="true">
+        <ui-select id="usuario" ng-model="ctrl.importacao.usuario" ng-change="ctrl.selecionaUsuario()" theme="bootstrap"
+          title="Selecione um Usuário:" skip-focusser="true">
           <ui-select-match placeholder="Selecione um Usuário">{{$select.selected.id}} - {{$select.selected.nome}}</ui-select-match>
           <ui-select-choices class="small-font" repeat="usuario in ctrl.usuarios | propsFilter: {id: $select.search, nome: $select.search}">
             <div ng-bind-html="usuario.nome | highlight: $select.search"></div>
@@ -174,8 +235,8 @@
         </ui-select>
       </div>
       <div class="col-xs-12 col-md-6 form-group">
-          <label for="usuario">Usuário de Destino</label>
-          <input class="form-control" type="text" ng-model="ctrl.nomeUsuarioFormatado" disabled />
+        <label for="usuario">Usuário de Destino</label>
+        <input class="form-control" type="text" ng-model="ctrl.nomeUsuarioFormatado" disabled />
       </div>
       <div class="col-xs-12 col-md-2">
         <input class="btn btn-primary" type="button" value="Importar" ng-click="ctrl.importar()" ng-disabled="!ctrl.importacao.usuario" />
@@ -191,13 +252,14 @@
             <tr ng-repeat="rc in ctrl.listaRepresentacaoCliente">
               <td>
                 <div class="btn-group">
-                    <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                      Ações <span class="caret"></span>
-                    </button>
-                    <ul class="dropdown-menu">
-                      <li><a href="" ng-click="ctrl.excluirRepresentacaoCliente(rc)">Excluir</a></li>
-                    </ul>
-                  </div>
+                  <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true"
+                    aria-expanded="false">
+                    Ações <span class="caret"></span>
+                  </button>
+                  <ul class="dropdown-menu">
+                    <li><a href="" ng-click="ctrl.excluirRepresentacaoCliente(rc)">Excluir</a></li>
+                  </ul>
+                </div>
               </td>
               <td>{{u.id}}</td>
               <td>{{u.nome}}</td>

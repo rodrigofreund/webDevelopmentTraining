@@ -3,28 +3,28 @@
 var UsuarioModulo = angular.module('usuario.module');
 
 UsuarioModulo.component('pesquisaUsuarioComponent', {
-	templateUrl: 'modules/usuario/components/pesquisa/views/pesquisa.html',
+	templateUrl: 'modules/usuario/components/pesquisa/pesquisa.html',
 	controllerAs: 'ctrl',
 	controller: function usuarioModuloController($state, UsuarioService, NotificationService, ModalService) {
 		var changeFilter = true
 
-		this.vm = this
+		var vm = this
 
-		this.vm.totalItens = 0
-		this.vm.filter = {
+		vm.totalItens = 0
+		vm.filter = {
 			pageSize: 10,
 			newPage: 1
 		}
 		// SE $event FOR PASSADO O COMPONENTE NAO PERDE O FOCO
-		this.vm.pesquisa = ($event) => {
+		vm.pesquisa = ($event) => {
 			if (!changeFilter) {
 				return
 			}
-			UsuarioService.pesquisa(this.vm.filter).then((result) => {
-				this.vm.result = result
-				this.vm.lista = this.vm.result.content;
-				this.vm.totalItens = this.vm.result.totalElements
-				if (this.vm.lista) {
+			UsuarioService.pesquisa(vm.filter).then((result) => {
+				vm.result = result
+				vm.lista = vm.result.content;
+				vm.totalItens = vm.result.totalElements
+				if (vm.lista) {
 					changeFilter = false
 					if ($event && $event.target) {
 						$event.target.focus()
@@ -33,31 +33,31 @@ UsuarioModulo.component('pesquisaUsuarioComponent', {
 			})
 		}
 
-		this.vm.verificaPesquisa = ($event) => {
+		vm.verificaPesquisa = ($event) => {
 			if ($event.charCode === ENTER_KEY_CODE) {
-				this.vm.pesquisa($event)
+				vm.pesquisa($event)
 			}
 		}
 
 		//APENAS EFETUA A PESQUISA SE O FILTRO FOI ALTERADO
-		this.vm.changeField = () => {
+		vm.changeField = () => {
 			changeFilter = true
 		}
 
-		this.vm.mudaPagina = () => {
+		vm.mudaPagina = () => {
 			changeFilter = true
-			this.vm.pesquisa()
+			vm.pesquisa()
 		}
 
-		this.vm.editarRegistro = (id) => {
+		vm.editarRegistro = (id) => {
 			$state.go('main.usuario.edicao', { 'id': id })
 		}
 
-		this.vm.novoUsuario = function () {
+		vm.novoUsuario = function () {
 			$state.go('usuario.cadastro')
 		}
 
-		this.vm.inativarUsuario = function (id) {
+		vm.inativarUsuario = function (id) {
 			var modalOptions = {
 				closeButtonText: 'Não',
 				actionButtonText: 'Sim',
@@ -68,15 +68,15 @@ UsuarioModulo.component('pesquisaUsuarioComponent', {
 				UsuarioService.buscaUsuarioPorId(id).then((result) => {
 					result.ativo = false
 					UsuarioService.salvaUsuario(result).then((usuario) => {
-						NotificationService.success(`Usuário ${usuario.nome} DESABILITADO com sucesso!`)
+						NotificationService.success(`Usuário ${usuario} DESABILITADO com sucesso!`)
 						changeFilter = true
-						this.vm.pesquisa()
+						vm.pesquisa()
 					})
 				})
 			})
 		}
 
-		this.vm.excluirUsuario = function (id) {
+		vm.excluirUsuario = function (id) {
 			var modalOptions = {
 				closeButtonText: 'Não',
 				actionButtonText: 'Sim',
@@ -87,15 +87,15 @@ UsuarioModulo.component('pesquisaUsuarioComponent', {
 				UsuarioService.buscaUsuarioPorId(id).then((result) => {
 					result.excluido = true
 					UsuarioService.salvaUsuario(result).then((usuario) => {
-						NotificationService.success(`Usuário ${usuario.nome} EXCLUÍDO com sucesso!`)
+						NotificationService.success(`Usuário ${usuario} EXCLUÍDO com sucesso!`)
 						changeFilter = true
-						this.vm.pesquisa()
+						vm.pesquisa()
 					})
 				})
 			})
 		}
 
-		this.vm.pesquisa()
+		vm.pesquisa()
 
 	}
 

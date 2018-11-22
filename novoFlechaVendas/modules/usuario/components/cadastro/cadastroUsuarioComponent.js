@@ -3,95 +3,157 @@
 var UsuarioModulo = angular.module('usuario.module')
 
 UsuarioModulo.component('cadastroUsuarioComponent', {
-	templateUrl: 'modules/usuario/components/cadastro/views/cadastroUsuario.html',
+	templateUrl: 'modules/usuario/components/cadastro/cadastroUsuario.html',
 	controllerAs: 'ctrl',
 	bindings: {
-    usuarioParaEditar: '<'
-  },
+		cadastro: '<'
+	},
 	controller: function usuarioModuloController(
 		$state,
+		$scope,
+		$q,
 		UsuarioService,
 		IndustriaService,
 		NotificationService,
 		LoginService,
-		ModalService
+		ModalService,
+		ClienteService
 	) {
 
-		this.vm = this;
+		var ctrl = this;
 
-		if (this.vm.usuarioParaEditar) {
-			this.vm.cadastro = this.vm.usuarioParaEditar
-			this.vm.senhaOriginal = LoginService.decodePassword(this.vm.cadastro.senha.senha1)
-			this.vm.cadastro.senha.senha1
-			this.vm.representacoes = this.vm.usuarioParaEditar.representacoes
+		if (ctrl.cadastro) {
+			ctrl.senhaOriginal = LoginService.decodePassword(ctrl.cadastro.senha.senha1);
+			ctrl.representacoes = ctrl.cadastro.representacoes;
 		} else {
-			this.vm.cadastro = {
+			ctrl.cadastro = {
 				ativo: true
 			}
-			this.vm.representacoes = []
+			ctrl.representacoes = []
 		}
 
-		this.vm.representacao = {
+		ctrl.representacao = {
 			industria: null
 		}
-		this.vm.listaIndustria = []
-		this.vm.senhaAlterada = false
-		this.vm.importacao = {
+		ctrl.listaIndustria = []
+		ctrl.senhaAlterada = false
+		ctrl.importacao = {
 			usuario: null
 		}
 
 		UsuarioService.listaPerfil().then((result) => {
-			this.vm.listaPerfil = result
+			ctrl.listaPerfil = result
 		})
 
-		this.vm.selecionaTabRepresentacao = function () {
+		ctrl.listaNomeBancos = ClienteService.buscaNomesBancos();
 
+		ctrl.selecionaTabRepresentacao = function () {
 			IndustriaService.getIndustrias().then((result) => {
-				this.vm.listaIndustria = result
+				ctrl.listaIndustria = result
 			})
-			if (this.vm.cadastro.id) {
-				UsuarioService.buscaUsuarioCadastroDto(this.vm.cadastro.id).then((result) => {
-					this.vm.representacoes = result.representacoes
-				})
+			if (ctrl.cadastro.id) {
+				UsuarioService.buscaUsuarioCadastroDto(ctrl.cadastro.id).then((result) => {
+					ctrl.representacoes = result.representacoes;
+				});
 			}
 		}
 
-		this.vm.selecionaTabRepresentacaoCliente = function () {
-
-			UsuarioService.buscaUsuarios().then((result) => {
-				this.vm.usuarios = result;
-				this.vm.nomeUsuarioFormatado = `${this.vm.cadastro.id} - ${this.vm.cadastro.nome}`;
+		ctrl.selecionaTabClientes = function() {
+			const filtro = {
+				idUsuario: ctrl.cadastro.id,
+				newPage: 1,
+				pageSize: 100
+			}
+			ClienteService.getClientesPorFiltro(filtro).then(result => {
+				ctrl.clientes = result.content;
 			});
 		}
 
-		this.vm.criaRepresentacao = function () {
-			var listaEncontrados = $.grep(this.vm.representacoes, function (e, i) {
-				return e.idIndustria == this.vm.representacao.industria.id;
+		ctrl.selecionaTabImportacao = function () {
+			UsuarioService.buscaUsuarios().then((result) => {
+				ctrl.usuarios = result;
+				ctrl.nomeUsuarioFormatado = `${ctrl.cadastro.id} - ${ctrl.cadastro.nome}`;
+			});
+		}
+
+		ctrl.criaRepresentacao = function () {
+			var listaEncontrados = $.grep(ctrl.representacoes, function (e) {
+				return e.idIndustria == ctrl.representacao.industria.id;
 			});
 			if (listaEncontrados && listaEncontrados.length > 0) {
 				NotificationService.alert('Indústria já cadastrada para o usuário.')
 			} else {
-				var representacaoDto = new RepresentacaoDto(this.vm.cadastro, this.vm.representacao.industria);
-				this.vm.representacoes.push(representacaoDto)
+				let representacaoDto = {
+					id: null,
+					idIndustria: ctrl.representacao.industria.id,
+					nomeIndustria: ctrl.representacao.industria.nome,
+					idUsuario: ctrl.cadastro.id,
+					nomeUsuario: ctrl.cadastro.nome,
+					ativo: true
+				};
+				ctrl.representacoes.push(representacaoDto);
 			}
 		}
 
-		this.vm.salvaUsuario = function () {
+		ctrl.removerIndustria = function (representacao) {
+			let deveSalvar = false;
+			ctrl.representacoes.forEach(function (item, i) {
+				if (!item.id) {
+					deveSalvar = true;
+				}
+			});
+			if (deveSalvar) {
+				modalAvisoNecessarioSalvar();
+			} else {
+				modalConfirmaRemoverRepresentacao(representacao).then(()=>{
+					if (representacao.id) {
+						UsuarioService.removerRepresentacao(representacao.id).then(() => {
+							ctrl.selecionaTabRepresentacao();
+						});
+					} else {
+						let index = null;
+						ctrl.representacoes.forEach(function (item, i) {
+							if (item.idIndustria === representacao.idIndustria) {
+								index = i;
+							}
+						});
+						if (index) {
+							ctrl.representacoes.splice(index);
+						}
+					}
+					NotificationService.success('Representação excluída com sucesso!')
+				}, () => {
+					NotificationService.success('Operação cancelada.');
+				});
+			}
+		}
+
+		ctrl.salvaUsuario = function () {
 			ajustesCriptografiaSenha()
-			this.vm.cadastro.representacoes = this.vm.representacoes
+			ctrl.cadastro.representacoes = ctrl.representacoes
 			if (validaSenha()) {
-				UsuarioService.salvaUsuario(this.vm.cadastro).then((result) => {
-					this.vm.cadastro = result
-					this.vm.senhaOriginal = LoginService.getPassword(this.vm.cadastro.senha.senha1)
-					this.vm.senhaAlterada = false
-					NotificationService.success('Usuário cadastrado com sucesso!')
+				var usuarioAtivo = ctrl.cadastro.id != null ? true : false;
+				UsuarioService.salvaUsuario(ctrl.cadastro).then((idUsuario) => {
+					if(!usuarioAtivo) {
+						NotificationService.success('Usuário cadastrado com sucesso!');
+					} else {
+						NotificationService.success('Cadastro atualizado!');
+					}
+					if ($state.current.name === 'main.usuario.edicao') {
+						UsuarioService.buscaUsuarioCadastroDto(idUsuario).then(usuarioDto => {
+							ctrl.cadastro = usuarioDto;
+							ctrl.representacoes = ctrl.cadastro.representacoes;
+						});
+					} else {
+						$state.go('main.usuario.edicao', { id: idUsuario });
+					}
 				})
 			} else {
 				NotificationService.error('Senhas informadas não são iguais')
 			}
 		}
 
-		this.vm.excluiUsuario = function () {
+		ctrl.excluiUsuario = function () {
 			var modalOptions = {
 				closeButtonText: 'Não',
 				actionButtonText: 'Sim',
@@ -99,32 +161,32 @@ UsuarioModulo.component('cadastroUsuarioComponent', {
 				bodyText: `Ao EXCLUIR o usuário o não será mais possível acessar os dados deste! Confirma?`
 			};
 			ModalService.showModal({}, modalOptions).then(function (result) {
-				UsuarioService.buscaUsuarioPorId(this.vm.cadastro.id, function (result) {
+				UsuarioService.buscaUsuarioPorId(ctrl.cadastro.id).then(function (result) {
 					result.excluido = true
-					UsuarioService.salvaUsuario(result, function (usuario) {
+					UsuarioService.salvaUsuario(result).then(function (usuario) {
 						NotificationService.success("Usuário EXCLUÍDO com sucesso!")
-						$state.go('usuario.pesquisa')
+						$state.go('main.usuario.pesquisa')
 					})
 				})
 			})
 		}
 
-		this.vm.sinalizaSenhaAlterada = function () {
-			this.vm.senhaAlterada = true
+		ctrl.sinalizaSenhaAlterada = function () {
+			ctrl.senhaAlterada = true
 		}
 
-		this.vm.isVendedor = function () {
+		ctrl.isVendedor = function () {
 			return LoginService.isVendedor();
 		}
 
-		this.vm.importar = function () {
-			if (this.vm.cadastro.id === this.vm.importacao.usuario.id) {
+		ctrl.importar = function () {
+			if (ctrl.cadastro.id === ctrl.importacao.usuario.id) {
 				NotificationService.alert('Não é possível importar para o mesmo usuário')
 				return
 			}
 			var importacaoUsuarioDto = {
-				idUsuarioOrigem: this.vm.importacao.usuario.id,
-				idUsuarioDestino: this.vm.cadastro.id
+				idUsuarioOrigem: ctrl.importacao.usuario.id,
+				idUsuarioDestino: ctrl.cadastro.id
 			}
 			UsuarioService.verificarImportacaoBaseUsuario(importacaoUsuarioDto).then((result) => {
 				var modalOptions = {
@@ -140,37 +202,65 @@ UsuarioModulo.component('cadastroUsuarioComponent', {
 					templateUrl: 'modules/modal/modalImportacaoClientesUsuario.html',
 				};
 				ModalService.showModal(modalDefaults, modalOptions).then(function (modalResult) {
-					UsuarioService.importarBaseUsuario(result, function (importacaoResult) {
+					UsuarioService.importarBaseUsuario(result).then(function (importacaoResult) {
 						NotificationService.success(`Importação realizada com sucesso! ${importacaoResult} clientes importados.`)
-						$state.go('usuario.edicao', { 'id': this.vm.cadastro.id })
+						ctrl.selecionaTabRepresentacao();
 					})
 				});
 			})
 		}
 
-		this.vm.verificaUsuarioCadastradoPorLogin = () => {
-			UsuarioService.buscaUsuarioPorLogin(this.vm.cadastro.login).then(result => {
+		ctrl.verificaUsuarioCadastradoPorLogin = () => {
+			UsuarioService.buscaUsuarioPorLogin(ctrl.cadastro.login).then(result => {
 				if (result) {
 					NotificationService.error('Login do usuário já existente');
-					this.vm.cadastro.login = null
+					ctrl.cadastro.login = null
 				}
 			});
 		}
 
+		function modalConfirmaRemoverRepresentacao(representacao) {
+			const deferred = $q.defer();
+			var modalOptions = {
+				closeButtonText: 'Não',
+				actionButtonText: 'Sim',
+				headerText: 'Confirmar',
+				bodyText: `Confirma exclusão da representação de ${representacao.nomeUsuario} para ${representacao.nomeIndustria}?`
+			};
+			ModalService.showModal({}, modalOptions).then(function (result) {
+				deferred.resolve(true);
+			}, function() {
+				deferred.reject(true);
+			});
+			return deferred.promise;
+		}
+
+		function modalAvisoNecessarioSalvar() {
+			var modalOptions = {
+				headerText: 'Remover representação',
+				actionButtonText: 'Ok',
+				bodyText: `Você deve salvar as alterações antes de efetuar esta exclusão.`,
+				showCloseButton: false
+			};
+			ModalService.showModal({}, modalOptions).then(() => {
+				return;
+			});
+		}
+
 		function ajustesCriptografiaSenha() {
-			if (this.vm.cadastro.id) {
-				if (this.vm.senhaAlterada && this.vm.senhaOriginal != this.vm.cadastro.senha.senha1) {
-					this.vm.cadastro.senha.senha1 = LoginService.getPasswordEncoded(this.vm.cadastro.senha.senha1)
-					this.vm.cadastro.senha.senha2 = LoginService.getPasswordEncoded(this.vm.cadastro.senha.senha2)
+			if (ctrl.cadastro.id) {
+				if (ctrl.senhaAlterada && ctrl.senhaOriginal != ctrl.cadastro.senha.senha1) {
+					ctrl.cadastro.senha.senha1 = LoginService.encodePassword(ctrl.cadastro.senha.senha1)
+					ctrl.cadastro.senha.senha2 = LoginService.encodePassword(ctrl.cadastro.senha.senha2)
 				}
 			} else {
-				this.vm.cadastro.senha.senha1 = LoginService.getPasswordEncoded(this.vm.cadastro.senha.senha1)
-				this.vm.cadastro.senha.senha2 = LoginService.getPasswordEncoded(this.vm.cadastro.senha.senha2)
+				ctrl.cadastro.senha.senha1 = LoginService.encodePassword(ctrl.cadastro.senha.senha1)
+				ctrl.cadastro.senha.senha2 = LoginService.encodePassword(ctrl.cadastro.senha.senha2)
 			}
 		}
 
 		function validaSenha() {
-			return this.vm.cadastro.senha.senha1 === this.vm.cadastro.senha.senha2
+			return ctrl.cadastro.senha.senha1 === ctrl.cadastro.senha.senha2
 		}
 	}
 })

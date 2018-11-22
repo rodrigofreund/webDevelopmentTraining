@@ -242,7 +242,7 @@
 						<div class="form-group input-group-sm">
 							<label>Arquivo Cliente: </label>
 							<input type="file" accept="image/png, image/jpeg, application/pdf, text/plain, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.openxmlformats-officedocument.wordprocessingml.document"
-							 ng-file-model="arquivoCliente" id="fileTabela" style="display: inline" ng-disabled="naoEditavel" multiple/>
+							 ng-file-model="ctrl.arquivoCliente" id="fileTabela" style="display: inline" ng-disabled="naoEditavel" multiple/>
 							<input type="button" ng-click="uploadArquivoCliente()" value="Enviar" ng-disabled="naoEditavel || !cliente.cpfCnpj" />
 						</div>
 					</div>

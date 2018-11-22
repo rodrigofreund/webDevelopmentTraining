@@ -3,94 +3,35 @@
 var ClienteModulo = angular.module('cliente.module');
 
 ClienteModulo.component('cadastroClienteComponent', {
-  templateUrl: 'modules/cliente/components/cadastro/views/cadastroCliente.html',
+  templateUrl: 'modules/cliente/components/cadastro/cadastroCliente.html',
   bindings: {
     cliente: '<',
     listaIndustriaCliente: '<'
   },
   controllerAs: 'ctrl',
-  /*
-  $scope,
-				$rootScope,
-				$location,
-				$sce,
-				$route,
-				$window,
-				service,
-				ClientesCadastradosService,
-				IndustriasService,
-				AuthenticationService,
-				blockUI,
-				ModalService,
-				IndustriaClientePrazoService,
-				NotificationService
-  */
-  controller: function (NotificationService, ModalService, ClienteService) {
+  controller: function ($scope,
+                        NotificationService,
+                        ModalService,
+                        ClienteService,
+                        FileService,
+                        UsuarioService,
+                        $log,
+                        IndustriaService,
+                        IndustriaPrazoService,
+                        $sce,
+                        $state,
+                        $window) {
+
     var ctrl = this;
-
-    function _base64ToArrayBuffer(base64) {
-      var binary_string = $window.atob(base64);
-      var len = binary_string.length;
-      var bytes = new Uint8Array(len);
-      for (var i = 0; i < len; i++) {
-        bytes[i] = binary_string.charCodeAt(i);
-      }
-      return bytes.buffer;
-    }
-
-    function b64toBlob(b64Data, contentType) {
-      return new Blob([_base64ToArrayBuffer(b64Data)], { type: contentType });
-    }
-
-    ctrl.downloadArquivo = (nomeArquivo) => {
-      service.downloadArquivo(ctrl.cliente.cpfCnpj, nomeArquivo, (data) => {
-        let a = document.createElement("a");
-        document.body.appendChild(a);
-        a.style = "display: none";
-        var blob = b64toBlob(data, 'image/jpg');
-        let url = $window.webkitURL.createObjectURL(blob);
-        a.href = url;
-        a.download = nomeArquivo;
-        a.click();
-        $window.webkitURL.revokeObjectURL(url);
-      })
-    }
-
-    ctrl.listaNomeBancos = service.buscaNomesBancos();
-    if (ctrl.cliente.nomeBanco != null) {
-      ctrl.banco.nome = ctrl.cliente.nomeBanco;
-    }
-
-    service.getRepresentacoesUsuario(usuario.id, function (response) {
-      ctrl.listaRepresentacoes = response;
-    });
-
-    service.buscaVendedores(function (response) {
-      ctrl.vendedores = response;
-    });
-
-    service.buscaListaTipoPessoa(function (response) {
-      ctrl.listaTipoPessoa = response;
-      if (ctrl.cliente.idPessoa != null) {
-        ctrl.listaTipoPessoa.forEach(function (item, index) {
-          if (item.id == ctrl.cliente.idPessoa) {
-            ctrl.tipoPessoa.selecionado = item;
-          }
-        });
-      } else {
-        ctrl.tipoPessoa.selecionado = ctrl.listaTipoPessoa[1];
-      }
-
-    });
 
     ctrl.verificaCliente = function () {
       const cpfCnpj = ctrl.cliente.cpfCnpj
       if (!cpfCnpj) {
-        return
+        return;
       }
-      ClientesCadastradosService.getClienteExistente(cpfCnpj, (response) => {
+      ClienteService.getClientePorCnpj(cpfCnpj, null, null, null, null, false).then(response => {
         if (response) {
-          if (AuthenticationService.isVendedor() && !ctrl.cliente.id) {
+          if (ctrl.auth.isVendedor && !ctrl.cliente.id) {
             NotificationService.alert('Cliente já cadastrado! Entre em contato com a administração.')
             ctrl.naoEditavel = true
           } else {
@@ -105,8 +46,7 @@ ClienteModulo.component('cadastroClienteComponent', {
     }
 
     ctrl.selecionaIndustria = function () {
-      var industria = ctrl.industria.selecionado.industria;
-      var listaEncontrados = $.grep(ctrl.listaIndustriaCliente, function (e, i) {
+      let listaEncontrados = $.grep(ctrl.listaIndustriaCliente, function (e, i) {
         return e.idIndustria == industria.id;
       });
       ctrl.industriaPrazo = {
@@ -119,12 +59,12 @@ ClienteModulo.component('cadastroClienteComponent', {
       if (listaEncontrados.length == 0) {
         ctrl.industriaCliente = {
           idCliente: null,
-          idIndustria: industria.id,
+          idIndustria: ctrl.industria.selecionado.idIndustria,
           codigo: null,
           limiteCredito: null,
           ativo: true,
           bloqueioVenda: false,
-          nomeIndustria: industria.nome,
+          nomeIndustria: ctrl.industria.selecionado.nomeIndustria,
           removido: false,
           listaIndustriaClientePrazo: [],
           listaIndustriaClientePrazoParaRemover: [],
@@ -142,9 +82,23 @@ ClienteModulo.component('cadastroClienteComponent', {
         })
       }
 
-      buscaRepresentacoesIndustria(industria)
+      buscaRepresentacoesIndustria(ctrl.industria.selecionado.idIndustria)
 
-      geraListaPrazosExistentes(industria)
+      geraListaPrazosExistentes(ctrl.industria.selecionado.idIndustria)
+    }
+
+    ctrl.downloadArquivo = function (nomeArquivo) {
+      ClienteService.downloadArquivoCliente(ctrl.cliente.cpfCnpj, nomeArquivo).then(data => {
+        let a = document.createElement("a");
+        document.body.appendChild(a);
+        a.style = "display: none";
+        var blob = FileService.b64toBlob(data, 'image/jpg');
+        let url = $window.webkitURL.createObjectURL(blob);
+        a.href = url;
+        a.download = nomeArquivo;
+        a.click();
+        $window.webkitURL.revokeObjectURL(url);
+      })
     }
 
     function exibeModalConfirmacaoCliente(response) {
@@ -155,18 +109,17 @@ ClienteModulo.component('cadastroClienteComponent', {
         bodyText: 'O cliente com CNPJ ' + response.cpfCnpj + ' já possui cadastro! Deseja carregar seus dados?'
       };
       ModalService.showModal({}, modalOptions).then(() => {
-        ClientesCadastradosService.clienteParaEditar = response
-        $route.reload();
+        $state.go('main.cliente.edicao', {})
       }, function (result) {
         return
       });
     }
 
-    function buscaRepresentacoesIndustria(industria) {
-      service.getRepresentacoesIndustria(industria.id, function (response) {
+    function buscaRepresentacoesIndustria(idIndustria) {
+      IndustriaService.buscaRepresentacoesIndustria(idIndustria).then(function (response) {
         ctrl.listaRepresentacoesVendedor = response;
 
-        if (AuthenticationService.isVendedor()) {
+        if (ctrl.auth.isVendedor) {
           var representacoes = $.grep(ctrl.listaRepresentacoesVendedor, function (e, i) {
             return e.usuario.id == usuario.id;
           });
@@ -180,8 +133,8 @@ ClienteModulo.component('cadastroClienteComponent', {
       })
     }
 
-    function geraListaPrazosExistentes(industria) {
-      IndustriasService.getPrazosIndustria(industria.id, (result) => {
+    function geraListaPrazosExistentes(idIndustria) {
+      IndustriaPrazoService.getIndustriaPrazo(idIndustria).then(result => {
         if (ctrl.industriaCliente.listaIndustriaClientePrazo !== null && ctrl.industriaCliente.listaIndustriaClientePrazo.length > 0) {
           //GERA LISTA DE PRAZOS JA ADICIONADOS NA INDUSTRIA SELECIONADA
           ctrl.industriaPrazo.selecionado = $.grep(result, (ePrazo) => {
@@ -237,24 +190,6 @@ ClienteModulo.component('cadastroClienteComponent', {
         removeIndustria(industria);
       }
     }
-
-    service.buscaEstados(function (response) {
-      ctrl.estados = response;
-      if (ctrl.cliente.estado == null) {
-        ctrl.estados.forEach(function (item, index) {
-          if (item.sigla == 'RS') {
-            ctrl.estado.selecionado = item;
-          }
-        });
-      } else {
-        ctrl.estados.forEach(function (item, index) {
-          if (item.sigla == ctrl.cliente.estado.sigla) {
-            ctrl.estado.selecionado = item;
-          }
-        });
-      }
-    });
-
     ctrl.salvarCliente = function () {
       var banco = ctrl.banco.nome;
       ctrl.cliente.idPessoa = ctrl.tipoPessoa.selecionado.id;
@@ -263,27 +198,32 @@ ClienteModulo.component('cadastroClienteComponent', {
       ctrl.cliente.estado = ctrl.estado.selecionado;
       ctrl.cliente.nomeBanco = ctrl.banco.nome;
 
-      if (AuthenticationService.isVendedor()) {
-        ctrl.cliente.pendenteRegistro = true
-        salvar()
-      } else {
-        if (ctrl.cliente.pendenteRegistro == true) {
-          var modalOptions = {
-            closeButtonText: 'Não',
-            actionButtonText: 'Sim',
-            headerText: 'Confirmar',
-            bodyText: 'O cliente ' + ctrl.cliente.razaoSocial + ' está mardo como pendente de cadastro. Deseja remover esta marcação?'
-          };
-
-          ModalService.showModal({}, modalOptions).then(function (result) {
-            ctrl.cliente.pendenteRegistro = false
-            salvar()
-          }, function (result) {
-            salvar()
-          });
-        } else {
+      if (validate) {
+        if (ctrl.auth.isVendedor) {
+          ctrl.cliente.pendenteRegistro = true
           salvar()
+        } else {
+          if (ctrl.cliente.pendenteRegistro == true) {
+            var modalOptions = {
+              closeButtonText: 'Não',
+              actionButtonText: 'Sim',
+              headerText: 'Confirmar',
+              bodyText: 'O cliente ' + ctrl.cliente.razaoSocial + ' está mardo como pendente de cadastro. Deseja remover esta marcação?'
+            };
+
+            ModalService.showModal({}, modalOptions).then(function (result) {
+              ctrl.cliente.pendenteRegistro = false
+              salvar()
+            }, function (result) {
+              salvar()
+            });
+          } else {
+            salvar()
+          }
         }
+      } else {
+        NotificationService.alert('Dados necessários não foram preenchidos');
+        ctrl.trySubmit = true;
       }
     }
 
@@ -308,7 +248,7 @@ ClienteModulo.component('cadastroClienteComponent', {
         ctrl.listaRepresentacoesCliente = [];
       }
       ctrl.listaRepresentacoesCliente.push(ctrl.representacaoCliente)
-      ctrl.bloqueiaSalvar = (AuthenticationService.isVendedor() && ctrl.listaRepresentacoesCliente.length < 1)
+      ctrl.bloqueiaSalvar = (ctrl.auth.isVendedor && ctrl.listaRepresentacoesCliente.length < 1)
     }
 
     ctrl.adicionaIndustriaClienteRepresentacaoVendedor = function () {
@@ -316,9 +256,9 @@ ClienteModulo.component('cadastroClienteComponent', {
       ctrl.adicionaRepresentcaoVendedor();
     }
 
-    ctrl.validaDocumento = function (cpfCnpj) {
+    $scope.validaDocumento = function (cpfCnpj) {
       if (cpfCnpj.length == 14) {
-        return service.validarCnpj(cpfCnpj);
+        return ClienteService.validarCnpj(cpfCnpj);
       } else {
         return false;
       }
@@ -328,7 +268,7 @@ ClienteModulo.component('cadastroClienteComponent', {
       $.each(ctrl.listaRepresentacoesCliente, function (i) {
         if (ctrl.listaRepresentacoesCliente[i].id === representacao.id) {
           ctrl.listaRepresentacoesCliente.splice(i, 1);
-          ctrl.bloqueiaSalvar = (AuthenticationService.isVendedor() && ctrl.listaRepresentacoesCliente.length < 1)
+          ctrl.bloqueiaSalvar = (ctrl.auth.isVendedor && ctrl.listaRepresentacoesCliente.length < 1)
           return false;
         }
       });
@@ -352,7 +292,7 @@ ClienteModulo.component('cadastroClienteComponent', {
     }
 
     ctrl.podeSalvar = function () {
-      if (AuthenticationService.isVendedor()) {
+      if (ctrl.auth.isVendedor) {
         if (ctrl.listaRepresentacoesCliente && ctrl.listaRepresentacoesCliente.length > 0) {
           return true
         } else {
@@ -427,16 +367,19 @@ ClienteModulo.component('cadastroClienteComponent', {
       if (!files) {
         NotificationService.alert("Nenhum arquivo selecionado")
       }
-      blockUI.start('Carregando Arquivo, Aguarde...');
-      service.uploadArquivoCliente(files, ctrl.cliente.cpfCnpj, function (result) {
+      ClienteService.uploadArquivoCliente(files, ctrl.cliente.cpfCnpj).then(function (result) {
         adicionaArquivosCliente(result)
+        NotificationService.success("Arquivo adicionado com sucesso!");
         ctrl.arquivoCliente = null
-        blockUI.stop();
       }, function (error) {
-        console.log('ERR')
-        blockUI.stop();
+        NotificationService.error("Nenhum arquivo selecionado")
       });
     }
+
+    function validate() {
+      return !$scope.formDadosPedido.$invalid;
+    }
+
 
     function adicionaArquivosCliente(arquivosEnviados) {
       if (arquivosEnviados) {
@@ -455,11 +398,13 @@ ClienteModulo.component('cadastroClienteComponent', {
     }
 
     function salvar() {
-      service.salvarCliente(ctrl.cliente, function (result) {
+      ClienteService.salvarCliente(ctrl.cliente).then(function (result) {
         NotificationService.success(`Cliente ${result.razaoSocial} cadastrado com sucesso!`);
-        $location.path('/listaClientes');
+        $state.go('main.cliente.pesquisa');
       })
     }
+
+    ctrl.listaNomeBancos = ClienteService.buscaNomesBancos();
 
     this.$onInit = function () {
       ctrl.auth = $scope.$parent.$resolve.auth;
@@ -518,8 +463,6 @@ ClienteModulo.component('cadastroClienteComponent', {
         nome: null
       };
 
-      ctrl.arquivoCliente = undefined
-
       ctrl.representacaoVendedor = {
         selecionado: null
       };
@@ -557,7 +500,7 @@ ClienteModulo.component('cadastroClienteComponent', {
         }
       }
 
-      ctrl.bloqueiaSalvar = (AuthenticationService.isVendedor() && ctrl.listaRepresentacoesCliente.length < 1)
+      ctrl.bloqueiaSalvar = (ctrl.auth.isVendedor && ctrl.listaRepresentacoesCliente.length < 1)
 
       ctrl.tipoPessoa = {
         selecionado: null
@@ -567,7 +510,51 @@ ClienteModulo.component('cadastroClienteComponent', {
         selecionado: undefined,
       }
 
-      ctrl.usuario = $rootScope.globals.currentUser.user;
+      let usuario = ctrl.auth;
+
+      if (ctrl.cliente.nomeBanco != null) {
+        ctrl.banco.nome = ctrl.cliente.nomeBanco;
+      }
+
+      UsuarioService.buscaUsuarioCadastroDto(usuario.id).then((response) => {
+        ctrl.listaRepresentacoes = response.representacoes;
+        $log.log('response.representacoes: ', response.representacoes)
+      });
+
+      UsuarioService.buscaUsuarios().then((response) => {
+        ctrl.vendedores = response;
+      });
+
+      ClienteService.buscaListaTipoPessoa().then(function (response) {
+        ctrl.listaTipoPessoa = response;
+        if (ctrl.cliente.idPessoa != null) {
+          ctrl.listaTipoPessoa.forEach(function (item, index) {
+            if (item.id == ctrl.cliente.idPessoa) {
+              ctrl.tipoPessoa.selecionado = item;
+            }
+          });
+        } else {
+          ctrl.tipoPessoa.selecionado = ctrl.listaTipoPessoa[1];
+        }
+
+      });
+
+      ClienteService.buscaEstados().then(function (response) {
+        ctrl.estados = response;
+        if (ctrl.cliente.estado == null) {
+          ctrl.estados.forEach(function (item, index) {
+            if (item.sigla == 'RS') {
+              ctrl.estado.selecionado = item;
+            }
+          });
+        } else {
+          ctrl.estados.forEach(function (item, index) {
+            if (item.sigla == ctrl.cliente.estado.sigla) {
+              ctrl.estado.selecionado = item;
+            }
+          });
+        }
+      });
     };
   }
 });

@@ -18,6 +18,20 @@ TabelaModulo.config(($stateProvider) => {
       },
     }
   };
+  var detalheTabela = {
+    name: 'main.tabela.detalhe',
+    url: '/detalhe/:idTabela',
+    params: {
+      idTabela : null
+    },
+    component: 'detalheTabelaComponent',
+    resolve: {
+      tabela: function (TabelaService, $stateParams) {
+        return TabelaService.buscaTabelaPorId($stateParams.idTabela);
+      },
+    }
+  };
   $stateProvider.state(tabela);
+  $stateProvider.state(detalheTabela);
   $stateProvider.state(cargaTabela);
 });

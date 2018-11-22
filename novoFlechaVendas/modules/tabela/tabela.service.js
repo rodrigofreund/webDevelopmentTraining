@@ -27,13 +27,13 @@ PedidoModule.factory('TabelaService', ['HttpService',
       return HttpService.httpPost(URL_TABELA_EXCLUIR, idTabela);
     };
 
-    service.excluirTabela = (idTabela) => {
-      return HttpService.httpGet(URL_TABELA_DOWNLOAD_ARQUIVO, idTabela);
+    service.buscaTabelaPorId = (idTabela) => {
+      return HttpService.httpGet(URL_TABELA_BUSCAR_POR_ID, {idTabela});
     };
 
-    service.buscaTabelaPorId = (idTabela) => {
-      return HttpService.httpGet(URL_TABELA_BUSCAR_POR_ID, idTabela);
-    };
+    service.downloadArquivo = (idTabela) => {
+      return HttpService.httpGet(URL_TABELA_DOWNLOAD_ARQUIVO, {idTabela});
+    }
 
     return service;
   }

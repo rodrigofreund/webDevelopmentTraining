@@ -1,18 +1,5 @@
 var cadastroClienteModule = angular.module('CadastroClientes');
 
-cadastroClienteModule.directive('autoComplete', ['$timeout', function ($timeout) {
-  return function (scope, iElement, iAttrs) {
-    iElement.autocomplete({
-      source: scope[iAttrs.uiItems],
-      select: function () {
-        $timeout(function () {
-          iElement.trigger('input');
-        }, 0);
-      }
-    });
-  };
-}]);
-
 cadastroClienteModule.directive('capitalize', function () {
   return {
     require: 'ngModel',

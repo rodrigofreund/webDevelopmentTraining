@@ -2,11 +2,21 @@
 
 var app = angular.module('GerenciadorFinanceiroFlechaVendas')
 
-app.config(function ($stateProvider) {
+app.config(function ($stateProvider, blockUIConfig) {
+
+  blockUIConfig.autoBlock = true;
+  blockUIConfig.resetOnException = false;
+  blockUIConfig.message = 'Carregando...';
+
   const login = {
     name: 'login',
     url: '/',
-    component: 'loginComponent'
+    component: 'loginComponent',
+    resolve: {
+      dadosAutenticacao: (LoginService) => {
+        return LoginService.getDadosAuthenticacao();
+      }
+    }
   }
   const main = {
     name: 'main',

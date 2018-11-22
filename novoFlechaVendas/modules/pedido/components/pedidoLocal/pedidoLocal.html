@@ -1,0 +1,96 @@
+<div class="row">
+  <div class="col-xs-12">
+    <p class="content-title">Listagem de Pedidos Salvos</p>
+  </div>
+</div>
+
+<form>
+  <div class="row">
+    <div class="col-xs-12">
+      <div class="panel panel-default">
+        <div class="panel-heading">Filtros</div>
+        <div class="panel-body">
+          <div class="row">
+            <div class="col-xs-12 col-md-6">
+              <div class="form-group input-group-sm">
+                <label for="nomeIndustria">Indústria</label>
+                <select id="nomeIndustria" class="form-control" ng-model="ctrl.filter.idIndustria" ng-change="ctrl.buscaPedidos()">
+                  <option value="">Selecione uma Indústria</option>
+                  <option ng-repeat="i in ctrl.listaIndustrias" value="{{i.id}}">{{i.nome}}</option>
+                </select>
+              </div>
+            </div>
+            <div class="col-xs-12 col-md-6">
+              <div class="form-group input-group-sm" restrict access="Vendedor">
+                <label for="nomeVendedor">Vendedor</label>
+                <label id="nomeVendedor" class="form-control">{{ctrl.usuario.nome}}</label>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-xs-12">
+      <div class="panel panel-default">
+        <div class="panel-heading">Pedidos</div>
+        <div class="panel-body">
+          <div class="table-responsive">
+            <table class="table">
+              <thead class="thead-inverse">
+                <tr>
+                  <th>Ações</th>
+                  <th>Número</th>
+                  <th>Data Pedido</th>
+                  <th>Data Entrega</th>
+                  <th>Indústria</th>
+                  <th>Cliente</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr ng-repeat="i in ctrl.listaPedidos" ng-class="{destaquePedido: i.alterado}">
+                  <td>
+                    <div class="btn-group btn-group-sm">
+                      <button type="button" class="btn btn-default" data-toggle="dropdown" aria-haspopup="true"
+                        aria-expanded="false">
+                        Ações
+                        <span class="caret"></span>
+                      </button>
+                      <ul class="dropdown-menu">
+                        <li>
+                          <a href="" ng-click="ctrl.exibeDetalhesPedido(i.idPedidoSalvo)">Detalhar</a>
+                        </li>
+                        <li>
+                          <a href="" ng-click="ctrl.editarPedido(i)">Editar</a>
+                        </li>
+                        <li>
+                          <a href="" ng-click="ctrl.cancelarPedido(i)">Cancelar</a>
+                        </li>
+                      </ul>
+                    </div>
+                  </td>
+                  <td>{{i.idPedidoSalvo}}</td>
+                  <td>{{i.dataPedido | date:'dd/MM/yyyy'}}</td>
+                  <td>{{i.dataEntrega | date:'dd/MM/yyyy'}}</td>
+                  <td>{{i.industria.nome}}</td>
+                  <td>{{i.cliente.razaoSocial}}</td>
+                </tr>
+                <tr ng-if="ctrl.listaPedidos.length==0">
+                  <td>Nenhum pedido realizado</td>
+                </tr>
+              </tbody>
+              <tfoot>
+                <div style="text-align: center;">
+                  <ul uib-pagination boundary-links="true" boundary-link-numbers="true" rotate="true" total-items="ctrl.searchResult.totalElements"
+                    ng-model="ctrl.page" class="pagination-sm" previous-text="Anterior" next-text="Próxima"
+                    first-text="Primeira" last-text="Última" ng-change="ctrl.mudaPagina()" max-size="5" items-per-page="ctrl.pedidoSearch.pageSize"></ul>
+                </div>
+              </tfoot>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</form>

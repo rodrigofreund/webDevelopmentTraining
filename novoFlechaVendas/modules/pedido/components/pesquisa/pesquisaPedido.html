@@ -23,15 +23,14 @@
             <div class="col-xs-12 col-md-4">
               <div class="form-group input-group-sm" restrict access="Administrador Gestor">
                 <label for="nomeVendedor">Vendedor</label>
-                <select class="form-control" ng-model="ctrl.pedidoSearch.idUsuario" id="nomeVendedor"
-                  required>
+                <select class="form-control" ng-model="ctrl.pedidoSearch.idUsuario" id="nomeVendedor" required>
                   <option value="">Todos</option>
                   <option ng-repeat="v in ctrl.listaVendedores track by v.id" value="{{v.id}}">{{v.nome}}</option>
                 </select>
               </div>
               <div class="form-group input-group-sm" restrict access="Vendedor">
                 <label for="nomeVendedor">Vendedor</label>
-                <label id="nomeVendedor" class="form-control">{{vendedor.nome}} </label>
+                <label id="nomeVendedor" class="form-control">{{ctrl.usuario.nome}}</label>
               </div>
             </div>
             <div class="col-xs-9 col-md-4">
@@ -47,16 +46,17 @@
             <div class="col-xs-3 col-md-2">
               <div class="form-group input-group-sm">
                 <label for="idPedido">Número</label>
-                <input id="idPedido" class="form-control" placeholder="Todos" ng-model-options="{ debounce: 1000 }" type="number"
-                  ng-model="ctrl.pedidoSearch.idPedido" />
+                <input id="idPedido" class="form-control" placeholder="Todos" ng-model-options="{ debounce: 1000 }"
+                  type="number" ng-model="ctrl.pedidoSearch.idPedido" />
               </div>
             </div>
             <div class="col-xs-12 col-md-6">
               <div class="form-group input-group-sm">
                 <label for="nomeCliente">Cliente</label>
-                <input id="nomeCliente" type="text" ng-model="ctrl.clienteSelecionado" placeholder="Selecione o Cliente"
-                  uib-typeahead="item.nomeFormatado for item in ctrl.buscaClientes($viewValue)" typeahead-min-length="3"
-                  typeahead-wait-ms="1000" typeahead-no-results="noResults" class="form-control" typeahead-on-select="ctrl.selectCliente($item)">
+                <input id="nomeCliente" type="text" ng-model="ctrl.cliente.selecionado" placeholder="Selecione o Cliente"
+                  uib-typeahead="item.nomeFormatado for item in ctrl.buscaClientes($viewValue)"
+                  typeahead-wait-ms="500" typeahead-select-on-blur="true" typeahead-should-select="ctrl.selCliente($event)" typeahead-no-results="noResults" class="form-control"
+                  typeahead-on-select="ctrl.selectCliente($item, $model, $label, $event)" typeahead-loading="loadingLocations">
                 <i ng-show="loadingLocations" class="glyphicon glyphicon-refresh"></i>
                 <div ng-show="noResults">
                   <i class="glyphicon glyphicon-remove"></i> Nenhum resultado encontrado
@@ -76,8 +76,8 @@
                 </p>
                 <p class="input-group">
                   <input id="inDataFinal" type="text" class="form-control" uib-datepicker-popup="dd/MM/yyyy" ng-model="ctrl.pedidoSearch.dtFim"
-                    is-open="ctrl.popup.openedfim" datepicker-options="ctrl.dateOptions" ng-required="true" close-text="Fechar" datepicker-append-to-body="true"
-                    current-text="Hoje" clear-text="Limpa" />
+                    is-open="ctrl.popup.openedfim" datepicker-options="ctrl.dateOptions" ng-required="true" close-text="Fechar"
+                    datepicker-append-to-body="true" current-text="Hoje" clear-text="Limpa" />
                   <span class="input-group-btn">
                     <button type="button" class="btn btn-default" ng-click="ctrl.openFim()"><i class="glyphicon glyphicon-calendar"></i></button>
                   </span>
@@ -118,7 +118,7 @@
               <tbody>
                 <tr ng-repeat="i in ctrl.pedidos" ng-class="{destaquePedido: i.alterado}">
                   <td>
-                    <div class="btn-group">
+                    <div class="btn-group btn-group-sm">
                       <button type="button" class="btn btn-default" data-toggle="dropdown" aria-haspopup="true"
                         aria-expanded="false">
                         Ações
@@ -144,8 +144,8 @@
                   <td>{{i.nomeVendedor}}</td>
                   <td>{{i.nomeIndustria}}</td>
                   <td>{{i.nomeCliente}}</td>
-                  <td>{{getTotalPedidoSemSt(i) | currency:"R$"}}</td>
-                  <td>{{getStatus(i.status)}}</td>
+                  <td>{{i.totalSemImposto | currency:"R$"}}</td>
+                  <td>{{ctrl.getStatusPedido(i.status)}}</td>
                 </tr>
                 <tr ng-if="ctrl.pedidos.length==0">
                   <td>Nenhum pedido realizado</td>
@@ -154,7 +154,7 @@
               <tfoot>
                 <div style="text-align: center;">
                   <ul uib-pagination boundary-links="true" boundary-link-numbers="true" rotate="true" total-items="ctrl.searchResult.totalElements"
-                    ng-model="ctrl.pedidoSearch.newPage" class="pagination-sm" previous-text="Anterior" next-text="Próxima"
+                    ng-model="ctrl.page" class="pagination-sm" previous-text="Anterior" next-text="Próxima"
                     first-text="Primeira" last-text="Última" ng-change="ctrl.mudaPagina()" max-size="5" items-per-page="ctrl.pedidoSearch.pageSize"></ul>
                 </div>
               </tfoot>

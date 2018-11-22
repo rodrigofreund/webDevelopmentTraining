@@ -82,3 +82,9 @@ const DOCUMENT_FILE_TYPE = [
 const ENTER_KEY_CODE = 13;
 
 const PEDIDO_PROPOSTA = 1;
+
+const TIPO_PEDIDO = {
+	VENDA: 1,
+	BONIFICACAO: 2,
+	SALDO: 3
+};

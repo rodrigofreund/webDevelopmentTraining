@@ -1,9 +1,9 @@
 'use strict';
 
-var ClienteModule = angular.module('usuario.module');
+var ClienteModule = angular.module('cliente.module');
 
-ClienteModule.factory('ClienteService', ['HttpService',
-  function (HttpService) {
+ClienteModule.factory('ClienteService', ['HttpService', '$q',
+  function (HttpService, $q) {
     var service = {};
     const SUBPATH = 'service/cliente';
 
@@ -16,6 +16,8 @@ ClienteModule.factory('ClienteService', ['HttpService',
     const URL_INDUSTRIA_CLIENTE_BUSCAR_POR_CLIENTE = `${SUBPATH}/buscaIndustriaCliente`;
     const URL_CLIENTE_UPLOAD_ARQUIVO = `${SUBPATH}/uploadArquivoCliente`;
     const URL_CLIENTE_DOWNLOAD_ARQUIVO = `${SUBPATH}/downloadArquivoCliente`;
+    const URL_CLIENTE_BUSCAR_ESTADOS = `${SUBPATH}/buscaEstados`;
+    const URL_CLIENTE_BUSCAR_LISTA_TIPO_PESSOA = `${SUBPATH}/buscaListaTipoPessoa`;
 
     service.salvarCliente = (clienteDto) => {
       return HttpService.httpPost(URL_CLIENTE_SALVAR, clienteDto);
@@ -26,7 +28,7 @@ ClienteModule.factory('ClienteService', ['HttpService',
     };
 
     service.getClientesPorFiltro = (clienteDto) => {
-      return HttpService.httpPost(URL_CLIENTE_POR_FILTRO, clienteDto);
+      return HttpService.httpPost(URL_CLIENTE_POR_FILTRO, clienteDto, null, null, null, true);
     };
 
     service.getClientePorCnpj = (cnpj) => {
@@ -45,42 +47,84 @@ ClienteModule.factory('ClienteService', ['HttpService',
       return HttpService.httpPost(URL_INDUSTRIA_CLIENTE_BUSCAR_POR_CLIENTE, idCliente);
     };
 
-    service.uploadArquivoCliente = function (files, cpfCnpj, callback, callbackError) {
-      service.compactarArquivos(files, (mFileDescriptor) => {
-        if (mFileDescriptor) {
-          mFileDescriptor.append('cpfCnpj', cpfCnpj)
-          $http.post(MODO_HTTP + URL + '/uploadArquivoCliente', mFileDescriptor, {
-            transformRequest: angular.identity,
-            headers: { 'Content-Type': undefined }
-          })
-            .success(function (result) {
-              NotificationService.success('Arquivo enviado com sucesso!')
-              callback(result);
-            })
-            .error(function (error) {
-              NotificationService.error(error);
-              callbackError(error);
-            });
-        } else {
-          NotificationService.error("Não foi possível enviar os arquivos");
-        }
-      });
-    }
-
     service.uploadArquivoCliente = (files, cpfCnpj) => {
-      service.compactarArquivos(files, (mFileDescriptor) => {
+      const deferred = $q.defer();
+      service.compactarArquivos(files, function (mFileDescriptor) {
         if (mFileDescriptor) {
           let header = { 'Content-Type': undefined };
           let opt = { transformRequest: angular.identity };
           mFileDescriptor.append('cpfCnpj', cpfCnpj);
-          return HttpService.httpPost(URL_CLIENTE_UPLOAD_ARQUIVO, mFileDescriptor, null, header, opt);
+          deferred.resolve(HttpService.httpPost(URL_CLIENTE_UPLOAD_ARQUIVO, mFileDescriptor, null, header, opt));
         };
       });
+      return deferred.promise;
     };
 
     service.downloadArquivoCliente = (cpfCnpj, nomeArquivo) => {
-      return HttpService.httpGet(URL_CLIENTE_DOWNLOAD_ARQUIVO, {cpfCnpj, nomeArquivo});
+      return HttpService.httpGet(URL_CLIENTE_DOWNLOAD_ARQUIVO, { cpfCnpj, nomeArquivo });
     };
+
+    service.buscaEstados = () => {
+      return HttpService.httpGet(URL_CLIENTE_BUSCAR_ESTADOS);
+    };
+
+    service.buscaListaTipoPessoa = () => {
+      return HttpService.httpGet(URL_CLIENTE_BUSCAR_LISTA_TIPO_PESSOA);
+    };
+
+    service.validarCnpj = function (cnpj) {
+      cnpj = cnpj.replace(/[^\d]+/g, '');
+      if (cnpj == '') {
+        return false;
+      }
+      if (cnpj.length != 14) {
+        return false;
+      }
+      // Elimina CNPJs invalidos conhecidos
+      if (cnpj == "00000000000000" ||
+        cnpj == "11111111111111" ||
+        cnpj == "22222222222222" ||
+        cnpj == "33333333333333" ||
+        cnpj == "44444444444444" ||
+        cnpj == "55555555555555" ||
+        cnpj == "66666666666666" ||
+        cnpj == "77777777777777" ||
+        cnpj == "88888888888888" ||
+        cnpj == "99999999999999") {
+        return false;
+      }
+      // Valida DVs
+      var tamanho = cnpj.length - 2
+      var numeros = cnpj.substring(0, tamanho);
+      var digitos = cnpj.substring(tamanho);
+      var soma = 0;
+      var pos = tamanho - 7;
+
+      for (var i = tamanho; i >= 1; i--) {
+        soma += numeros.charAt(tamanho - i) * pos--;
+        if (pos < 2)
+          pos = 9;
+      }
+      var resultado = soma % 11 < 2 ? 0 : 11 - soma % 11;
+      if (resultado != digitos.charAt(0)) {
+        return false;
+      }
+
+      tamanho = tamanho + 1;
+      numeros = cnpj.substring(0, tamanho);
+      soma = 0;
+      pos = tamanho - 7;
+      for (var i = tamanho; i >= 1; i--) {
+        soma += numeros.charAt(tamanho - i) * pos--;
+        if (pos < 2)
+          pos = 9;
+      }
+      var resultado = soma % 11 < 2 ? 0 : 11 - soma % 11;
+      if (resultado != digitos.charAt(1)) {
+        return false;
+      }
+      return true;
+    }
 
     //----------------------------------REFATORAR------------------------------------------------------
 
@@ -92,7 +136,7 @@ ClienteModule.factory('ClienteService', ['HttpService',
           new ImageCompressor(files[i], {
             quality: .8,
             minWidth: 1024,
-            maxWidth: 1440 ,
+            maxWidth: 1440,
             minHeight: 768,
             maxHeight: 900,
             success(result) {
@@ -117,7 +161,7 @@ ClienteModule.factory('ClienteService', ['HttpService',
       }
     }
 
-    service.buscaNomesBancos = function() {
+    service.buscaNomesBancos = function () {
       var nomes = [
         'Alvorada Banco de Investimento',
         '654 | Banco A.J.Renner S.A.',
@@ -337,7 +381,7 @@ ClienteModule.factory('ClienteService', ['HttpService',
         '409 | UNIBANCO - União de Bancos Brasileiros S.A.',
         '230 | Unicard Banco Múltiplo S.A.',
         '091-4 | Unicred Central do Rio Grande do Sul'
-        ];
+      ];
       return nomes;
     };
 

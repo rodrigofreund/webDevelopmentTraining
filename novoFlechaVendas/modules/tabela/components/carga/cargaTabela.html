@@ -5,7 +5,7 @@
     </div>
     <div class="row">
       <div class="form-group">
-        <label for="industria">Indústria</label> <select class="form-control" ng-model="ctrl.industria.selecionado" id="nomeIndustria"
+        <label for="industria">Indústria</label> <select class="form-control" ng-model="ctrl.industria" id="nomeIndustria"
           ng-options="i.nome for i in ctrl.listaIndustrias track by i.id" value="{{i}}" ng-change="ctrl.selecionaIndustria()" required>
           <option value="">Selecione uma Indústria</option>
         </select>
@@ -24,7 +24,7 @@
               </tr>
             </thead>
             <tbody>
-              <tr ng-repeat="t in tabelas">
+              <tr ng-repeat="t in ctrl.tabelas">
                 <td><a href="" ng-click="ctrl.detalheTabela(t.id)">{{t.nome}}</a></td>
                 <td>{{t.data | date : "dd/MM/yyyy HH:mm:ss"}}</td>
                 <td restrict access="Gestor Administrador">
@@ -61,7 +61,7 @@
         <div class="panel-heading">Nova Tabela</div>
         <div class="panel-body">
           <input type="file" file-model="fileTabela" id="fileTabela" style="display: inline" /> <input type="submit"
-            ng-click="uploadTabela()" value="Enviar" ng-disabled="industria.selecionado == null" />
+            ng-click="ctrl.uploadTabela()" value="Enviar" ng-disabled="ctrl.industria == null" />
         </div>
       </div>
     </div>

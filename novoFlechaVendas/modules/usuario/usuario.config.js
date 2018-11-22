@@ -23,11 +23,11 @@ UsuarioModulo.config(function($stateProvider){
     url: '/edicao/:id',
     component:'cadastroUsuarioComponent',
     resolve: {
-      usuarioParaEditar: (UsuarioService, $stateParams, $q) => {
+      cadastro: (UsuarioService, $stateParams, $q) => {
         const deferred = $q.defer();
         //efetuar busca pelo usuário
         if($stateParams.id) {
-          UsuarioService.buscaUsuarioPorId($stateParams.id).then(usuarioDto => {
+          UsuarioService.buscaUsuarioCadastroDto($stateParams.id).then(usuarioDto => {
             deferred.resolve(usuarioDto);
           }, (error) => {
             deferred.reject(error);
