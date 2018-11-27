@@ -28,39 +28,29 @@
 	<link rel="stylesheet" href="css/ui-bootstrap-2.4.0-csp.css">
 	<link rel="stylesheet" href="css/select.min.css">
 	<link rel="stylesheet" href="css/select2-bootstrap.css">
-	<!--
-	<link rel="stylesheet" href="css/bootstrap-datepicker3.css">
-	<link rel="stylesheet" href="css/jquery-ui.min.css">
-	<link rel="stylesheet" href="css/jquery-ui.theme.min.css">
-
-
-	<link rel="stylesheet" href="css/ui-grid.min.css">
-
-	-->
 </head>
 
 <body>
 	<ui-view></ui-view>
-</body>
 
-<script src="dist/js/lib/jquery-3.1.0.min.js"></script>
-<script src="dist/js/lib/bootstrap.min.js"></script>
-<script src="dist/js/lib/angular.min.js"></script>
-<script src="dist/js/lib/angular-locale_pt-br.js"></script>
-<script src="dist/js/lib/angular-ui-router.min.js"></script>
-<script src="dist/js/lib/angular-block-ui.min.js"></script>
-<script src="dist/js/lib/ui-bootstrap-tpls-2.4.0.min.js"></script>
-<script src="dist/js/lib/angular-ui-notification.min.js"></script>
-<script src="dist/js/lib/angular-block-ui.min.js"></script>
-<script src="dist/js/lib/angular-sanitize.min.js"></script>
-<script src="dist/js/lib/angular-animate.min.js"></script>
-<script src="dist/js/lib/select.min.js"></script>
-<script src="dist/js/lib/mask.min.js"></script>
-<script src="dist/js/lib/image-compressor.min.js"></script>
-<script src="dist/js/lib/moment.min.js"></script>
-<script src="dist/js/lib/moment-with-locales.min.js"></script>
+<script src="js/jquery-3.1.0.min.js"></script>
+<script src="js/bootstrap.min.js"></script>
+<script src="js/angular.min.js"></script>
+<script src="js/angular-locale_pt-br.js"></script>
+<script src="js/angular-ui-router.min.js"></script>
+<script src="js/angular-block-ui.min.js"></script>
+<script src="js/ui-bootstrap-tpls-2.4.0.min.js"></script>
+<script src="js/angular-ui-notification.min.js"></script>
+<script src="js/angular-block-ui.min.js"></script>
+<script src="js/angular-sanitize.min.js"></script>
+<script src="js/angular-animate.min.js"></script>
+<script src="js/select.min.js"></script>
+<script src="js/mask.min.js"></script>
+<script src="js/image-compressor.min.js"></script>
+<script src="js/moment.min.js"></script>
+<script src="js/moment-with-locales.min.js"></script>
 
-<script src="dist/js/context.js"></script>
+<script src="js/context.js"></script>
 
 <script src="modules/app/app.module.js"></script>
 <script src="modules/app/app.config.js"></script>
@@ -125,74 +115,6 @@
 <script src="modules/notificacao/controller.js"></script>
 <script src="modules/notificacao/service.js"></script>
 
-<!--
-
-<script src="dist/js/lib/angular-route.min.js"></script>
-
-<script src="dist/js/lib/angular-cookies.min.js"></script>
-<script src="dist/js/lib/ui-grid.min.js"></script>
-
-<script src="dist/js/lib/moment.min.js"></script>
-<script src="dist/js/lib/moment-with-locales.min.js"></script>
-
-<script src="dist/js/lib/bootstrap-datepicker.min.js"></script>
-<script src="dist/js/lib/bootstrap-datepicker.pt-BR.min.js"></script>
-
-<script src="dist/js/lib/image-compressor.min.js"></script>
-
-<script src="dist/js/context.js"></script>
-
-<script src="app.js?v=12"></script>
-
-<script src="dto/PedidoDto.js?v=12"></script>
-<script src='dto/RepresentacaoDto.js?v=12'></script>
-
-<script src="modules/authentication/services.js?v=12"></script>
-<script src="modules/authentication/controller.js?v=12"></script>
-<script src="modules/authentication/repository.js?v=12"></script>
-<script src="modules/industrias/controller.js?v=12"></script>
-<script src="modules/industrias/services.js?v=12"></script>
-<script src="modules/dashboard/controller.js?v=12"></script>
-<script src="modules/dashboard/service.js?v=12"></script>
-<script src="modules/pedido/controller.js?v=12"></script>
-<script src="modules/pedido/service.js?v=12"></script>
-<script src="modules/pedidoProdutos/controller.js?v=12"></script>
-<script src="modules/pedidoProdutos/service.js?v=12"></script>
-<script src="modules/pedidoProdutos/directive.js?v=12"></script>
-<script src="modules/pedidoResumo/controller.js?v=12"></script>
-<script src="modules/pedidoResumo/service.js?v=12"></script>
-<script src="modules/detalhePedido/controller.js?v=12"></script>
-<script src="modules/detalhePedido/service.js?v=12"></script>
-<script src="modules/detalhePedidoItens/controller.js?v=12"></script>
-<script src="modules/tabela/service.js?v=12"></script>
-<script src="modules/tabela/controller.js?v=12"></script>
-<script src="modules/cadastroClientes/services.js?v=12"></script>
-<script src="modules/cadastroClientes/controller.js?v=12"></script>
-<script src="modules/cadastroClientes/directives.js?v=12"></script>
-<script src="modules/clientesCadastrados/service.js?v=12"></script>
-<script src="modules/clientesCadastrados/controller.js?v=12"></script>
-<script src="modules/partials/service.js?v=12"></script>
-<script src="modules/mapper/service.js?v=12"></script>
-<script src="modules/storage/service.js?v=12"></script>
-<script src="modules/detalhePedidoSalvo/controller.js?v=12"></script>
-<script src="modules/detalhePedidoSalvo/service.js?v=12"></script>
-<script src="modules/detalhePedidoSalvoItens/controller.js?v=12"></script>
-<script src="modules/database/service.js?v=12"></script>
-<script src="modules/network/service.js?v=12"></script>
-<script src="modules/console/service.js?v=12"></script>
-<script src="modules/sincronizacao/service.js?v=12"></script>
-
-<script src="modules/localStorage/service.js?v=12"></script>
-<script src="modules/industriaClientePrazo/service.js?v=12"></script>
-<script src="modules/industriaPrazo/service.js?v=12"></script>
-<script src="modules/observacaoPedido/service.js?v=12"></script>
-<script src="modules/usuario/usuarioComponent.js?v=12"></script>
-<script src="modules/usuario/usuarioConfig.js?v=12"></script>
-<script src="modules/usuario/usuarioService.js?v=12"></script>
-
-<script src="modules/usuario/components/cadastroCompleto/cadastroCompletoComponent.js?v=12"></script>
-<script src="modules/usuario/components/pesquisa/pesquisaComponent.js?v=12"></script>
-
--->
+</body>
 
 </html>

@@ -5,13 +5,13 @@ var app = express();
 
 app.set('port', (process.env.PORT || 8080));
 
-app.use(express.static(__dirname + '/'));
+app.use(express.static(__dirname + '/dist'));
 
-app.set('views', __dirname);
+app.set('views', __dirname + "/dist");
 app.engine('html', engines.mustache);
 app.set('view engine', 'html');
 
-app.get('/', function(req, res) {
+app.get('/dist', function(req, res) {
   res.render('index.html');
 });
 
