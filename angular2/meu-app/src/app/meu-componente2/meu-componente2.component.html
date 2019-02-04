@@ -1,0 +1,17 @@
+<div *ngIf="isInvisible; else condicaoFalsa">{{ Aluno.Dados.nome }}</div>
+
+<ng-template #condicaoFalsa>
+  <p>outro texto</p>
+</ng-template>
+
+<div [ngSwitch]="option">
+  <span *ngSwitchCase="1"> Opção 1</span>
+  <span *ngSwitchCase="2"> Opção 2</span>
+  <span *ngSwitchCase=""> Opção Default</span>
+</div>
+
+<p>Items</p>
+
+<ol>
+  <li *ngFor="let item of myList"> Item {{item}}</li>
+</ol>

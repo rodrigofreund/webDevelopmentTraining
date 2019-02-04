@@ -6,24 +6,28 @@ ClienteModulo.component('cadastroClienteComponent', {
   templateUrl: 'modules/cliente/components/cadastro/cadastroCliente.html',
   bindings: {
     cliente: '<',
-    listaIndustriaCliente: '<'
+    janela: '<',
+    listaRepresentacoes: '<'
   },
   controllerAs: 'ctrl',
   controller: function ($scope,
-                        NotificationService,
-                        ModalService,
-                        ClienteService,
-                        FileService,
-                        UsuarioService,
-                        $log,
-                        IndustriaService,
-                        IndustriaPrazoService,
-                        $sce,
-                        $state,
-                        $window) {
+    NotificationService,
+    ModalService,
+    ClienteService,
+    FileService,
+    UsuarioService,
+    $log,
+    IndustriaService,
+    IndustriaPrazoService,
+    $sce,
+    $state,
+    $window) {
 
     var ctrl = this;
 
+    $scope.forms = {};
+
+    /*VERIFICA SE O CLIENTE EXISTE APÓS ADICIONAR O CNPJ */
     ctrl.verificaCliente = function () {
       const cpfCnpj = ctrl.cliente.cpfCnpj
       if (!cpfCnpj) {
@@ -32,7 +36,7 @@ ClienteModulo.component('cadastroClienteComponent', {
       ClienteService.getClientePorCnpj(cpfCnpj, null, null, null, null, false).then(response => {
         if (response) {
           if (ctrl.auth.isVendedor && !ctrl.cliente.id) {
-            NotificationService.alert('Cliente já cadastrado! Entre em contato com a administração.')
+            NotificationService.alert('Cliente já cadastrado! Entre em contato com a administração.');
             ctrl.naoEditavel = true
           } else {
             if (!ctrl.cliente.id) {
@@ -45,9 +49,58 @@ ClienteModulo.component('cadastroClienteComponent', {
       })
     }
 
+    // SELECIONA INDUSTRIA MA ABA DE REPRESENTACAO - CLIENTE
+    ctrl.selecionaIndustriaVendedor = function () {
+      //Se for administrador busca todos os vendedores
+      if (ctrl.auth.vendedor) {
+        $log.log("vendedor")
+      }
+      if (ctrl.auth.administrador) {
+        $log.log("administrador")
+        //Buscar todas as indústrias ativas
+        IndustriaService.buscaRepresentacoesIndustria(ctrl.representacaoIndustria.id).then((result) => {
+          ctrl.listaRepresentacoesVendedor = result;
+        })
+      }
+      //Se for vendedor usa o mesmo id do vendedor
+    }
+
+    // ADICIONA UM REGISTRO REPRESENTACAO - CLIENTE
+    ctrl.adicionaRepresentacaoVendedor = function () {
+      // CRIAR ASSOCIACAO A PARTIR DE ctrl.representacaoIndustria E ctrl.representacaoVendedor
+      if (!ctrl.listaRepresentacoesCliente) {
+        ctrl.listaRepresentacoesCliente = [];
+      }
+      let representacao = {
+        industria : ctrl.representacaoIndustria,
+        usuario : ctrl.representacaoVendedor.usuario
+      }
+      ctrl.listaRepresentacoesCliente.push(representacao)
+      debugger
+      ctrl.bloqueiaSalvar = (ctrl.auth.isVendedor && ctrl.listaRepresentacoesCliente.length < 1)
+    }
+
+    // REMOVE ASSOCIACAO REPRESENTACAO - CLIENTE
+    ctrl.removeRepresentacao = function (representacao) {
+      $.each(ctrl.listaRepresentacoesCliente, function (i) {
+        if (ctrl.listaRepresentacoesCliente[i].id === representacao.id) {
+          ctrl.listaRepresentacoesCliente.splice(i, 1);
+          ctrl.bloqueiaSalvar = (ctrl.auth.isVendedor && ctrl.listaRepresentacoesCliente.length < 1)
+          return false;
+        }
+      });
+    }
+
+    ctrl.salvarRepresentacaoCliente = function() {
+      ctrl.cliente.listaRepresentacoesCliente = ctrl.listaRepresentacoesCliente;
+      ClienteService.salvarRepresentacaoCliente(ctrl.cliente).then(function(response) {
+        NotificationService.alert('Representantes atualizados com sucesso.');
+      })
+    }
+
     ctrl.selecionaIndustria = function () {
       let listaEncontrados = $.grep(ctrl.listaIndustriaCliente, function (e, i) {
-        return e.idIndustria == industria.id;
+        return e.idIndustria == ctrl.industria.selecionado.id;
       });
       ctrl.industriaPrazo = {
         selecionado: undefined
@@ -58,13 +111,13 @@ ClienteModulo.component('cadastroClienteComponent', {
 
       if (listaEncontrados.length == 0) {
         ctrl.industriaCliente = {
-          idCliente: null,
-          idIndustria: ctrl.industria.selecionado.idIndustria,
+          idCliente: ctrl.cliente.id,
+          idIndustria: ctrl.industria.selecionado.id,
           codigo: null,
           limiteCredito: null,
           ativo: true,
           bloqueioVenda: false,
-          nomeIndustria: ctrl.industria.selecionado.nomeIndustria,
+          nomeIndustria: ctrl.industria.selecionado.nome,
           removido: false,
           listaIndustriaClientePrazo: [],
           listaIndustriaClientePrazoParaRemover: [],
@@ -77,14 +130,16 @@ ClienteModulo.component('cadastroClienteComponent', {
         }
       } else {
         ctrl.industriaCliente = listaEncontrados[0];
-        IndustriaClientePrazoService.getIndustriaClientePrazoPorIdIndustriaCliente(ctrl.industriaCliente.id, (result) => {
+        /*
+        IndustriaClientePrazoService.getIndustriaClientePrazoPorIdIndustriaCliente(ctrl.industriaCliente.id).then((result) => {
           ctrl.industriaClientePrazo = result
         })
+        */
       }
 
-      buscaRepresentacoesIndustria(ctrl.industria.selecionado.idIndustria)
+      buscaRepresentacoesIndustria(ctrl.industria.selecionado.id)
 
-      geraListaPrazosExistentes(ctrl.industria.selecionado.idIndustria)
+      geraListaPrazosExistentes(ctrl.industria.selecionado.id)
     }
 
     ctrl.downloadArquivo = function (nomeArquivo) {
@@ -109,7 +164,7 @@ ClienteModulo.component('cadastroClienteComponent', {
         bodyText: 'O cliente com CNPJ ' + response.cpfCnpj + ' já possui cadastro! Deseja carregar seus dados?'
       };
       ModalService.showModal({}, modalOptions).then(() => {
-        $state.go('main.cliente.edicao', {})
+        $state.go('main.cliente.edicao',  {'cnpj':response.cpfCnpj, 'janela':ABA_CADASTRO_CLIENTE.DADOS_PESSOAIS})
       }, function (result) {
         return
       });
@@ -190,15 +245,14 @@ ClienteModulo.component('cadastroClienteComponent', {
         removeIndustria(industria);
       }
     }
+
     ctrl.salvarCliente = function () {
-      var banco = ctrl.banco.nome;
       ctrl.cliente.idPessoa = ctrl.tipoPessoa.selecionado.id;
       ctrl.cliente.listaIndustriaCliente = ctrl.listaIndustriaCliente;
       ctrl.cliente.listaRepresentacoesCliente = ctrl.listaRepresentacoesCliente;
       ctrl.cliente.estado = ctrl.estado.selecionado;
       ctrl.cliente.nomeBanco = ctrl.banco.nome;
-
-      if (validate) {
+      if (isFormCadastroClienteValido()) {
         if (ctrl.auth.isVendedor) {
           ctrl.cliente.pendenteRegistro = true
           salvar()
@@ -231,24 +285,17 @@ ClienteModulo.component('cadastroClienteComponent', {
       if (!ctrl.listaIndustriaCliente) {
         ctrl.listaIndustriaCliente = [];
       }
-      let atualizou = false
-      ctrl.listaIndustriaCliente.forEach(function (item, index) {
-        if (item.id == ctrl.industriaCliente.id && item.removido) {
-          ctrl.listaIndustriaCliente[index].removido = false
-          atualizou = true
+      let adicionar = true
+      ctrl.listaIndustriaCliente.forEach(function (item) {
+        if (item.idIndustria == ctrl.industriaCliente.idIndustria) {
+          adicionar = false
         }
       })
-      if (!atualizou) {
+      if (adicionar) {
         ctrl.listaIndustriaCliente.push(ctrl.industriaCliente);
+      } else {
+        NotificationService.alert('Indústria já adicionada. Pressione SALVAR para salvar as alterações.');
       }
-    }
-
-    ctrl.adicionaRepresentcaoVendedor = function () {
-      if (!ctrl.listaRepresentacoesCliente) {
-        ctrl.listaRepresentacoesCliente = [];
-      }
-      ctrl.listaRepresentacoesCliente.push(ctrl.representacaoCliente)
-      ctrl.bloqueiaSalvar = (ctrl.auth.isVendedor && ctrl.listaRepresentacoesCliente.length < 1)
     }
 
     ctrl.adicionaIndustriaClienteRepresentacaoVendedor = function () {
@@ -264,17 +311,18 @@ ClienteModulo.component('cadastroClienteComponent', {
       }
     }
 
-    ctrl.removeRepresentacao = function (representacao) {
-      $.each(ctrl.listaRepresentacoesCliente, function (i) {
-        if (ctrl.listaRepresentacoesCliente[i].id === representacao.id) {
-          ctrl.listaRepresentacoesCliente.splice(i, 1);
-          ctrl.bloqueiaSalvar = (ctrl.auth.isVendedor && ctrl.listaRepresentacoesCliente.length < 1)
-          return false;
-        }
-      });
+    ctrl.removerIndustriaCliente = function (industriaCliente) {
+      // Se industria cliente possuir id deve remover na base
+      if (industriaCliente.id) {
+        ClienteService.excluirIndustriaCliente(industriaCliente).then(function () {
+          removeItemIndustriaClienteLista(industriaCliente);
+        })
+      } else {
+        removeItemIndustriaClienteLista(industriaCliente);
+      }
     }
 
-    ctrl.removerIndustriaCliente = function (industriaCliente) {
+    function removeItemIndustriaClienteLista(industriaCliente) {
       $.each(ctrl.listaIndustriaCliente, function (i) {
         if (ctrl.listaIndustriaCliente[i].id === industriaCliente.id) {
           if (industriaCliente.id === undefined) {
@@ -285,6 +333,13 @@ ClienteModulo.component('cadastroClienteComponent', {
           return false;
         }
       });
+    }
+
+    ctrl.salvarIndustriaCliente = function () {
+      ClienteService.salvarIndustriaCliente(ctrl.listaIndustriaCliente).then(function (result) {
+        NotificationService.success('Indústrias atualizadas com sucesso!');
+        $state.go('main.cliente.edicao', { 'cnpj': ctrl.cliente.cpfCnpj, 'janela': ABA_CADASTRO_CLIENTE.ASSOCIAR_VENDEDOR }, {reload: true});
+      })
     }
 
     ctrl.voltar = function () {
@@ -376,8 +431,9 @@ ClienteModulo.component('cadastroClienteComponent', {
       });
     }
 
-    function validate() {
-      return !$scope.formDadosPedido.$invalid;
+    function isFormCadastroClienteValido() {
+      let form = $scope.forms.formCadastroCliente;
+      return form.$valid;
     }
 
 
@@ -400,8 +456,12 @@ ClienteModulo.component('cadastroClienteComponent', {
     function salvar() {
       ClienteService.salvarCliente(ctrl.cliente).then(function (result) {
         NotificationService.success(`Cliente ${result.razaoSocial} cadastrado com sucesso!`);
-        $state.go('main.cliente.pesquisa');
+        $state.go('main.cliente.edicao', { 'cnpj': ctrl.cliente.cpfCnpj, 'janela': ABA_CADASTRO_CLIENTE.ASSOCIAR_INDUSTRIA }, {reload: true});
       })
+    }
+
+    ctrl.updateActiveTab = function () {
+      ctrl.active = ctrl.janela;
     }
 
     ctrl.listaNomeBancos = ClienteService.buscaNomesBancos();
@@ -414,10 +474,11 @@ ClienteModulo.component('cadastroClienteComponent', {
       ctrl.industriaPrazo = {
         selecionado: undefined,
       }
+      ctrl.updateActiveTab();
 
       if (ctrl.cliente) {
         ctrl.listaRepresentacoesCliente = ctrl.cliente.listaRepresentacoesCliente;
-        ClienteService.buscaIndustriaCliente(cliente.id).then((response) => {
+        ClienteService.buscaIndustriaCliente(ctrl.cliente.id).then((response) => {
           ctrl.listaIndustriaCliente = response;
         });
         if (ctrl.cliente.excluido) {
@@ -510,16 +571,9 @@ ClienteModulo.component('cadastroClienteComponent', {
         selecionado: undefined,
       }
 
-      let usuario = ctrl.auth;
-
       if (ctrl.cliente.nomeBanco != null) {
         ctrl.banco.nome = ctrl.cliente.nomeBanco;
       }
-
-      UsuarioService.buscaUsuarioCadastroDto(usuario.id).then((response) => {
-        ctrl.listaRepresentacoes = response.representacoes;
-        $log.log('response.representacoes: ', response.representacoes)
-      });
 
       UsuarioService.buscaUsuarios().then((response) => {
         ctrl.vendedores = response;

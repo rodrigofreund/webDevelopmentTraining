@@ -24,13 +24,15 @@ app.component('dashboardComponent', {
     }
 
     function init() {
+      let possuiPedidoSalvo = !!PedidoStorageService.getPedidosSalvo();
+      let numeroPedidoSalvo = possuiPedidoSalvo ? PedidoStorageService.getPedidosSalvo().length : 0;
       ctrl.info = {
         pedidoAtivo: PedidoService.getPedidoAtivo(),
         exibePedidoAtivo: PedidoService.getPedidoAtivo() !== null,
         exibePedidosEnviados: ctrl.informacoes.numeroPedidosEnviados > 0,
         numeroPedidosEnviados: ctrl.informacoes.numeroPedidosEnviados,
-        exibePedidosSalvos: PedidoStorageService.getPedidosSalvo() !== undefined && PedidoStorageService.getPedidosSalvo().length > 0,
-        numeroPedidosSalvos: PedidoStorageService.getPedidosSalvo().length,
+        exibePedidosSalvos:  possuiPedidoSalvo,
+        numeroPedidosSalvos: numeroPedidoSalvo,
         exibePedidosNegados: ctrl.informacoes.numeroPedidosNegados > 0,
         numeroPedidosNegados: ctrl.informacoes.numeroPedidosNegados,
         exibeClientesPendente: ctrl.informacoes.numeroClientesPendentes > 0,

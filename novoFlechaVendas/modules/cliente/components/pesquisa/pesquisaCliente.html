@@ -1,121 +1,97 @@
 <p class="content-title">Listagem de Clientes</p>
 
-<div class="col-sm-12">
-	<div class="panel panel-default">
-		<div class="panel-heading">Filtros</div>
-		<div class="panel-body">
-			<div class="form-group-row">
-				<div class="col-sm-3">
-					<div class="form-group input-group-sm">
-						<label>Razão social:</label> <input id="razaoSocialFilter" class="form-control" ng-model="ctrl.filter.razaoSocial"
-						 ng-blur="ctrl.pesquisa()" ng-change="ctrl.alteradaPesquisa()" focus />
-					</div>
+<div class="panel panel-default">
+	<div class="panel-heading">Filtros</div>
+	<div class="panel-body">
+		<div class="form-group-row">
+			<div class="col-sm-3">
+				<div class="form-group input-group-sm">
+					<label>Razão social:</label> <input id="razaoSocialFilter" class="form-control" ng-model="ctrl.filter.razaoSocial"
+						ng-blur="ctrl.pesquisa()" ng-change="ctrl.alteradaPesquisa()" focus />
 				</div>
-				<div class="col-sm-2">
-					<div class="form-group input-group-sm">
-						<label>Nome:</label> <input class="form-control" ng-model="ctrl.filter.nomeFantasia" ng-blur="ctrl.pesquisa()" ng-change="ctrl.alteradaPesquisa()" focus />
-					</div>
+			</div>
+			<div class="col-sm-2">
+				<div class="form-group input-group-sm">
+					<label>Nome:</label> <input class="form-control" ng-model="ctrl.filter.nomeFantasia" ng-blur="ctrl.pesquisa()" ng-change="ctrl.alteradaPesquisa()" focus />
 				</div>
-				<div class="col-sm-3">
-					<div class="form-group input-group-sm">
-						<label>CNPJ:</label> <input type="search" class="form-control" ng-model="ctrl.filter.cpfCnpj" ng-blur="ctrl.pesquisa()" ng-change="ctrl.alteradaPesquisa()"
-						 focus />
-					</div>
+			</div>
+			<div class="col-sm-3">
+				<div class="form-group input-group-sm">
+					<label>CNPJ:</label> <input type="search" class="form-control" ng-model="ctrl.filter.cpfCnpj" ng-blur="ctrl.pesquisa()" ng-change="ctrl.alteradaPesquisa()"
+						focus />
 				</div>
-				<div class="col-sm-3" restrict access="Administrador">
-					<div class="form-group input-group-sm">
-						<label>Vendedor:</label>
-						<select class="form-control" ng-model="ctrl.filter.vendedorFiltro" ng-options="vendedor.nome for vendedor in ctrl.listaVendedor track by vendedor.id"
-						 id="filtroVendedor" ng-change="ctrl.selecionaVendedor()">
-							<option value="">Selecione um vendedor</option>
-						</select>
-					</div>
+			</div>
+			<div class="col-sm-3" restrict access="Administrador">
+				<div class="form-group input-group-sm">
+					<label>Vendedor:</label>
+					<select class="form-control" ng-model="ctrl.filter.vendedorFiltro" ng-options="vendedor.nome for vendedor in ctrl.listaVendedor track by vendedor.id"
+						id="filtroVendedor" ng-change="ctrl.selecionaVendedor()">
+						<option value="">Selecione um vendedor</option>
+					</select>
 				</div>
-				<div class="col-sm-1">
-					<div class="form-group input-group-sm">
-						<label for="pendenteRegistro">Pendente:</label>
-						<input id="pendenteRegistro" class="form-control" type="checkbox" ng-model="search.pendenteRegistro" ng-change="ctrl.pesquisa()" ng-change="ctrl.alteradaPesquisa()"/>
-					</div>
+			</div>
+			<div class="col-sm-1">
+				<div class="form-group input-group-sm">
+					<label for="pendenteRegistro">Pendente:</label>
+					<input id="pendenteRegistro" type="checkbox" ng-model="search.pendenteRegistro" ng-change="ctrl.pesquisa()" ng-change="ctrl.alteradaPesquisa()"/>
 				</div>
 			</div>
 		</div>
 	</div>
-	<hr />
-	<div class="form-group row">
-		<div class="col-sm-12">
-			<div class="row">
-				<div class="col-sm-2">
-					<input class="btn btn-default btn-primary" type="button" ng-click="removerCliente()" value="Remover" ng-if="possuiPermissaoEditar()"
-					 ng-disabled="canEditCliente === false">
-					<input class="btn btn-default btn-primary" type="button" ng-click="editarCliente()" value="Editar" ng-disabled="canEditCliente === false">
-				</div>
-				<div class="col-sm-2"></div>
-				<div class="col-sm-2"></div>
-				<div class="col-sm-2"></div>
-				<div class="col-sm-2"></div>
-				<div class="col-sm-2"></div>
-			</div>
-		</div>
-	</div>
-	<hr />
-	<div class="row">
-		<div class="col-xs-12">
-			<div class="panel panel-default">
-				<div class="panel-heading">Clientes</div>
-				<div class="panel-body">
-					<div class="table-responsive">
-						<table class="table">
-							<thead class="thead-inverse">
-								<tr>
-									<th>Ações</th>
-									<th>Razão Social</th>
-									<th>Nome Fantasia</th>
-									<th>Cnpj</th>
-									<th>Telefone</th>
-									<th>Celular</th>
-									<th>Informações Adicionais</th>
-								</tr>
-							</thead>
-							<tbody>
-								<tr ng-repeat="c in ctrl.clientes">
-									<td>
-										<div class="btn-group btn-group-sm">
-											<button type="button" class="btn btn-default" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-												Ações
-												<span class="caret"></span>
-											</button>
-											<ul class="dropdown-menu">
-												<li>
-													<a href="" ng-click="ctrl.editarCliente(c.id)">Editar</a>
-												</li>
-												<li>
-													<a href="" ng-click="ctrl.editarPedido(i.idPedido)" ng-if="ctrl.podeEditar(i)">Remover</a>
-												</li>
-											</ul>
-										</div>
-									</td>
-									<td>{{c.razaoSocial}}</td>
-									<td>{{c.nomeFantasia}}</td>
-									<td>{{c.cpfCnpj}}</td>
-									<td>{{c.telefone}}</td>
-									<td>{{c.celular}}</td>
-									<td>{{c.informacoesAdicionais}}</td>
-								</tr>
-								<tr ng-if="ctrl.clientes.length==0">
-									<td>Nenhum cliente encontrado</td>
-								</tr>
-							</tbody>
-							<tfoot>
-								<div style="text-align: center;">
-									<ul uib-pagination boundary-links="true" boundary-link-numbers="true" rotate="true" total-items="ctrl.searchResult.totalElements"
-									 ng-model="ctrl.filter.newPage" class="pagination-sm" previous-text="Anterior" next-text="Próxima" first-text="Primeira"
-									 last-text="Última" ng-change="ctrl.mudaPagina()" max-size="5" items-per-page="ctrl.filter.pageSize"></ul>
-								</div>
-							</tfoot>
-						</table>
+</div>
+<div class="panel panel-default">
+	<div class="panel-heading">Clientes</div>
+	<div class="panel-body">
+		<div class="table-responsive">
+			<table class="table">
+				<thead class="thead-inverse">
+					<tr>
+						<th>Ações</th>
+						<th>Razão Social</th>
+						<th>Nome Fantasia</th>
+						<th>Cnpj</th>
+						<th>Telefone</th>
+						<th>Celular</th>
+						<th>Informações Adicionais</th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr ng-repeat="c in ctrl.clientes">
+						<td class="col-lg-1">
+							<div class="btn-group btn-group-sm">
+								<button type="button" class="btn btn-default" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+									Ações
+									<span class="caret"></span>
+								</button>
+								<ul class="dropdown-menu">
+									<li>
+										<a href="" ng-click="ctrl.editarCliente(c.cpfCnpj)">Editar</a>
+									</li>
+									<li>
+										<a href="" ng-click="ctrl.editarPedido(i.idPedido)" ng-if="ctrl.podeEditar(i)">Remover</a>
+									</li>
+								</ul>
+							</div>
+						</td>
+						<td class="col-lg-3">{{c.razaoSocial}}</td>
+						<td class="col-lg-2">{{c.nomeFantasia}}</td>
+						<td class="col-lg-1">{{c.cpfCnpj}}</td>
+						<td class="col-lg-1">{{c.telefone}}</td>
+						<td class="col-lg-1">{{c.celular}}</td>
+						<td class="col-lg-3">{{c.informacoesAdicionais}}</td>
+					</tr>
+					<tr ng-if="ctrl.clientes.length==0">
+						<td>Nenhum cliente encontrado</td>
+					</tr>
+				</tbody>
+				<tfoot>
+					<div style="text-align: center;">
+						<ul uib-pagination boundary-links="true" boundary-link-numbers="true" rotate="true" total-items="ctrl.searchResult.totalElements"
+							ng-model="ctrl.filter.newPage" class="pagination-sm" previous-text="Anterior" next-text="Próxima" first-text="Primeira"
+							last-text="Última" ng-change="ctrl.mudaPagina()" max-size="5" items-per-page="ctrl.filter.pageSize"></ul>
 					</div>
-				</div>
-			</div>
+				</tfoot>
+			</table>
 		</div>
 	</div>
 </div>

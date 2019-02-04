@@ -22,6 +22,7 @@ ClienteModulo.component('pesquisaClienteComponent', {
     };
 
     ctrl.mudaPagina = function () {
+      ctrl.alteradaPesquisa();
       ctrl.pesquisa();
     };
 
@@ -30,7 +31,7 @@ ClienteModulo.component('pesquisaClienteComponent', {
     }
 
     ctrl.editarCliente = function(cnpj) {
-      $state.go('main.cliente.edicao', {'cnpj':cnpj} );
+      $state.go('main.cliente.edicao', {'cnpj':cnpj, 'janela':ABA_CADASTRO_CLIENTE.DADOS_PESSOAIS} );
     }
 
     $scope.selecionaVendedor = function () {

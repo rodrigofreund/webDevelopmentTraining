@@ -18,6 +18,10 @@ ClienteModule.factory('ClienteService', ['HttpService', '$q',
     const URL_CLIENTE_DOWNLOAD_ARQUIVO = `${SUBPATH}/downloadArquivoCliente`;
     const URL_CLIENTE_BUSCAR_ESTADOS = `${SUBPATH}/buscaEstados`;
     const URL_CLIENTE_BUSCAR_LISTA_TIPO_PESSOA = `${SUBPATH}/buscaListaTipoPessoa`;
+    const URL_CLIENTE_REMOVER_INDUSTRIA_CLIENTE = `${SUBPATH}/removerIndustriaCliente`;
+    const URL_CLIENTE_SALVAR_INDUSTRIA_CLIENTE = `${SUBPATH}/salvarIndustriaCliente`;
+    const URL_CLIENTE_SALVAR_REPRESENTACAO_CLIENTE = `${SUBPATH}/salvarRepresentacaoCliente`;
+    const URL_CLIENTE_REMOVER_REPRESENTACAO_CLIENTE = `${SUBPATH}/removerRepresentacaoCliente`;
 
     service.salvarCliente = (clienteDto) => {
       return HttpService.httpPost(URL_CLIENTE_SALVAR, clienteDto);
@@ -71,6 +75,22 @@ ClienteModule.factory('ClienteService', ['HttpService', '$q',
     service.buscaListaTipoPessoa = () => {
       return HttpService.httpGet(URL_CLIENTE_BUSCAR_LISTA_TIPO_PESSOA);
     };
+
+    service.excluirIndustriaCliente = (industriaClienteDto) => {
+      return HttpService.httpPost(URL_CLIENTE_REMOVER_INDUSTRIA_CLIENTE, industriaClienteDto);
+    };
+
+    service.salvarIndustriaCliente = (industriaClienteDto) => {
+      return HttpService.httpPost(URL_CLIENTE_SALVAR_INDUSTRIA_CLIENTE, industriaClienteDto);
+    };
+
+    service.salvarRepresentacaoCliente = (clienteDto) => {
+      return HttpService.httpPost(URL_CLIENTE_SALVAR_REPRESENTACAO_CLIENTE, clienteDto);
+    };
+
+    service.excluirRepresentacaoCliente = (representacaoClienteDto) => {
+      return HttpService.httpPost(URL_CLIENTE_REMOVER_REPRESENTACAO_CLIENTE, clienteDto);
+    }
 
     service.validarCnpj = function (cnpj) {
       cnpj = cnpj.replace(/[^\d]+/g, '');

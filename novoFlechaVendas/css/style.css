@@ -431,3 +431,10 @@
   margin-top: 0px !important;
   font-size: smaller;
 }
+
+.vcenter {
+  display: inline-block;
+  vertical-align: middle;
+  float: none;
+}
+

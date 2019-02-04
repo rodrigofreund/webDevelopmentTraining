@@ -52,6 +52,10 @@ UsuarioModule.factory('UsuarioService', ['HttpService',
       return HttpService.httpPost(SUBPATH + '/removerRepresentacao', idRepresentacao);
     }
 
+    service.getVendedoresPorIndustria = (idIndustria) => {
+      return HttpService.httpPost(SUBPATH + '/getVendedoresPorIndustria', idIndustria);
+    }
+
     return service;
   }
 ])
