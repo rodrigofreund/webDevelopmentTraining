@@ -45,6 +45,18 @@
                 <label class="form-control">{{ctrl.pedido.dataEntrega | date:'dd/MM/yyyy'}}</label>
               </div>
             </div>
+            <div class="col-xs-6 padding-off">
+              <div class="form-group input-group-sm">
+                <label>Tipo: </label>
+                <label class="form-control">{{ctrl.valorTipoPedido()}}</label>
+              </div>
+            </div>
+            <div class="col-xs-6 padding-off">
+              <div class="form-group input-group-sm">
+                <label>Relacionados: </label>
+                <label class="form-control">{{ctrl.valorPedidosRelacionados()}}</label>
+              </div>
+            </div>
           </div>
           <div class="row">
             <div class="col-xs-12 padding-off">
@@ -75,19 +87,19 @@
             </div>
           </div>
           <div class="row">
-            <div class="col-xs-4 padding-off">
+            <div class="col-xs-4 col-sm-3 padding-off">
               <div class="form-group input-group-sm">
                 <label>Prazo: </label>
                 <label class="form-control">{{ctrl.pedido.industriaPrazo.descricao}}</label>
               </div>
             </div>
-            <div class="col-xs-4 padding-off">
+            <div class="col-xs-4 col-sm-3 padding-off">
               <div class="form-group input-group-sm">
                 <label>Carga: </label>
                 <label class="form-control">{{ctrl.valorCarga()}}</label>
               </div>
             </div>
-            <div class="col-xs-4 padding-off">
+            <div class="col-xs-4 col-sm-3 padding-off">
               <div class="form-group input-group-sm">
                 <label>Proposta: </label>
                 <label class="form-control">{{(ctrl.pedido.proposta == 1 ? 'Sim' : 'Não')}}</label>
@@ -154,10 +166,10 @@
                   <td>{{i.precoSemImposto / i.quantidade | currency:"R$"}}</td>
                   <td>{{i.precoSemImposto * i.quantidadeSolicitada | currency:"R$"}}
                   </td>
-                  <td ng-if="isVendedor()">{{i.precoColocado | currency:"R$"}}</td>
+                  <td>{{i.precoColocado | currency:"R$"}}</td>
                   <td>
-                    <input class="form-control" ng-model="i.precoColocado" ng-if="!isVendedor()" type="number"
-                      ng-change="ctrl.alteraPrecoColocado(i)" ng-disabled="isVendedor()" />
+                    <input class="form-control" ng-model="i.precoColocado" type="number"
+                      ng-change="ctrl.alteraPrecoColocado(i)" ng-disabled="ctrl.isVendedor()" ng-if="!ctrl.isVendedor()" />
                   </td>
                 </tr>
                 <tr ng-show="ctrl.pedidos.length==0">
@@ -176,11 +188,13 @@
         <div class="panel-heading">Ações</div>
         <div class="panel-body">
           <input type="button" ng-style="{'background-color': pedido.industria.cor}" class="btn btn-primary" value="Voltar"
-            ui-sref="main.pedido.pesquisa" />
+            ng-click="ctrl.voltar()" />
           <input type="button" ng-style="{'background-color': pedido.industria.cor}" class="btn btn-primary" value="Negar"
-            ng-click="ctrl.negarPedido()" restrict access="Gestor Administrador" ng-if="ctrl.podeNegarPedido()" />
+            ng-click="ctrl.negarPedido()" ng-show="ctrl.podeNegarPedido()" restrict access="Administrador Gestor" />
           <input type="button" ng-style="{'background-color': pedido.industria.cor}" class="btn btn-primary" value="Colocar"
-            ng-click="ctrl.colocarPedido()" restrict access="Gestor Administrador" ng-show="ctrl.podeColocarPedido()" />
+            ng-click="ctrl.colocarPedido()" restrict access="Administrador Gestor" ng-show="ctrl.podeColocarPedido()" />
+          <input type="button" ng-style="{'background-color': pedido.industria.cor}" class="btn btn-primary" value="Enviar"
+            ng-click="ctrl.enviarPedido()" ng-show="ctrl.podeEnviarPedido()" />
         </div>
       </div>
     </div>

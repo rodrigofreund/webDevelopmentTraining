@@ -6,11 +6,12 @@ PedidoModulo.component('pesquisaPedidoComponent', {
   templateUrl: 'modules/pedido/components/pesquisa/pesquisaPedido.html',
   bindings: {
     listaIndustrias: '<',
-    pedidoSearch: '<'
+    pedidoSearch: '<',
+    listaVendedores: '<'
   },
   controllerAs: 'ctrl',
   controller: function ($log, $scope, PedidoService, ModalService,
-    ClienteService, NotificationService, UsuarioService, $state, PedidoCalculoService) {
+    ClienteService, NotificationService, $state, PedidoCalculoService) {
 
     var ctrl = this;
 
@@ -18,6 +19,14 @@ PedidoModulo.component('pesquisaPedidoComponent', {
 
     ctrl.selectCliente = function ($item) {
       ctrl.pedidoSearch.idCliente = $item.id;
+    }
+
+    ctrl.verificaClienteAtual = function() {
+      let input = angular.element('#nomeCliente')
+      let value = input[0].value
+      if(!value) {
+        ctrl.pedidoSearch.idCliente = null
+      }
     }
 
     /* EDITAR PEDIDO */
@@ -161,12 +170,6 @@ PedidoModulo.component('pesquisaPedidoComponent', {
         opened: false
       };
 
-      if (ctrl.usuario.administrador) {
-        UsuarioService.buscaUsuarios().then(response => {
-          ctrl.listaVendedores = response;
-        });
-      }
-
       if (ctrl.pedidoSearch.dtInicio) {
         ctrl.pedidoSearch.dtInicio = new Date(ctrl.pedidoSearch.dtInicio);
       }
@@ -178,7 +181,6 @@ PedidoModulo.component('pesquisaPedidoComponent', {
       PedidoService.getListaStatusPedido().then(result => {
         ctrl.listaStatusPedido = result
       });
-      $log.log('pedidoSearch: ', ctrl.pedidoSearch)
     };
   }
 });

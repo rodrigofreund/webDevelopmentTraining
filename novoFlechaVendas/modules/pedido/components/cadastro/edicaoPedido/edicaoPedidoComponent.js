@@ -8,7 +8,7 @@ PedidoModulo.component('edicaoPedidoComponent', {
     pedido: '<'
   },
   controllerAs: 'ctrl',
-  controller: function ($log, $scope, IndustriaPrazoService, $state, PedidoService, TabelaService, $filter, PedidoCalculoService, PedidoStorageService, ModalService) {
+  controller: function ($scope, IndustriaPrazoService, $state, PedidoService, TabelaService, $filter, PedidoCalculoService, NotificationService) {
     var ctrl = this;
     this.$onInit = init(ctrl);
 
@@ -17,33 +17,33 @@ PedidoModulo.component('edicaoPedidoComponent', {
     };
 
     ctrl.geraPedido = function () {
-      debugger
-      PedidoService.setPedidoAtivo(ctrl.pedido);
-      $state.go('main.pedido.cadastro.itens', { 'pedido': ctrl.pedido });
+      if (validate()) {
+        PedidoService.setPedidoAtivo(ctrl.pedido);
+        $state.go('main.pedido.cadastro.itens', { 'pedido': ctrl.pedido });
+      }
+
     };
 
     $scope.$watch('ctrl.pedido.tabela', function (novaTabela, antigaTabela) {
       if (novaTabela.id !== antigaTabela.id) {
+        ctrl.tabelaInexistente = false
         $filter('itensAdicionadosFilter', null)(antigaTabela.itens).forEach(item => {
           $filter('filter')(novaTabela.itens, { codigo: item.codigo }).forEach(novoItem => {
             novoItem['inserido'] = item['inserido']
             novoItem['quantidadeSolicitada'] = item['quantidadeSolicitada']
             novoItem['desconto'] = item['desconto']
+            novoItem['precoColocado'] = item['precoColocado']
             PedidoCalculoService.inicializaPreco(novoItem);
           })
         });
       }
     });
 
-    ctrl.alteraPrazo = function() {
-      $log.log('altera prazo')
-      $log.log(ctrl.pedido.industriaPrazo);
-    }
-
     function init(ctrl) {
 
       TabelaService.getTabelasPorIndustria(ctrl.pedido.industria.id).then((tabelaDtoList) => {
         ctrl.listaTabelas = tabelaDtoList;
+        consisteTabelaAtual()
       });
 
       const industriaPrazoSearchDto = {
@@ -54,7 +54,22 @@ PedidoModulo.component('edicaoPedidoComponent', {
         ctrl.listaPrazos = industriaPrazoPedidoDtoList;
       })
 
-      ctrl.pedido.dataEntrega = geraDataEntrega(ctrl.pedido.dataEntrega);
+      ctrl.pedido.dataPedido = new Date();
+
+      if(ctrl.pedido.dataEntrega) {
+        ctrl.pedido.dataEntrega = new Date(ctrl.pedido.dataEntrega);
+      } else {
+        ctrl.pedido.dataEntrega = geraDataEntrega();
+      }
+
+      ctrl.dataEntregaOptions = {
+        formatYear: 'yyyy',
+        minDate: ctrl.pedido.dataPedido,
+        startingDay: 1
+      };
+      ctrl.dataEntregaModelOptions = {
+        allowInvalid: false
+      }
 
       if (ctrl.pedido.itensPedido != null) {
         ctrl.pedido.itensPedido.forEach((itemInserido) => {
@@ -63,11 +78,19 @@ PedidoModulo.component('edicaoPedidoComponent', {
               itemTabela['inserido'] = true;
               itemTabela['quantidadeSolicitada'] = itemInserido['quantidadeSolicitada']
               itemTabela['desconto'] = itemInserido['desconto']
+              itemTabela['precoColocado'] = itemInserido['precoColocado']
               PedidoCalculoService.inicializaPreco(itemTabela);
             }
           });
         });
       }
+
+      //ajuste para o legado
+      if (!ctrl.pedido.tipoPedido) {
+        ctrl.pedido.tipoPedido = TIPO_PEDIDO.VENDA;
+      }
+      ctrl.pedido.carga = parseInt(ctrl.pedido.carga);
+      ctrl.pedido.proposta = (typeof ctrl.pedido.proposta === 'string') ? ctrl.pedido.proposta == 'true' : ctrl.pedido.proposta;
 
       ctrl.dateOptions = {
         formatYear: 'yyyy',
@@ -79,15 +102,9 @@ PedidoModulo.component('edicaoPedidoComponent', {
         opened: false
       };
 
-      ctrl.propostaOptions = [
-        { id: "false", text: 'Não' },
-        { id: "true", text: 'Sim' }
-      ];
+      ctrl.propostaOptions = LISTA_SIMNAO;
 
-      ctrl.cargaOptions = [
-        { value: "1", text: 'Batida' },
-        { value: "2", text: 'Paletizada' }
-      ];
+      ctrl.cargaOptions = LISTA_CARGA;
 
       ctrl.tipoPedidoOptions = [
         { id: 1, descricao: 'Venda de Produtos' },
@@ -96,8 +113,27 @@ PedidoModulo.component('edicaoPedidoComponent', {
       ];
     }
 
-    function geraDataEntrega(dataEntrega) {
-      return new Date(dataEntrega)
+    function validate() {
+      if (ctrl.tabelaInexistente || $scope.formDadosPedido.$invalid) {
+        NotificationService.error('Existem erros no preenchimento do pedido.');
+        return false;
+      }
+      return true;
+    }
+
+    function consisteTabelaAtual() {
+      let existe = ctrl.listaTabelas.some(function (tabela) {
+        return ctrl.pedido.tabela.id === tabela.id;
+      })
+      if (!existe) {
+        NotificationService.alert('A tabela atual não está mais vigente. Selecione outra tabela')
+        ctrl.tabelaInexistente = true
+      }
+    }
+
+    function geraDataEntrega() {
+      let dataAtual = new Date();
+      return new Date(dataAtual.getFullYear(), dataAtual.getMonth(), dataAtual.getDate() + 1);
     }
 
   }

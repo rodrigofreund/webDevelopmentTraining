@@ -10,7 +10,6 @@ UsuarioModulo.component('cadastroUsuarioComponent', {
 	},
 	controller: function usuarioModuloController(
 		$state,
-		$scope,
 		$q,
 		UsuarioService,
 		IndustriaService,
@@ -58,11 +57,11 @@ UsuarioModulo.component('cadastroUsuarioComponent', {
 			}
 		}
 
-		ctrl.selecionaTabClientes = function() {
+		ctrl.selecionaTabClientes = function () {
 			const filtro = {
 				idUsuario: ctrl.cadastro.id,
 				newPage: 1,
-				pageSize: 100
+				pageSize: 100000
 			}
 			ClienteService.getClientesPorFiltro(filtro).then(result => {
 				ctrl.clientes = result.content;
@@ -105,7 +104,7 @@ UsuarioModulo.component('cadastroUsuarioComponent', {
 			if (deveSalvar) {
 				modalAvisoNecessarioSalvar();
 			} else {
-				modalConfirmaRemoverRepresentacao(representacao).then(()=>{
+				modalConfirmaRemoverRepresentacao(representacao).then(() => {
 					if (representacao.id) {
 						UsuarioService.removerRepresentacao(representacao.id).then(() => {
 							ctrl.selecionaTabRepresentacao();
@@ -134,7 +133,7 @@ UsuarioModulo.component('cadastroUsuarioComponent', {
 			if (validaSenha()) {
 				var usuarioAtivo = ctrl.cadastro.id != null ? true : false;
 				UsuarioService.salvaUsuario(ctrl.cadastro).then((idUsuario) => {
-					if(!usuarioAtivo) {
+					if (!usuarioAtivo) {
 						NotificationService.success('Usuário cadastrado com sucesso!');
 					} else {
 						NotificationService.success('Cadastro atualizado!');
@@ -204,7 +203,8 @@ UsuarioModulo.component('cadastroUsuarioComponent', {
 				ModalService.showModal(modalDefaults, modalOptions).then(function (modalResult) {
 					UsuarioService.importarBaseUsuario(result).then(function (importacaoResult) {
 						NotificationService.success(`Importação realizada com sucesso! ${importacaoResult} clientes importados.`)
-						ctrl.selecionaTabRepresentacao();
+						ctrl.importacao.usuario = null
+						ctrl.selecionaTabRepresentacao()
 					})
 				});
 			})
@@ -213,10 +213,28 @@ UsuarioModulo.component('cadastroUsuarioComponent', {
 		ctrl.verificaUsuarioCadastradoPorLogin = () => {
 			UsuarioService.buscaUsuarioPorLogin(ctrl.cadastro.login).then(result => {
 				if (result) {
-					NotificationService.error('Login do usuário já existente');
+					if (ctrl.cadastro.id && ctrl.cadastro.id == result.id) {
+						return
+					}
+					NotificationService.error('Login do usuário já existente')
 					ctrl.cadastro.login = null
 				}
 			});
+		}
+
+		ctrl.exibeSenha = () => {
+			
+			if(ctrl.cadastro.senha.senha1.localeCompare(ctrl.cadastro.senha.senha2) != 0) {
+				NotificationService.error('Senhas digitadas não coincidem')
+				return
+			}
+			if(ctrl.senhaAlterada) {
+				NotificationService.alert(`Senhas digitadas: ${ctrl.cadastro.senha.senha1} - ${ctrl.cadastro.senha.senha2}`)
+			} else {
+				let senha1 = LoginService.getPassword(ctrl.cadastro.senha.senha1)
+				let senha2 = LoginService.getPassword(ctrl.cadastro.senha.senha2)
+				NotificationService.alert(`Senhas digitadas: ${senha1} - ${senha2}`)
+			}
 		}
 
 		function modalConfirmaRemoverRepresentacao(representacao) {
@@ -229,7 +247,7 @@ UsuarioModulo.component('cadastroUsuarioComponent', {
 			};
 			ModalService.showModal({}, modalOptions).then(function (result) {
 				deferred.resolve(true);
-			}, function() {
+			}, function () {
 				deferred.reject(true);
 			});
 			return deferred.promise;

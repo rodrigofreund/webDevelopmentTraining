@@ -5,7 +5,8 @@ var ClienteModulo = angular.module('cliente.module');
 ClienteModulo.component('pesquisaClienteComponent', {
   templateUrl: 'modules/cliente/components/pesquisa/pesquisaCliente.html',
   bindings: {
-    listaVendedor: '<'
+    listaVendedor: '<',
+    filter: '<'
   },
   controllerAs: 'ctrl',
   controller: function ($scope, ClienteService, $log, UsuarioService, $state) {
@@ -43,14 +44,9 @@ ClienteModulo.component('pesquisaClienteComponent', {
     }
 
     function init() {
-      let usuario = $scope.$parent.$resolve.auth;
-      ctrl.filter = {
-        newPage: 1,
-        pageSize: 20,
-        idUsuario: usuario.id
-      };
       ctrl.efetuaPesquisa = true;
       ctrl.pesquisa();
+      console.log('filtro: ', ctrl.filter)
     };
 
     this.$onInit = init();

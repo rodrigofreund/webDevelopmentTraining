@@ -55,23 +55,28 @@ PedidoModule.factory('PedidoStorageService', ['$log',
 
     service.getPedidoPorFiltro = function (idCliente, idUsuario, idIndustria) {
       let listaPedidosSalvos = service.getPedidosSalvo();
-      let pedidoEncontrado = listaPedidosSalvos.filter(function(pedido) {
-        return (pedido.cliente.id == idCliente && pedido.usuario.id == idUsuario && pedido.industria.id == idIndustria);
-      });
-      let result = [];
-      pedidoEncontrado.forEach(function(item) {
-        let pedido = {
-          numero: null,
-          codigo: item.codigo,
-          dataPedido: item.dataPedido,
-          nomeIndustria: item.industria.nome,
-          status: item.statusPedido,
-          itensPedido: item.itensPedido,
-          idPedidoSalvo: item.idPedidoSalvo
-        }
-        result.push(pedido);
-      })
-      return result;
+      let pedidoEncontrado = null
+      if(listaPedidosSalvos) {
+        pedidoEncontrado = listaPedidosSalvos.filter(function(pedido) {
+          return (pedido.cliente.id == idCliente && pedido.usuario.id == idUsuario && pedido.industria.id == idIndustria);
+        });
+        let result = [];
+        pedidoEncontrado.forEach(function(item) {
+          let pedido = {
+            numero: null,
+            codigo: item.codigo,
+            dataPedido: item.dataPedido,
+            nomeIndustria: item.industria.nome,
+            status: item.statusPedido,
+            itensPedido: item.itensPedido,
+            idPedidoSalvo: item.idPedidoSalvo
+          }
+          result.push(pedido);
+        })
+        return result;
+      } else {
+        return null
+      }
     }
 
     service.removePedidoSalvo = function (pedido) {

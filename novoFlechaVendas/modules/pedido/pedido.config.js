@@ -27,17 +27,17 @@ PedidoModulo.config(($stateProvider) => {
       listaIndustrias: function (IndustriaService, auth) {
         return IndustriaService.getIndustriasByIdUsuario(auth.id);
       },
-      pedidoRelacionado: function($stateParams, PedidoStorageService) {
-        if($stateParams.idPedidoRelacionado && $stateParams.tipoPedido && $stateParams.idIndustria && $stateParams.idCliente) {
+      pedidoRelacionado: function ($stateParams, PedidoStorageService) {
+        if ($stateParams.idPedidoRelacionado && $stateParams.tipoPedido && $stateParams.idIndustria && $stateParams.idCliente) {
           let pedido = PedidoStorageService.getPedido($stateParams.idPedidoRelacionado)
-          if(!pedido) {
+          if (!pedido) {
             return undefined;
           }
           return {
-            'pedidoPrincipal' : pedido,
-            'tipoPedido' : $stateParams.tipoPedido,
-            'idIndustria' : $stateParams.idIndustria,
-            'idCliente' : $stateParams.idCliente
+            'pedidoPrincipal': pedido,
+            'tipoPedido': $stateParams.tipoPedido,
+            'idIndustria': $stateParams.idIndustria,
+            'idCliente': $stateParams.idCliente
           };
         } else {
           return undefined;
@@ -80,22 +80,29 @@ PedidoModulo.config(($stateProvider) => {
     name: 'main.pedido.pesquisa',
     url: '/pesquisa',
     params: {
-      status : null
+      status: null
     },
     component: 'pesquisaPedidoComponent',
     resolve: {
       listaIndustrias: function (IndustriaService, auth) {
         return IndustriaService.getIndustriasByIdUsuario(auth.id);
       },
-      pedidoSearch: function(PedidoService, auth, $stateParams) {
-        if($stateParams.status) {
+      pedidoSearch: function (PedidoService, auth, $stateParams) {
+        if ($stateParams.status) {
           return new filtroPedidoDto(auth, $stateParams.status);
         } else {
-          if(PedidoService.getFiltroPedido()) {
+          if (PedidoService.getFiltroPedido()) {
             return PedidoService.getFiltroPedido();
           } else {
             return new filtroPedidoDto(auth);
           }
+        }
+      },
+      listaVendedores: function (auth, UsuarioService) {
+        if (auth.administrador) {
+          return UsuarioService.buscaUsuarios()
+        } else {
+          return null
         }
       }
     }
@@ -112,7 +119,7 @@ PedidoModulo.config(($stateProvider) => {
   };
   let detalhePedidoSalvo = {
     name: 'main.pedido.detalhe-pedido-local',
-    url: '/detalhe/:idPedidoSalvo',
+    url: '/detalhe-pedido-salvo/:idPedidoSalvo',
     component: 'detalhePedidoComponent',
     resolve: {
       pedido: function (PedidoStorageService, $stateParams) {

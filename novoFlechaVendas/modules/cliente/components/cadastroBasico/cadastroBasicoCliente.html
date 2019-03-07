@@ -1,0 +1,407 @@
+<p class="content-title">Cadastro Cliente</p>
+
+<uib-tabset active="ctrl.active">
+  <uib-tab index="0" heading="Dados Pessoais">
+    <form novalidate ng-submit="ctrl.salvarCliente()" name="forms.formCadastroCliente">
+      <div class="panel panel-default">
+        <div class="panel-heading">Informações Básicas</div>
+        <div class="panel-body">
+          <div class="row">
+            <div class="col-xs-12 col-sm-6 col-lg-2">
+              <div class="form-group input-group-sm" ng-class="{ 'has-error': forms.formCadastroCliente.cpfCnpj.$invalid && forms.formCadastroCliente.cpfCnpj.$dirty}">
+                <label class="control-label">*CNPJ:</label>
+                <input name="cpfCnpj" class="form-control" type="text" ng-model="ctrl.cliente.cpfCnpj" ui-mask="99.999.999/9999-99"
+                  check-cpf-cnpj ng-blur="ctrl.verificaCliente()" required />
+                <span class="help-block msg-erro-cadastro-cliente" ng-if="forms.formCadastroCliente.cpfCnpj.$invalid && forms.formCadastroCliente.cpfCnpj.$dirty">
+                  *O CNPJ é inválido
+                </span>
+              </div>
+            </div>
+            <div class="col-xs-12 col-sm-6 col-lg-2">
+              <div class="form-group input-group-sm" ng-class="{'has-error': forms.formCadastroCliente.rg.$invalid && forms.formCadastroCliente.rg.$dirty || forms.formCadastroCliente.rg.$invalid && forms.formCadastroCliente.$submitted}">
+                <label for="rg" class="control-label">*RG/IE:</label>
+                <input name="rg" class="form-control" type="text" ng-model="ctrl.cliente.rgIe" ng-disabled="ctrl.naoEditavel"
+                  maxlength="30" required />
+                <span class="help-block msg-erro-cadastro-cliente" ng-if="forms.formCadastroCliente.rg.$invalid && forms.formCadastroCliente.rg.$dirty || forms.formCadastroCliente.rg.$invalid && forms.formCadastroCliente.$submitted">
+                  *O RG é obrigatório
+                </span>
+              </div>
+            </div>
+            <div class="col-xs-12 col-sm-6 col-lg-4">
+              <div class="form-group input-group-sm" ng-class="{'has-error' : forms.formCadastroCliente.razaoSocial.$invalid && forms.formCadastroCliente.razaoSocial.$dirty || forms.formCadastroCliente.razaoSocial.$invalid && forms.formCadastroCliente.$submitted}">
+                <label class="control-label">*Razão Social:</label>
+                <input class="form-control" name="razaoSocial" type="text" ng-model="ctrl.cliente.razaoSocial"
+                  capitalize ng-disabled="ctrl.naoEditavel" maxlength="120" required />
+                <span class="help-block msg-erro-cadastro-cliente" ng-if="forms.formCadastroCliente.razaoSocial.$invalid && forms.formCadastroCliente.razaoSocial.$dirty || forms.formCadastroCliente.razaoSocial.$invalid && forms.formCadastroCliente.$submitted">
+                  *A Razão Social é obrigatório
+                </span>
+              </div>
+            </div>
+            <div class="col-xs-12 col-sm-6 col-lg-4">
+              <div class="form-group input-group-sm">
+                <label>Nome Fantasia:</label>
+                <input class="form-control" type="text" ng-model="ctrl.cliente.nomeFantasia" capitalize ng-disabled="ctrl.naoEditavel"
+                  maxlength="120" />
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="panel panel-default">
+        <div class="panel-heading">Endereço</div>
+        <div class="panel-body">
+          <div class="row">
+            <div class="col-xs-12 col-sm-10 col-md-5 col-lg-4">
+              <div class="form-group input-group-sm">
+                <label>Rua:</label>
+                <input class="form-control" type="text" ng-model="ctrl.cliente.rua" capitalize ng-disabled="ctrl.naoEditavel" />
+              </div>
+            </div>
+            <div class="col-xs-12 col-sm-2 col-md-2 col-lg-2">
+              <div class="form-group input-group-sm">
+                <label>Número:</label>
+                <input class="form-control" type="number" ng-model="ctrl.cliente.numero" ng-disabled="ctrl.naoEditavel" />
+              </div>
+            </div>
+            <div class="col-xs-12 col-sm-4 col-md-1 col-lg-2">
+              <div class="form-group input-group-sm">
+                <label>Sala:</label>
+                <input class="form-control" type="text" ng-model="ctrl.cliente.sala" capitalize ng-disabled="ctrl.naoEditavel" />
+              </div>
+            </div>
+            <div class="col-xs-12 col-sm-4 col-md-1 col-lg-2">
+              <div class="form-group input-group-sm">
+                <label>Andar:</label>
+                <input class="form-control" type="text" ng-model="ctrl.cliente.andar" ng-disabled="ctrl.naoEditavel"
+                  capitalize />
+              </div>
+            </div>
+            <div class="col-xs-12 col-sm-4 col-md-3 col-lg-2">
+              <div class="form-group input-group-sm">
+                <label>Complemento:</label>
+                <input class="form-control" type="text" ng-model="ctrl.cliente.complemento" capitalize ng-disabled="ctrl.naoEditavel" />
+              </div>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-xs-12 col-sm-8 col-lg-4">
+              <div class="form-group input-group-sm">
+                <label>Bairro: </label>
+                <input class="form-control" type="text" ng-model="ctrl.cliente.bairro" capitalize ng-disabled="ctrl.naoEditavel" />
+              </div>
+            </div>
+            <div class="col-xs-12 col-sm-4 col-lg-3">
+              <div class="form-group input-group-sm" ng-class="{'has-error': ctrl.cadastroCliente.cep.$invalid && ctrl.cadastroCliente.cep.$dirty}">
+                <label class="control-label">CEP: </label>
+                <input class="form-control" type="text" name="cep" ui-mask="99999-999" ng-model="ctrl.cliente.cep"
+                  pattern="[0-9]{5}[-]{1}[0-9]{3}" ng-disabled="ctrl.naoEditavel" />
+              </div>
+            </div>
+            <div class="col-xs-12 col-sm-8 col-lg-3">
+              <div class="form-group input-group-sm">
+                <label>Cidade: </label>
+                <input class="form-control" type="text" ng-model="ctrl.cliente.cidade" capitalize ng-disabled="ctrl.naoEditavel" />
+              </div>
+            </div>
+            <div class="col-xs-12 col-sm-4 col-lg-2">
+              <div class="form-group input-group-sm">
+                <label>Estado: </label>
+                <select class="form-control" ng-model="ctrl.estado.selecionado" id="estado" ng-options="e.sigla for e in ctrl.estados"
+                  value="{{e}}" ng-disabled="ctrl.naoEditavel"></select>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="panel panel-default">
+        <div class="panel-heading">Contato</div>
+        <div class="panel-body">
+          <div class="row">
+            <div class="col-xs-12 col-sm-6 col-md-4 col-lg-2">
+              <div class="form-group input-group-sm" ng-class="{'has-error': forms.formCadastroCliente.telefone.$invalid && forms.formCadastroCliente.$submitted || forms.formCadastroCliente.telefone.$invalid && forms.formCadastroCliente.telefone.$dirty}">
+                <label for="telefone" class="control-label">*Telefone: </label>
+                <input name="telefone" class="form-control" type="text" ng-model="ctrl.cliente.telefone" ui-mask="(99)9999-9999"
+                  ng-disabled="ctrl.naoEditavel" required />
+                <span class="help-block msg-erro-cadastro-cliente" ng-if="forms.formCadastroCliente.telefone.$invalid && forms.formCadastroCliente.$submitted || forms.formCadastroCliente.telefone.$invalid && forms.formCadastroCliente.telefone.$dirty">
+                  *O Telefone é obrigatório.
+                </span>
+              </div>
+            </div>
+            <div class="col-xs-12 col-sm-6 col-md-4 col-lg-2">
+              <div class="form-group input-group-sm" ng-class="{'has-error': forms.formCadastroCliente.celular.$invalid && forms.formCadastroCliente.$submitted || forms.formCadastroCliente.celular.$invalid && forms.formCadastroCliente.celular.$dirty}">
+                <label for="celular" class="control-label">*Celular: </label>
+                <input name="celular" class="form-control" type="text" ng-model="ctrl.cliente.celular" ui-mask="(99)99999-9999"
+                  ng-disabled="ctrl.naoEditavel" required />
+                <span class="help-block msg-erro-cadastro-cliente" ng-if="forms.formCadastroCliente.celular.$invalid && forms.formCadastroCliente.$submitted || forms.formCadastroCliente.celular.$invalid && forms.formCadastroCliente.celular.$dirty">
+                  *O Celular é obrigatório.
+                </span>
+              </div>
+            </div>
+            <div class="col-xs-12 col-sm-12 col-md-4 col-lg-2">
+              <div class="form-group input-group-sm" ng-class="{'has-error': forms.formCadastroCliente.contato.$invalid && forms.formCadastroCliente.$submitted || forms.formCadastroCliente.contato.$invalid && forms.formCadastroCliente.$submitted}">
+                <label for="contato" class="control-label">*Contato: </label>
+                <input name="contato" class="form-control" type="text" ng-model="ctrl.cliente.contato" capitalize
+                  ng-disabled="ctrl.naoEditavel" required />
+                <span class="help-block msg-erro-cadastro-cliente" ng-if="forms.formCadastroCliente.contato.$invalid && forms.formCadastroCliente.contato.$dirty || forms.formCadastroCliente.contato.$invalid && forms.formCadastroCliente.$submitted">
+                  *O Contato é obrigatório.
+                </span>
+              </div>
+            </div>
+            <div class="col-xs-12 col-sm-12 col-md-6 col-lg-2">
+              <div class="form-group input-group-sm" ng-class="{'has-error': forms.formCadastroCliente.email.$invalid && forms.formCadastroCliente.email.$dirty || forms.formCadastroCliente.email.$invalid && forms.formCadastroCliente.$submitted}">
+                <label for="email" class="control-label">*E-mail: </label>
+                <input name="email" class="form-control" type="text" ng-model="ctrl.cliente.email" capitalize
+                  ng-disabled="ctrl.naoEditavel" required />
+                <span class="help-block msg-erro-cadastro-cliente" ng-if="forms.formCadastroCliente.email.$invalid && forms.formCadastroCliente.email.$dirty || forms.formCadastroCliente.email.$invalid && forms.formCadastroCliente.$submitted">
+                  *O Email é obrigatório.
+                </span>
+              </div>
+            </div>
+            <div class="col-xs-12 col-sm-12 col-md-6 col-lg-4">
+              <div class="form-group input-group-sm" ng-class="{'has-error': forms.formCadastroCliente.referenciascomerciais.$invalid && forms.formCadastroCliente.referenciascomerciais.$dirty || forms.formCadastroCliente.referenciascomerciais.$invalid && forms.formCadastroCliente.$submitted}">
+                <label for="referenciascomerciais" class="control-label">*Referências comerciais: </label>
+                <input name="referenciascomerciais" class="form-control" type="text" ng-model="ctrl.cliente.referenciasComerciais"
+                  capitalize ng-disabled="ctrl.naoEditavel" required />
+                <span class="help-block msg-erro-cadastro-cliente" ng-if="forms.formCadastroCliente.referenciascomerciais.$invalid && forms.formCadastroCliente.referenciascomerciais.$dirty || forms.formCadastroCliente.referenciascomerciais.$invalid && forms.formCadastroCliente.$submitted">
+                  *Referências Comerciais é obrigatório.
+                </span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="panel panel-default">
+        <div class="panel-heading">Informações de Entrega</div>
+        <div class="panel-body">
+          <div class="row">
+            <div class="col-sm-6">
+              <div class="form-group input-group-sm">
+                <label>Dias Entrega: </label>
+                <input class="form-control" type="text" ng-model="ctrl.cliente.diasEntrega" capitalize ng-disabled="ctrl.naoEditavel" />
+              </div>
+            </div>
+            <div class="col-sm-6">
+              <div class="form-group input-group-sm">
+                <label>Horário Entrega: </label>
+                <input class="form-control" type="text" ng-model="ctrl.cliente.horarioEntrega" capitalize ng-disabled="ctrl.naoEditavel" />
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="panel panel-default" restrict access="Administrador Gestor">
+        <div class="panel-heading">Dados Bancários</div>
+        <div class="panel-body">
+          <div class="row">
+            <div class="col-sm-3">
+              <div class="form-group input-group-sm">
+                <label>Banco: </label>
+                <input class="form-control" auto-complete ui-items="ctrl.listaNomeBancos" ng-model="ctrl.banco.nome"
+                  ng-disabled="ctrl.naoEditavel" />
+              </div>
+            </div>
+            <div class="col-sm-2">
+              <div class="form-group input-group-sm">
+                <label>Agência: </label>
+                <input class="form-control" type="text" ng-model="ctrl.cliente.numeroAgencia" ng-disabled="ctrl.naoEditavel" />
+              </div>
+            </div>
+            <div class="col-sm-4">
+              <div class="form-group input-group-sm">
+                <label>Nome Agência: </label>
+                <input class="form-control" type="text" ng-model="ctrl.cliente.nomeAgencia" capitalize ng-disabled="ctrl.naoEditavel" />
+              </div>
+            </div>
+            <div class="col-sm-3">
+              <div class="form-group input-group-sm">
+                <label>Número conta: </label>
+                <input class="form-control" type="number" maxlength="10" ng-model="ctrl.cliente.numeroConta"
+                  ng-disabled="ctrl.naoEditavel" />
+              </div>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-sm-9">
+              <div class="form-group input-group-sm">
+                <label>Pessoa: </label>
+                <select class="form-control" ng-model="ctrl.tipoPessoa.selecionado" id="tipoPessoa" ng-options="tp.descricao for tp in ctrl.listaTipoPessoa"
+                  value="{{tp}}" ng-disabled="ctrl.naoEditavel"></select>
+              </div>
+            </div>
+            <div class="col-sm-1">
+              <div class="form-group input-group-sm">
+                <label>Ativo: </label>
+                <input class="form-control" type="checkbox" ng-model="ctrl.cliente.ativo" ng-disabled="ctrl.naoEditavel" />
+              </div>
+            </div>
+            <div class="col-sm-2">
+              <div class="form-group input-group-sm">
+                <label>Bloqueio Venda: </label>
+                <input class="form-control" type="checkbox" ng-model="ctrl.cliente.bloqueioVenda" ng-disabled="ctrl.naoEditavel" />
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-sm-12 col-lg-6">
+          <div class="panel panel-default">
+            <div class="panel-heading">Informações Adicionais</div>
+            <div class="panel-body">
+              <div class="row">
+                <div class="col-sm-12">
+                  <div class="form-group input-group-sm">
+                    <label>Informações Adicionais: </label>
+                    <textarea class="form-control" style="resize:none" type="text" rows="6" cols="100" maxlength="255"
+                      ng-model="ctrl.cliente.informacoesAdicionais" capitalize ng-disabled="ctrl.naoEditavel"></textarea>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="col-sm-12 col-lg-6">
+          <div class="panel panel-default">
+            <div class="panel-heading">Arquivos Cliente</div>
+            <div class="panel-body">
+              <div class="row">
+                <div class="col-xs-12 col-md-8">
+                  <div class="form-group input-group-sm">
+                    <label>Arquivo Cliente: </label>
+                    <input type="file" accept="image/png, image/jpeg, application/pdf, text/plain, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.openxmlformats-officedocument.wordprocessingml.document"
+                      ng-file-model="ctrl.arquivoCliente" id="fileTabela" style="display: inline" ng-disabled="ctrl.naoEditavel"
+                      multiple />
+                    <input type="button" ng-click="ctrl.uploadArquivoCliente()" value="Enviar" ng-disabled="ctrl.naoEditavel || !ctrl.cliente.cpfCnpj" />
+                  </div>
+                </div>
+                <div class="col-xs-12 col-md-4">
+                  <div ng-repeat="arquivo in ctrl.cliente.arquivos">
+                    <span>
+                      <a href="" ng-click="ctrl.downloadArquivo(arquivo.nomeArquivo)">{{arquivo.nomeArquivo}}</a>
+                    </span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="panel panel-default">
+        <div class="panel-heading">Finalizar Cadastro</div>
+        <div class="panel-body">
+          <div class="row">
+            <div class="col-sm-12">
+              <div class="form-group" role="group" aria-label="...">
+                <button type="button" ng-click="ctrl.voltar()" class="btn btn-default btn-primary">Voltar</button>
+                <button type="submit" class="btn btn-default btn-primary" ng-disabled="ctrl.naoEditavel">Salvar</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </form>
+  </uib-tab>
+
+  <uib-tab index="1" heading="Associar Indústrias">
+    <form novalidate ng-submit="ctrl.salvarIndustriaCliente()" name="forms.formCadastroClienteIndustria">
+      <div class="panel panel-default">
+        <div class="panel-heading">Associar Indústrias</div>
+        <div class="panel-body">
+          <div class="row">
+            <div class="col-sm-4">
+              <div class="form-group input-group-sm">
+                <label>Indústria: </label>
+                <select class="form-control" ng-model="ctrl.industria.selecionado" id="industria" ng-options="r.nome for r in ctrl.listaRepresentacoes"
+                  value="{{r}}" ng-change="ctrl.selecionaIndustria()" ng-disabled="ctrl.naoEditavel"></select>
+              </div>
+            </div>
+            <div class="col-xs-12 col-sm-3 form-group">
+              <label for="selecacoPrazo">Prazo:</label>
+              <ui-select id="selecacoPrazo" multiple ng-model="ctrl.industriaPrazo.selecionado" search-enabled="false"
+                theme="bootstrap" close-on-select="false" title="Selecione os prazos para o cliente na indústria"
+                on-select="ctrl.selecionaIndustriaPrazo($item)" on-remove="ctrl.removeIndustriaPrazo($item)"
+                ng-disabled="ctrl.naoEditavel">
+                <ui-select-match placeholder="Selecione os prazos...">{{$item.descricao}}</ui-select-match>
+                <ui-select-choices repeat="item in ctrl.prazosIndustria">
+                  <small>
+                    {{item.descricao}}
+                  </small>
+                </ui-select-choices>
+              </ui-select>
+            </div>
+            <div class="col-xs-8 col-sm-2 form-group">
+              <label for="prazoPadrao">Prazo Padrão</label>
+              <ui-select id="industriaClientePrazoPadrao" ng-model="ctrl.industriaClientePrazoPadrao.selecionado"
+                ng-disabled="ctrl.industriaCliente.listaIndustriaClientePrazo.length < 1" theme="bootstrap" title="Selecione o prazo padrão:"
+                skip-focusser="true" on-select="ctrl.selecionaIndustriaPrazoPadrao()">
+                <ui-select-match placeholder="Selecione o prazo padrão">{{$select.selected.descricaoIndustriaPrazo}}</ui-select-match>
+                <ui-select-choices class="small-font" repeat="industriaClientePrazoPadrao in ctrl.industriaCliente.listaIndustriaClientePrazo">
+                  <div ng-bind-html="industriaClientePrazoPadrao.descricaoIndustriaPrazo | highlight: $select.search"></div>
+                </ui-select-choices>
+              </ui-select>
+            </div>
+            <div class="col-xs-2 col-sm-1 form-group">
+              <input class="btn btn-primary btn-xs" style="margin-top: 30%;" type="button" ng-click="ctrl.removerPadrao()"
+                value="Remove padrão">
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-xs-12 form-group">
+              <input type="button" class="btn btn-primary" ng-click="ctrl.adicionaIndustriaCliente()" value="Adicionar"
+                ng-disabled="!ctrl.industria.selecionado">
+            </div>
+          </div>
+          <hr />
+          <div class="row">
+            <div class="col-sm-12">
+              <table class="table" ng-show="ctrl.listaIndustriaCliente.length > 0">
+                <thead class="thead-inverse">
+                  <tr>
+                    <th>Indústria</th>
+                    <th>Código</th>
+                    <th>Limite Crédito</th>
+                    <th>Ativo</th>
+                    <th>Prazo</th>
+                    <th>Bloqueio</th>
+                    <th>Remover</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr ng-repeat="ci in ctrl.listaIndustriaCliente" ng-if="ci.removido == false">
+                    <td>{{ci.nomeIndustria}}</td>
+                    <td>{{ci.codigo}}</td>
+                    <td>{{ci.limiteCredito | currency:"R$"}}</td>
+                    <td>{{ci.ativo | sim_nao}}</td>
+                    <td>
+                      <span ng-bind-html="ctrl.buscaDescricaoResumidaPrazo(ci)"></span>
+                    </td>
+                    <td>{{ci.bloqueioVenda | sim_nao}}</td>
+                    <td>
+                      <input type="button" class="btn" value="Remover" ng-click="ctrl.removerIndustriaCliente(ci)"
+                        ng-disabled="naoEditavel" />
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+            <hr />
+          </div>
+        </div>
+      </div>
+      <div class="panel panel-default">
+        <div class="panel-heading">Finalizar Cadastro</div>
+        <div class="panel-body">
+          <div class="row">
+            <div class="col-sm-12">
+              <div class="form-group" role="group" aria-label="...">
+                <button type="submit" class="btn btn-default btn-primary" ng-disabled="ctrl.naoEditavel">Salvar</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </form>
+  </uib-tab>
+</uib-tabset>

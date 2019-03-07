@@ -3,7 +3,7 @@
     <span class="content-title">Edição Pedido</span>
   </div>
 </div>
-<form>
+<form name="formDadosPedido" ng-submit="ctrl.geraPedido()" novalidate>
   <div class="row">
     <div class="col-xs-12 form-group">
       <label>Indústria</label>
@@ -26,74 +26,92 @@
   </div>
   <div class="row">
     <div class="col-xs-12 form-group">
-      <label for="selTabela">Tabela</label>
-      <select id="selTabela" class="form-control" focus="selectChanged" ng-model="ctrl.pedido.tabela" ng-options="tabela.nome for tabela in ctrl.listaTabelas track by tabela.id"
-        placeholder="Selecione a tabela" required>
+      <label for="selTabela" ng-class="{ 'error-field' : ctrl.tabelaInexistente}">Tabela</label>
+      <select name="selTabela" class="form-control" focus="selectChanged" ng-model="ctrl.pedido.tabela"
+        ng-options="tabela.nome for tabela in ctrl.listaTabelas track by tabela.id" placeholder="Selecione a tabela"
+        required>
       </select>
+      <div ng-if="ctrl.tabelaInexistente" style="display: inline-block;">
+        *O campo é obrigatório
+      </div>
     </div>
   </div>
   <div class="row">
     <div class="col-xs-12 form-group">
       <label for="selTipoPedido">Tipo de Pedido</label>
       <select name="selTipoPedido" class="form-control" focus="selectChanged" ng-model="ctrl.pedido.tipoPedido"
-        ng-options="tipoPedido.id as tipoPedido.descricao for tipoPedido in ctrl.tipoPedidoOptions" placeholder="Selecione o tipo do Pedido"
-        ng-disabled="true" required>
-    </select>
-    </div>
-  </div>
-  <div class="row">
-    <div class="col-xs-12 form-group">
-      <label for="inDataEntrega">Data de entrega</label>
-      <p class="input-group">
-        <input id="inDataEntrega" type="text" class="form-control" uib-datepicker-popup="dd/MM/yyyy" ng-model="ctrl.pedido.dataEntrega"
-          is-open="ctrl.popup.opened" datepicker-options="ctrl.dateOptions" ng-required="true" close-text="Fechar"
-          datepicker-append-to-body="true" current-text="Hoje" clear-text="Limpa" />
-        <span class="input-group-btn">
-          <button type="button" class="btn btn-default" ng-click="ctrl.open()"><i class="glyphicon glyphicon-calendar"></i></button>
-        </span>
-      </p>
-    </div>
-  </div>
-  <div class="row">
-    <div class="col-xs-12 form-group">
-      <label for="selPrazo">Prazo</label>
-      <select id="selPrazo" class="form-control" ng-model="ctrl.pedido.industriaPrazo" ng-disabled="!ctrl.pedido.cliente"
-        required ng-options="p as p.descricao for p in ctrl.listaPrazos track by p.idIndustriaPrazo" ng-change="ctrl.alteraPrazo()">
-        <option value="">Selecione um prazo</option>
+        ng-options="tipoPedido.id as tipoPedido.descricao for tipoPedido in ctrl.tipoPedidoOptions"
+        placeholder="Selecione o tipo do Pedido" ng-disabled="true" required>
       </select>
     </div>
   </div>
   <div class="row">
     <div class="col-xs-12 form-group">
+      <label for="inDataEntrega"
+        ng-class="{ 'error-field' : formDadosPedido.inDataEntrega.$invalid}">Data
+        de entrega</label>
+      <p class="input-group">
+        <input name="inDataEntrega" type="text" class="form-control" uib-datepicker-popup="dd/MM/yyyy"
+          ng-model="ctrl.pedido.dataEntrega" is-open="ctrl.popup.opened" datepicker-options="ctrl.dataEntregaOptions"
+          required close-text="Fechar" datepicker-append-to-body="true" current-text="Hoje" clear-text="Limpa"
+          ng-model-options="ctrl.dataEntregaModelOptions" valid-date />
+        <span class="input-group-btn">
+          <button type="button" class="btn btn-default" ng-click="ctrl.open()"><i
+              class="glyphicon glyphicon-calendar"></i></button>
+        </span>
+        <div ng-if="formDadosPedido.inDataEntrega.$invalid">
+          *A data é inválida
+        </div>
+      </p>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-xs-12 form-group">
+      <label for="selPrazo" ng-class="{ 'error-field' : formDadosPedido.selPrazo.$invalid}">Prazo</label>
+      <select name="selPrazo" class="form-control" ng-model="ctrl.pedido.industriaPrazo"
+        ng-disabled="!ctrl.pedido.cliente" required
+        ng-options="p as p.descricao for p in ctrl.listaPrazos track by p.idIndustriaPrazo">
+        <option value="">Selecione um prazo</option>
+      </select>
+      <div ng-if="formDadosPedido.selPrazo.$invalid" style="display: inline-block;">
+        *O campo é obrigatório
+      </div>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-xs-12 form-group">
       <label for="selProposta">Proposta</label>
-      <select id="selProposta" class="form-control" ng-model="ctrl.pedido.proposta" ng-options="p.id as p.text for p in ctrl.propostaOptions">
+      <select id="selProposta" class="form-control" ng-model="ctrl.pedido.proposta"
+        ng-options="p.value as p.text for p in ctrl.propostaOptions">
       </select>
     </div>
   </div>
   <div class="row">
     <div class="col-xs-12 form-group">
       <label for="selCarga">Carga</label>
-      <select id="selCarga" class="form-control" ng-model="ctrl.pedido.carga" ng-options="c.value as c.text for c in ctrl.cargaOptions">
+      <select id="selCarga" class="form-control" ng-model="ctrl.pedido.carga"
+        ng-options="c.value as c.text for c in ctrl.cargaOptions">
       </select>
     </div>
   </div>
   <div class="row">
     <div class="col-xs-12 col-sm-2 col-md-2 col-lg-2 form-group">
-      <button class="btn btn-danger btn-sm btn-block" ng-click="ctrl.cancelarPedido()">Cancelar</button>
+      <button class="btn btn-danger btn-sm btn-block" type="button" ng-click="ctrl.cancelarPedido()">Cancelar</button>
     </div>
     <div class="col-lg-1"></div>
     <div class="col-xs-12 col-sm-3 col-md-3 col-lg-2 form-group">
-      <button class="btn btn-sm btn-block" type="button" data-toggle="modal" ng-style="{'background-color': industria.cor}"
-        data-target="#modalFaturamentos" disabled>Acampanhamento</button>
+      <button class="btn btn-sm btn-block" type="button" data-toggle="modal"
+        ng-style="{'background-color': industria.cor}" data-target="#modalFaturamentos" disabled>Acampanhamento</button>
     </div>
     <div class="col-lg-1"></div>
     <div class="col-xs-12 col-sm-3 col-md-3 col-lg-2 form-group">
-      <button class="btn btn-sm btn-block" type="button" data-toggle="modal" data-target="#modalDuplicatas" ng-style="{'background-color': industria.cor}"
-        disabled>Duplicatas</button>
+      <button class="btn btn-sm btn-block" type="button" data-toggle="modal" data-target="#modalDuplicatas"
+        ng-style="{'background-color': industria.cor}" disabled>Duplicatas</button>
     </div>
     <div class="col-lg-2"></div>
     <div class="col-xs-12 col-sm-4 col-md-4 col-lg-2 form-group">
-      <button class="btn btn-primary btn-sm btn-block" type="submit" ng-click="ctrl.geraPedido()" ng-style="{'background-color': industria.cor}">Fazer
+      <button class="btn btn-primary btn-sm btn-block" type="submit"
+        ng-style="{'background-color': industria.cor}">Fazer
         Pedido
       </button>
     </div>

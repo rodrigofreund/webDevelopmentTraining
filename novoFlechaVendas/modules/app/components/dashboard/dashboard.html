@@ -28,7 +28,7 @@
               <strong> {{ctrl.info.numeroPedidosSalvos}} pedido(s) salvo(s) </strong> aguardando envio. </a>
           </div>
         </div>
-        <div class="col-xs-12 col-lg-6" ng-if="ctrl.info.exibeNaoHaInformacoes">
+        <div class="col-xs-12 col-lg-12" ng-if="ctrl.info.exibeNaoHaInformacoes">
           <span>Não há atividades rescentes!</span>
         </div>
       </div>
@@ -45,7 +45,7 @@
               <strong> {{ctrl.info.numeroPedidosNegados}} pedido(s) negado(s) </strong>. </a>
           </div>
         </div>
-        <div class="col-xs-12 col-lg-6" ng-if="ctrl.info.exibeClientesPendente">
+        <div class="col-xs-12 col-lg-6" ng-if="ctrl.info.exibeClientesPendente" restrict access="Administrador">
           <div class="alert alert-danger">
             <a href="" ng-click="ctrl.exibeClientesPendentes()">Você possui
               <strong> {{ctrl.info.numeroClientesPendente}} cliente(s) pendente(s) </strong>. </a>

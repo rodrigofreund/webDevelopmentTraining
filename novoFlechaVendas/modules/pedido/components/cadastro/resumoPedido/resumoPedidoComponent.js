@@ -8,7 +8,7 @@ PedidoModulo.component('resumoPedidoComponent', {
     pedido: '='
   },
   controllerAs: 'ctrl',
-  controller : function ($scope, $state, PedidoCalculoService, PedidoService, NotificationService, $filter, PedidoStorageService, $log) {
+  controller : function ($scope, $state, $filter, PedidoCalculoService, PedidoService, NotificationService, PedidoStorageService) {
     var ctrl = this;
 
     ctrl.voltar = function() {
@@ -17,14 +17,11 @@ PedidoModulo.component('resumoPedidoComponent', {
     }
 
     ctrl.enviarPedido = function() {
-      let pedidoSalvo = ctrl.pedido;
-      PedidoService.salvaPedido(ctrl.pedido).then(idPedido => {
-        NotificationService.success(`Pedido ${idPedido} gerado com sucesso!`);
-        PedidoService.removePedidoAtivo();
-        PedidoStorageService.removePedidoSalvo(pedidoSalvo);
-        $state.go('main.pedido.cadastro.dados');
+      PedidoService.enviarPedido(ctrl.pedido).then(result => {
+        NotificationService.success(result)
+        $state.go('main.pedido.cadastro.dados')
       }, error => {
-        NotificationService.error(`Erro ao cadastrar o pedido: ${error.data.message}`);
+        NotificationService.error(error)
       })
     }
 
@@ -42,7 +39,7 @@ PedidoModulo.component('resumoPedidoComponent', {
     }
 
     ctrl.getIdPedidoPrincipal = function() {
-      if(ctrl.pedido.pedidoPrincipal != null) {
+      if(ctrl.pedido.pedidoPrincipal) {
         return ctrl.pedido.pedidoPrincipal.id != null ? ctrl.pedido.pedidoPrincipal.id : ctrl.pedido.pedidoPrincipal.idPedidoSalvo;
       }
     }
@@ -86,6 +83,7 @@ PedidoModulo.component('resumoPedidoComponent', {
         ctrl.pedido.observacoesPedidoDto = [];
       }
       ctrl.pedido.itensPedido = $filter('itensAdicionadosFilter', null)(ctrl.pedido.tabela.itens)
+      ctrl.cargaOptions = LISTA_CARGA;
     };
   }
 });

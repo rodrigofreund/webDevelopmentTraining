@@ -2,8 +2,8 @@
 
 var PedidoModule = angular.module('pedido.module');
 
-PedidoModule.factory('PedidoService', ['HttpService', '$log',
-  function (HttpService, $log) {
+PedidoModule.factory('PedidoService', ['HttpService', 'PedidoStorageService', '$q',
+  function (HttpService, PedidoStorageService, $q) {
     var service = {};
     const SUBPATH = 'service/pedido';
 
@@ -16,6 +16,52 @@ PedidoModule.factory('PedidoService', ['HttpService', '$log',
     const URL_PEDIDO_BUSCAR_OBSERVACOES_PEDIDO = `${SUBPATH}/getObservacoesPedido`;
     const URL_PEDIDO_ADICIONAR_OBSERVACOES_PEDIDO = `${SUBPATH}/setObservacoesPedido`;
     const URL_PEDIDO_BUSCAR_ULTIMAR_VENDAS_ITEM = `${SUBPATH}/getUltimasVendasItem`;
+
+    service.enviarPedido = (pedidoDto) => {
+      const deferred = $q.defer();
+
+      let pedidoSalvo = pedidoDto;
+      let pedidoPrincipalSalvo = pedidoDto.pedidoPrincipal;
+
+      let pedidoPrincipalPromisse = enviarPedidoPrincipal(pedidoDto);
+
+      if(pedidoPrincipalPromisse) {
+        pedidoPrincipalPromisse.then(idPedidoPrincipal => {
+          if(idPedidoPrincipal) {
+            pedidoDto.pedidoPrincipal.id = idPedidoPrincipal
+            PedidoStorageService.removePedidoSalvo(pedidoPrincipalSalvo)
+          }
+  
+          pedidoDto.statusPedido = STATUS_PEDIDO.ENVIADO;
+          service.salvaPedido(pedidoDto).then(idPedido => {
+            service.removePedidoAtivo();
+            PedidoStorageService.removePedidoSalvo(pedidoSalvo);
+            deferred.resolve(`Pedidos ${idPedidoPrincipal} e ${idPedido} gerados com sucesso!`);
+          }, error => {
+            deferred.reject(`Erro ao cadastrar o pedido: ${error.data.message}`);
+          })
+        })
+      } else {
+        pedidoDto.statusPedido = STATUS_PEDIDO.ENVIADO;
+        service.salvaPedido(pedidoDto).then(idPedido => {
+          service.removePedidoAtivo();
+          PedidoStorageService.removePedidoSalvo(pedidoSalvo);
+          deferred.resolve(`Pedido ${idPedido} gerado com sucesso!`)
+        }, error => {
+          deferred.reject(`Erro ao cadastrar o pedido: ${error.data.message}`);
+        })
+      }
+      return deferred.promise;
+    }
+
+    function enviarPedidoPrincipal(pedidoDto) {
+      if(pedidoDto.pedidoPrincipal && !pedidoDto.pedidoPrincipal.id) {
+        let pedidoPrincipal = pedidoDto.pedidoPrincipal;
+        pedidoPrincipal.statusPedido = STATUS_PEDIDO.ENVIADO;
+        return service.salvaPedido(pedidoPrincipal)
+      }
+      return null
+    }
 
     service.salvaPedido = (pedidoDto) => {
       return HttpService.httpPost(URL_PEDIDO_SALVAR, pedidoDto);

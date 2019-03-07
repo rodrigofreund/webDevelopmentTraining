@@ -32,7 +32,7 @@ angular.module('GerenciadorFinanceiroFlechaVendas').component('chat', {
 				listaObservacaoPedidoDto: ctrl.observacoes
 			}
 
-			if (ctrl.idPedido !== null) {
+			if (ctrl.idPedido) {
 				PedidoService.setObservacoesPedido(observacaoPedidoUpdateDto);
 			}
 			// Limpa campo da tela

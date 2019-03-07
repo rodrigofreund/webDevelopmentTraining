@@ -16,14 +16,14 @@
                 <label for="nomeIndustria">Indústria</label>
                 <select id="nomeIndustria" class="form-control" ng-model="ctrl.pedidoSearch.idIndustria">
                   <option value="">Selecione uma Indústria</option>
-                  <option ng-repeat="i in ctrl.listaIndustrias" value="{{i.id}}">{{i.nome}}</option>
+                  <option ng-repeat="i in ctrl.listaIndustrias track by i.id" value="{{i.id}}">{{i.nome}}</option>
                 </select>
               </div>
             </div>
             <div class="col-xs-12 col-md-4">
               <div class="form-group input-group-sm" restrict access="Administrador Gestor">
                 <label for="nomeVendedor">Vendedor</label>
-                <select class="form-control" ng-model="ctrl.pedidoSearch.idUsuario" id="nomeVendedor" required>
+                <select class="form-control" ng-model="ctrl.pedidoSearch.idUsuario" id="nomeVendedor">
                   <option value="">Todos</option>
                   <option ng-repeat="v in ctrl.listaVendedores track by v.id" value="{{v.id}}">{{v.nome}}</option>
                 </select>
@@ -55,11 +55,11 @@
                 <label for="nomeCliente">Cliente</label>
                 <input id="nomeCliente" type="text" ng-model="ctrl.cliente.selecionado" placeholder="Selecione o Cliente"
                   uib-typeahead="item.nomeFormatado for item in ctrl.buscaClientes($viewValue)"
-                  typeahead-wait-ms="500" typeahead-select-on-blur="true" typeahead-should-select="ctrl.selCliente($event)" typeahead-no-results="noResults" class="form-control"
-                  typeahead-on-select="ctrl.selectCliente($item, $model, $label, $event)" typeahead-loading="loadingLocations">
+                  typeahead-wait-ms="500" typeahead-select-on-blur="true" typeahead-no-results="noResults" class="form-control"
+                  typeahead-on-select="ctrl.selectCliente($item, $model, $label, $event)" typeahead-loading="loadingLocations" ng-blur="ctrl.verificaClienteAtual()">
                 <i ng-show="loadingLocations" class="glyphicon glyphicon-refresh"></i>
                 <div ng-show="noResults">
-                  <i class="glyphicon glyphicon-remove"></i> Nenhum resultado encontrado
+                  <i class="glyphicon glyphicon-remove"></i> <span>Nenhum resultado encontrado</span>
                 </div>
               </div>
             </div>
@@ -99,7 +99,7 @@
       <div class="panel panel-default">
         <div class="panel-heading">Pedidos</div>
         <div class="panel-body">
-          <div class="table-responsive">
+          <div class="table-responsive" style="min-height: 80px;">
             <table class="table">
               <thead class="thead-inverse">
                 <tr>

@@ -8,16 +8,34 @@ PedidoModulo.component('pedidoLocalComponent', {
     listaIndustrias: '<'
   },
   controllerAs: 'ctrl',
-  controller: function ($log, $scope, PedidoService, ModalService,
-    NotificationService, $state, PedidoCalculoService, PedidoStorageService) {
+  controller: function ($scope, PedidoService, ModalService, $state, PedidoCalculoService, PedidoStorageService, NotificationService) {
 
     var ctrl = this;
 
     this.$onInit = init();
 
+    ctrl.enviarPedido = function(p) {
+
+      let pedido = PedidoStorageService.getPedido(p.idPedidoSalvo);
+
+      var modalOptions = {
+        closeButtonText: 'Não',
+        actionButtonText: 'Sim',
+        headerText: 'Confirmar',
+        bodyText: 'Confirma ENVIO do pedido para o cliente ' + pedido.cliente.nomeFantasia + ' ?'
+      };
+      ModalService.showModal({}, modalOptions).then(function () {
+        PedidoService.enviarPedido(pedido).then(result => {
+          NotificationService.success(result)
+          $state.reload()
+        }, error => {
+          NotificationService.error(error)
+        });
+      });
+    }
+
     /* EDITAR PEDIDO */
     ctrl.editarPedido = function (p) {
-      debugger
       let pedido = PedidoStorageService.getPedido(p.idPedidoSalvo);
       PedidoService.setPedidoAtivo(pedido);
       $state.go('main.pedido.cadastro.edicao');

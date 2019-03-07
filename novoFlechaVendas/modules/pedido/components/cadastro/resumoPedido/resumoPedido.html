@@ -6,7 +6,8 @@
 <div class="row">
   <div class="col-xs-12 padding-off">
     <div class="form-group input-group-sm" style="text-align: center">
-      <label class="form-control" disabled="disabled" style="height: auto;">{{ctrl.pedido.cliente.id}} - {{ctrl.pedido.cliente.razaoSocial}}</label>
+      <label class="form-control" disabled="disabled" style="height: auto;">{{ctrl.pedido.cliente.id}} -
+        {{ctrl.pedido.cliente.razaoSocial}}</label>
     </div>
   </div>
 </div>
@@ -48,12 +49,14 @@
   <div class="row">
     <div class="col-xs-6 col-md-3">
       <div class="form-group">
-        <label>Total Sem Imposto</label> <label class="form-control">{{ctrl.valorTotalPedidoSemImposto | currency:"R$"}}</label>
+        <label>Total Sem Imposto</label> <label
+          class="form-control">{{ctrl.valorTotalPedidoSemImposto | currency:"R$"}}</label>
       </div>
     </div>
     <div class="col-xs-6 col-md-3">
       <div class="form-group">
-        <label>Total Com Imposto</label> <label class="form-control">{{ctrl.valorTotalPedidoComImposto | currency:"R$"}}</label>
+        <label>Total Com Imposto</label> <label
+          class="form-control">{{ctrl.valorTotalPedidoComImposto | currency:"R$"}}</label>
       </div>
     </div>
     <div class="col-xs-6 col-md-3">
@@ -65,7 +68,8 @@
       <div class="form-group" ng-if="!ctrl.isPedidoVenda()">
         <label>Número Pedido Original</label> <label class="form-control" ng-bind="ctrl.getIdPedidoPrincipal()"></label>
       </div>
-      <div class="form-group" ng-if="ctrl.isPedidoVenda() && ctrl.possuiPedidoRelacionado()" ng-repeat="pr in ctrl.pedido.pedidosRelacionados">
+      <div class="form-group" ng-if="ctrl.isPedidoVenda() && ctrl.possuiPedidoRelacionado()"
+        ng-repeat="pr in ctrl.pedido.pedidosRelacionados">
         <label ng-bind="ctrl.getRotuloPedidoRelacionado(pr)"></label>
         <label class="form-control" ng-bind="(pr.id != null ? pr.id : pr.idPedidoSalvo)"></label>
       </div>
@@ -80,9 +84,8 @@
     <div class="col-xs-6 col-sm-4">
       <div class="form-group">
         <label for="selCarga">Carga</label>
-        <select id="selCarga" class="form-control" ng-model="ctrl.pedido.carga" disabled>
-          <option value="1">Batida</option>
-          <option value="2">Paletizada</option>
+        <select id="selCarga" class="form-control" ng-model="ctrl.pedido.carga"
+          ng-options="c.value as c.text for c in ctrl.cargaOptions" disabled>
         </select>
       </div>
     </div>
@@ -93,30 +96,35 @@
     </div>
     <div class="col-sm-1"></div>
     <div class="col-xs-12 col-sm-10">
-      <chat id-pedido="ctrl.pedido.id" mensagens="ctrl.pedido.mensagens" auth="ctrl.auth" observacoes="ctrl.pedido.observacoesPedidoDto"></chat>
+      <chat id-pedido="ctrl.pedido.id" mensagens="ctrl.pedido.mensagens" auth="ctrl.auth"
+        observacoes="ctrl.pedido.observacoesPedidoDto"></chat>
     </div>
     <div class="col-sm-1"></div>
   </div>
 
   <div class="row">
     <div class="col-xs-12 col-sm-3 form-group">
-      <button class="btn btn-primary btn-sm btn-block" type="button" ng-style="{'background-color': industria.cor}" ng-click="ctrl.voltar()">Voltar</button>
+      <button class="btn btn-primary btn-sm btn-block" type="button" ng-style="{'background-color': industria.cor}"
+        ng-click="ctrl.voltar()">Voltar</button>
     </div>
-    
+
     <div class="col-xs-12 col-sm-3 form-group">
-      <button class="btn btn-primary btn-sm btn-block" type="button" ng-style="{'background-color': industria.cor}" ng-click="ctrl.salvarPedido()">
+      <button class="btn btn-primary btn-sm btn-block" type="button" ng-style="{'background-color': industria.cor}"
+        ng-click="ctrl.salvarPedido()">
         Salvar Pedido
       </button>
     </div>
 
     <div class="col-xs-12 col-sm-3 form-group">
-      <button class="btn btn-primary btn-sm btn-block" type="button" ng-style="{'background-color': industria.cor}" ng-click="ctrl.gerarBonificacao()" ng-disabled="ctrl.desabilitaGerarBonificacao()">
+      <button class="btn btn-primary btn-sm btn-block" type="button" ng-style="{'background-color': industria.cor}"
+        ng-click="ctrl.gerarBonificacao()" ng-disabled="ctrl.desabilitaGerarBonificacao()">
         Gerar Bonificação
       </button>
     </div>
-    
+
     <div class="col-xs-12 col-sm-3 form-group">
-      <button class="btn btn-primary btn-sm btn-block" type="button" ng-style="{'background-color': industria.cor}" ng-click="ctrl.enviarPedido()">
+      <button class="btn btn-primary btn-sm btn-block" type="button" ng-style="{'background-color': industria.cor}"
+        ng-click="ctrl.enviarPedido()">
         Enviar Pedido
       </button>
     </div>

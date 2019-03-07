@@ -67,7 +67,7 @@ function constructor($http, HttpService) {
 	}
 
 	function clearLogin() {
-		sessionStorage.setItem('login', null);
+		sessionStorage.clear();
 	}
 
 	return service;

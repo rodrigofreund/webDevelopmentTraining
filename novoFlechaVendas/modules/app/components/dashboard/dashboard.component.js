@@ -3,7 +3,7 @@
 var app = angular.module('GerenciadorFinanceiroFlechaVendas')
 
 app.component('dashboardComponent', {
-	controller: function dashboardController($log, PedidoService, PedidoStorageService, $state) {
+	controller: function dashboardController(PedidoService, PedidoStorageService, $state, LoginService) {
     var ctrl = this;
     this.$onInit = init();
 
@@ -17,7 +17,7 @@ app.component('dashboardComponent', {
       $state.go('main.pedido.cadastro.edicao');
     }
     ctrl.exibeClientesPendentes = function() {
-      $state.go('main.cliente.pesquisa');
+      $state.go('main.cliente.pesquisa', {pendenteRegistro : true});
     }
     ctrl.exibePedidosNegados = function() {
       $state.go('main.pedido.pesquisa', {status: STATUS_PEDIDO.NEGADO.toString()});
@@ -38,10 +38,16 @@ app.component('dashboardComponent', {
         exibeClientesPendente: ctrl.informacoes.numeroClientesPendentes > 0,
         numeroClientesPendente: ctrl.informacoes.numeroClientesPendentes
       };
-      ctrl.info.exibeNaoHaInformacoes = 
-        !ctrl.info.exibePedidoAtivo && 
+      if(LoginService.getUsuario().vendedor) {
+        ctrl.info.exibeNaoHaInformacoes = 
+        !ctrl.info.exibePedidoAtivo &&
+        !ctrl.info.exibePedidosSalvos;
+      } else {
+        ctrl.info.exibeNaoHaInformacoes = 
+        !ctrl.info.exibePedidoAtivo &&
         !ctrl.info.exibePedidosEnviados &&
         !ctrl.info.exibePedidosSalvos;
+      }
       ctrl.info.exibeNaoHaAlertas = 
         !ctrl.info.exibePedidosNegados &&
         !ctrl.info.exibeClientesPendente

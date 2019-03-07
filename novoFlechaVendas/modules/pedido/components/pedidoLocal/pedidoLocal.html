@@ -14,7 +14,8 @@
             <div class="col-xs-12 col-md-6">
               <div class="form-group input-group-sm">
                 <label for="nomeIndustria">Indústria</label>
-                <select id="nomeIndustria" class="form-control" ng-model="ctrl.filter.idIndustria" ng-change="ctrl.buscaPedidos()">
+                <select id="nomeIndustria" class="form-control" ng-model="ctrl.filter.idIndustria"
+                  ng-change="ctrl.buscaPedidos()">
                   <option value="">Selecione uma Indústria</option>
                   <option ng-repeat="i in ctrl.listaIndustrias" value="{{i.id}}">{{i.nome}}</option>
                 </select>
@@ -59,6 +60,9 @@
                       </button>
                       <ul class="dropdown-menu">
                         <li>
+                          <a href="" ng-click="ctrl.enviarPedido(i)">Enviar</a>
+                        </li>
+                        <li>
                           <a href="" ng-click="ctrl.exibeDetalhesPedido(i.idPedidoSalvo)">Detalhar</a>
                         </li>
                         <li>
@@ -82,9 +86,10 @@
               </tbody>
               <tfoot>
                 <div style="text-align: center;">
-                  <ul uib-pagination boundary-links="true" boundary-link-numbers="true" rotate="true" total-items="ctrl.searchResult.totalElements"
-                    ng-model="ctrl.page" class="pagination-sm" previous-text="Anterior" next-text="Próxima"
-                    first-text="Primeira" last-text="Última" ng-change="ctrl.mudaPagina()" max-size="5" items-per-page="ctrl.pedidoSearch.pageSize"></ul>
+                  <ul uib-pagination boundary-links="true" boundary-link-numbers="true" rotate="true"
+                    total-items="ctrl.searchResult.totalElements" ng-model="ctrl.page" class="pagination-sm"
+                    previous-text="Anterior" next-text="Próxima" first-text="Primeira" last-text="Última"
+                    ng-change="ctrl.mudaPagina()" max-size="5" items-per-page="ctrl.pedidoSearch.pageSize"></ul>
                 </div>
               </tfoot>
             </table>

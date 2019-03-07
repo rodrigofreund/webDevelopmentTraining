@@ -10,7 +10,6 @@ PedidoModulo.component('dadosPedidoComponent', {
   },
   controllerAs: 'ctrl',
   controller: function (
-    $log,
     ClienteService,
     $scope,
     TabelaService,
@@ -80,7 +79,12 @@ PedidoModulo.component('dadosPedidoComponent', {
       };
       PedidoService.getPedidosPorCriteria(filtroPedidoDto).then(response => {
         let listaPedidoSalvo = PedidoStorageService.getPedidoPorFiltro(ctrl.pedido.cliente.id, ctrl.pedido.usuario.id, ctrl.pedido.industria.id);
-        let pedidos = response.content.concat(listaPedidoSalvo);
+        let pedidos = null
+        if(listaPedidoSalvo) {
+          pedidos = response.content.concat(listaPedidoSalvo);
+        } else {
+          pedidos = response.content;
+        }
         if (pedidos.length > 0) {
           pedidos.forEach((pedido) => {
             PedidoCalculoService.inicializaPrecosPedido(pedido);
@@ -105,10 +109,10 @@ PedidoModulo.component('dadosPedidoComponent', {
           }
           var itemSelecionado = JSON.parse(result)
           if (itemSelecionado) {
-            if (itemSelecionado.id) {
+            if (itemSelecionado.idPedido) {
               PedidoService.getPedido(itemSelecionado.idPedido).then(pedido => {
                 ctrl.pedido.pedidoPrincipal = pedido;
-                NotificationService.success(`Pedido ${itemSelecionado.id} relacionado com sucesso!`);
+                NotificationService.success(`Pedido ${itemSelecionado.idPedido} relacionado com sucesso!`);
               })
             } else if (itemSelecionado.idPedidoSalvo) {
               ctrl.pedido.pedidoPrincipal = PedidoStorageService.getPedido(itemSelecionado.idPedidoSalvo);
@@ -202,6 +206,13 @@ PedidoModulo.component('dadosPedidoComponent', {
         let indice = null;
         ctrl.pedido.pedidoPrincipal = ctrl.pedidoRelacionado.pedidoPrincipal;
 
+        /*
+        ClienteService.getClientePorCnpj(ctrl.pedidoRelacionado.cnpjCliente).then(function(result) {
+          ctrl.pedido.cliente = result
+        })
+        */
+
+        
         ctrl.listaIndustrias.forEach(function (item, index) {
           if (item.id === ctrl.pedidoRelacionado.idIndustria) {
             indice = index;
@@ -226,17 +237,19 @@ PedidoModulo.component('dadosPedidoComponent', {
             });
           }
         });
+        
 
         TabelaService.getTabelasPorIndustria(ctrl.pedido.industria.id).then((tabelaDtoList) => {
           ctrl.listaTabelas = tabelaDtoList
         });
+        
       } else {
         ctrl.pedido.tipoPedido = TIPO_PEDIDO.VENDA;
       }
 
       ctrl.pedido.statusPedido = STATUS_PEDIDO.ENVIADO;
       ctrl.pedido.proposta = 'true';
-      ctrl.pedido.carga = "1";
+      ctrl.pedido.carga = '1';
     }
   }
 });
